@@ -26,6 +26,11 @@ class CoolLexer(Lexer):
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
               POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
+    
+    RESERVED_WORDS = ("IF", "FI", "THEN", "NOT", "IN", 
+                      "CASE","ELSE", "ESAC", "CLASS", "INHERITS", 
+                      "ISVOID","LET", "LOOP", "NEW", "OF", "POOL", 
+                      "THEN", "WHILE", "TRUE", "FALSE")
     ignore = '\t '
     literals = {'.'}
     ELSE = r'\b[eE][lL][sS][eE]\b'
@@ -33,24 +38,28 @@ class CoolLexer(Lexer):
     
     @_(r'\b[a-z][A-Z0-9_a-z]*\b')
     def OBJECTID(self, t):
+        if t.value.upper() in self.RESERVED_WORDS:
+            t.type = t.value.upper()
+        if t.value.upper() in ("TRUE," "FALSE"):
+            t.type = "BOOL_CONST"
+            t.value = t.value.upper() == "TRUE"
         return t
+
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
     
-    @_(r'\b[wW][hH][iI][lL][eE]\b')
-    def WHILE(self, t):
-        t.value = (t.value) + 'dddd'
+    @_(r'[A-Z][A-Z0-9_a-z]*')
+    def TYPEID(self, t):
+        if t.value.upper() not in self.RESERVED_WORDS:
+            t.type = "TYPEID"
         return t
+
     @_(r'.')
     def ERROR(self, t):
         print(t)
         if t.value in self.literals:
             t.type = t.value
-    
-    @_(r'\w+')
-    def TYPEID(self, t):
-        return t
 
     def error(self, t):
         self.index += 1

@@ -7,17 +7,23 @@ import sys
 
 
 class Comentario(Lexer):
+    _nivel_anidado = 0
     tokens = {}
+
+    @_(r'\(\*')
+    def LINEA(self, t):
+        print("Detectado (* BBBBBBBBBBBBB")
+        nivel_anidado += 1
+
+    @_(r'\*\)')
+    def VOLVER(self, t):
+        print("Detectado *) AAAAAAAAAAAAAA")
+        if self._nivel_anidado > 0: self._nivel_anidado -= 1
+        if self._nivel_anidado == 0: self.begin(CoolLexer)
+    
     @_(r'.')
     def PASAR(self, t):
         pass
-    @_(r'\n')
-    def LINEA(self, t):
-        self.lineno += 1
-    @_(r'\*\)')
-    def VOLVER(self, t):
-        self.begin(CoolLexer)
-
 
 
 
@@ -26,42 +32,65 @@ class CoolLexer(Lexer):
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
               POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
+    
+    RESERVED_WORDS = ("IF", "FI", "THEN", "NOT", "IN", 
+                      "CASE","ELSE", "ESAC", "CLASS", "INHERITS", 
+                      "ISVOID","LET", "LOOP", "NEW", "OF", "POOL", 
+                      "THEN", "WHILE", "TRUE", "FALSE")
     ignore = '\t '
-    literals = {'.'}
+    literals = ('.')
     ELSE = r'\b[eE][lL][sS][eE]\b'
     STR_CONST = r'"[a-zA-Z0-9_/]*"'
     
-    RESERVED_WORDS = ("IF", "FI", "THEN", "NOT", "IN", 
-                           "CASE","ELSE", "ESAC", "CLASS", "INHERITS", 
-                           "ISVOID","LET", "LOOP", "NEW", "OF", "POOL", 
-                           "THEN", "WHILE")
+    @_(r'\(\*')
+    def IR_BLOQUE(self, t):
+        print("Entrando a Comentario")
+        Comentario._nivel_anidado += 1
+        self.begin(Comentario)
+    
+    @_(r'--.*')
+    def IR_LINEA(self, t):
+        if Comentario._nivel_anidado != 0: pass
+        print("PAPAPAPAPAPA")
+        self.lineno += 1
+
+    @_(r'\*\)')
+    def ERROR_PARENTESIS(self, t):
+        t.type = "ERROR \"Unmatched *)\""
+        return t
 
     @_(r'\b[a-z][A-Z0-9_a-z]*\b')
     def OBJECTID(self, t):
-        if (t.value.upper() in self.RESERVED_WORDS):
+        if t.value.upper() in self.RESERVED_WORDS:
             t.type = t.value.upper()
-        if (t.value.upper() in ("TRUE", "FALSE")):
+        if t.value.upper() in ("TRUE," "FALSE"):
             t.type = "BOOL_CONST"
             t.value = t.value.upper() == "TRUE"
         return t
     
+    @_(r'\d+')
+    def INT_CONST(self, t):
+        t.type = "INT_CONST"
+        t.value = int(t.value)
+        return t
+
     @_(r'\n')
     def LINEBREAK(self, t):
-        if (t.value == '\n'):
-            self.lineno += 1
+        self.lineno += 1
     
-    @_(r'\b[A-Z][A-Z0-9_a-z]*\b')
+    @_(r'[A-Z][A-Z0-9_a-z]*')
     def TYPEID(self, t):
-        if (t.value.upper() not in self.RESERVED_WORDS):
+        if t.value.upper() not in self.RESERVED_WORDS:
             t.type = "TYPEID"
-            t.value = t.value
         return t
-    
+
     @_(r'.')
     def ERROR(self, t):
         print(t)
         if t.value in self.literals:
             t.type = t.value
+            return t
+
     def error(self, t):
         self.index += 1
     
@@ -69,9 +98,6 @@ class CoolLexer(Lexer):
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']
                           for j in range(16)] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
-    @_(r'\(\*')
-    def IR(self, t):
-        self.begin(Comentario)
 
     def error(self, t):
         self.index += 1

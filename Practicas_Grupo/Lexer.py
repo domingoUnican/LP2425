@@ -25,16 +25,39 @@ class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
-              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
+              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}  
+              
+    _key_words =  ('IF', 'FI', 'THEN', 'NOT', 'IN', 'CASE','ELSE', 'ESAC', 'CLASS', 'INHERITS', 'IS'
+            'VOID', 'LET', 'LOOP', 'NEW', 'OF', 'POOL', 'THEN', 'WHILE', 'TRUE', 'FALSE')
     ignore = '\t '
-    literals = {'.'}
+
+    literals = {'==', '+','\-', '*', '/', '(', ')', '<', '>', '.', ' ', ',', ';', ':', '@',}
+                
     ELSE = r'\b[eE][lL][sS][eE]\b'
     STR_CONST = r'"[a-zA-Z0-9_/]*"'
-    
-    @_(r'\b[a-z][A-Z0-9_a-z]*\b')
-    def OBJECTID(self, t):
+
+    @_(r'\bt[rR][uU][eE]\b|\bf[aA][lL][sS][eE]\b')
+    def BOOL_CONST(self, t):
+        #t.value = t.value[0] =='t'
+        t.type = 'BOOL_CONST'
         return t
-    @_(r'\n')
+
+    @_(r'[a-z_][a-zA-Z0-9_]*\b')
+    def OBJECTID(self, t):
+        t.type = 'OBJECTID'
+        return t
+    
+    @_(r'[A-Z][a-zA-Z0-9_]*\b')
+    def TYPEID(self, t):
+        t.type = 'TYPEID'
+        return t
+    
+    @_(r'\d+')
+    def INT_CONST(self, t):
+        t.type = 'INT_CONST'
+        return t
+
+    @_(r'\r\n')
     def LINEBREAK(self, t):
         self.lineno += 1
     
@@ -48,9 +71,7 @@ class CoolLexer(Lexer):
         if t.value in self.literals:
             t.type = t.value
     
-    @_(r'\w+')
-    def TYPEID(self, t):
-        return t
+
 
     def error(self, t):
         self.index += 1

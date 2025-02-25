@@ -1,4 +1,3 @@
-digraph {
 TNothing-> TNumber [label="TyNumber"];
 TNothing-> TIdentifier [label="TyChar"];
 TNothing-> TLeftParen [label="TyLeftParen"];
@@ -70,4 +69,3 @@ TComment-> TComment [label="TyGreater"];
 TComment-> TComment [label="TyQuote"];
 TIdentifier-> None [label="TySpace"];
 TSpace-> None [label="TyChar"];
-}

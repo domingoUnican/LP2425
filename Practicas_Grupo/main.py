@@ -6,7 +6,8 @@ from termcolor import colored
 init()
 
 
-DIRECTORIO = os.path.expanduser("~/Repositorio/Docencia/Asignaturas/LP/Proyecto/")
+#DIRECTORIO = os.path.expanduser("C:\\Users\\gopem\\OneDrive\\Escritorio\\Estudios\\Uni\\Lenguajes de Programacion\\Practicas\\REPOSITORIO\\LP2425\\Practicas_Grupo")
+DIRECTORIO = os.path.expanduser("E:\\'Universidad de Cantabria'\\4º\\'2do Cuatri'\\'G1662 - Lenguajes de Programación'\\'LP2425'\\'Practicas_Grupo'\\enunciado.pdf")
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
@@ -14,7 +15,7 @@ from Lexer import *
 from Clases import *
 
 PRACTICA = "01" # Practica que hay que evaluar
-DEBUG = True   # Decir si se lanzan mensajes de debug
+DEBUG = True    # Decir si se lanzan mensajes de debug
 NUMLINEAS = 3   # Numero de lineas que se muestran antes y después de la no coincidencia
 sys.path.append(DIRECTORIO)
 DIR = os.path.join(DIRECTORIO, PRACTICA, 'grading')
@@ -23,7 +24,8 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
-TESTS = ["escapedunprintables.cool"]
+#TESTS = ["escapedunprintables.cool"]
+#TESTS = ["multilinecomment.cool"]
 
 if True:
     for fich in TESTS:
@@ -94,4 +96,3 @@ if True:
                         g.close()
             except Exception as e:
                 print(f"Lanza excepción en {fich} con el texto {e}")
-

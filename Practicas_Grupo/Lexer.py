@@ -22,21 +22,53 @@ class Comentario(Lexer):
 
 
 class CoolLexer(Lexer):
-    tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
+    tokens = {BOOL_CONST, OBJECTID, INT_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
-              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
+              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN, TRUE, FALSE}
     ignore = '\t '
-    literals = {'.'}
-    ELSE = r'\b[eE][lL][sS][eE]\b'
-    STR_CONST = r'"[a-zA-Z0-9_/]*"'
+    literals = {'.', ',', ';', ':', '@', '(', ')', '{', '}', '+', '-', '*', '/', '<', '=', '~'}
+    keywords = {'else', 'if', 'fi', 'then', 'not', 'in', 'case', 'esac', 'class',
+                'inherits', 'isvoid', 'let', 'loop', 'new', 'of', 'pool', 'then', 'while'}
+    LE = r'<='
+    DARROW = r'=>'
+    ASSIGN = r'<-'
+    #STR_CONST = r'"[a-zA-Z0-9_\:\\\s]*"'
+
+    @_(r'"[a-zA-Z0-9_\:\\\s\n\b\f\t\033\015]*"')
+    def STR_CONST(self, t):
+        t.value = t.value.replace('\n', r'n').replace('\b', r'b').replace('\f', r'f').replace('\t', r't').replace('\033', '\\033').replace('\015', '\\015')
+        return t
     
+
+    @_(r'\b[0-9]+\b')
+    def INT_CONST(self, t):
+        t.value = int(t.value)
+        return t
+    
+    @_(r't[rR][uU][eE]')
+    def BOOL_CONST(self, t):
+        t.value = True
+        return t
+
     @_(r'\b[a-z][A-Z0-9_a-z]*\b')
     def OBJECTID(self, t):
+        if t.value in self.keywords:
+            t.type = t.value.upper()
         return t
+    
+    @_(r'\b[A-Z][A-Z0-9_a-z]*\b')
+    def TYPEID(self, t):
+        if t.value in self.keywords:
+            t.type = t.value.upper()
+        return t
+    
+
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
+
+    
     
     @_(r'\b[wW][hH][iI][lL][eE]\b')
     def WHILE(self, t):
@@ -71,8 +103,18 @@ class CoolLexer(Lexer):
         list_strings = []
         for token in lexer.tokenize(texto):
             result = f'#{token.lineno} {token.type} '
-            if token.type == 'OBJECTID':
+            if token.type == 'BOOL_CONST':
+                result += "true" if token.value else "false"
+            elif token.type == 'STR_CONST':
+                result += f'"{token.value}"'
+            elif token.type == 'OBJECTID':
                 result += f"{token.value}"
+            elif token.type == 'ASSIGN':
+                result += '<-'
+            elif token.type == 'DARROW':
+                result += '=>'
+            elif token.type == 'LE':            
+                result += '<='
             elif token.type == 'BOOL_CONST':
                 result += "true" if token.value else "false"
             elif token.type == 'TYPEID':

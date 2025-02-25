@@ -6,10 +6,10 @@ from termcolor import colored
 init()
 
 
-DIRECTORIO = os.path.expanduser("~/Repositorio/Docencia/Asignaturas/LP/Proyecto/")
+DIRECTORIO = os.path.expanduser("C:/Users/Sergio/Desktop/LenguajesDeProgramacion/LP2425/Practicas_Grupo")
 sys.path.append(DIRECTORIO)
 
-from LexerJairo import *
+from Lexer import *
 #from Parser import *
 from Clases import *
 
@@ -23,7 +23,7 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
-TESTS = ["escapedunprintables.cool"]
+TESTS = ["all_else_true.cl.cool"]
 
 if True:
     for fich in TESTS:

@@ -1,8 +1,9 @@
 #name "lineno2.cool"
-#3 OBJECTID fdjsk
-#3 ';' 
-#3 OBJECTID ajs
-#4 '*' 
-#4 ')' 
-#6 OBJECTID fjdk
-#7 STR_CONST ""
+ OBJECTID jfkds
+ OBJECTID ajfkdl
+ OBJECTID a
+ STR_CONST ""\015n\015n""
+ OBJECTID fdjsk
+ OBJECTID ajs
+ OBJECTID fjdk
+ STR_CONST """"

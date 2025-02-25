@@ -181,6 +181,12 @@ dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
 tokens_to_ignore = [TokenType.TSpace, TokenType.TComment, TokenType.TCommentLine]
 # ODOT oicicrejE 2: Parte 1
 
+#TODO Ejercicio 3: Implementar la interpretacion de numeros con coma flotante
+#dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TNumber#Ya esta implementada
+# ODOT oicicrejE 3
+
+
+
 def is_final_state(state):
     return (state not in [TokenType.THalfString, TokenType.TNothing])
         
@@ -257,8 +263,9 @@ prueba1 = "a = 1\n a"
 prueba2 = "a"
 prueba3 = '"esto es un string" b'
 prueba4 = "or and "
+prueba5 = '"Esto es un entero" 123 ", y esto un flotante" 123.45'
 
-for i in tokenize(prueba1):
+for i in tokenize(prueba5):
     print("El token es ", i)
 
 
@@ -297,3 +304,65 @@ Token(lineno=1, value=' ', tipo=TokenType.TSpace),
 Token(lineno=1, value='and', tipo=TokenType.TAnd),
 Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
 """
+
+#TODO Ejercicio 4: Explicar la clase Token y el metodo post_init:
+
+"""
+Un token es una unidad léxica que el lexer identifica en el código fuente.
+
+@dataclass
+class Token:
+    lineno: int = 0
+    value: str = ""
+    tipo: TokenType = TokenType.TNothing
+
+    def __post_init__(self):
+        try:
+            self.tipo = TokenType(self.value)
+        except:
+            pass
+
+Atributos:
+
+lineno: Un entero que indica el número de línea en la que se encuentra el
+        token en el código fuente.
+value: Una cadena de texto que contiene el valor del token, es decir, 
+        el texto exacto que representa el token en el código fuente.
+tipo: Un valor del enumerado TokenType que indica el tipo de token. 
+        Por defecto, se inicializa como TokenType.TNothing.
+
+Método __post_init__:
+Este método es un "post-initialization" hook que se ejecuta automáticamente
+después de que el dataclass ha sido inicializado.
+
+En este método, se intenta asignar el tipo de token (tipo) 
+basado en el valor (value). Si el valor coincide con alguno de los 
+valores definidos en el enumerado TokenType, se asigna ese tipo al token. 
+Si no coincide, se deja el tipo como está.
+
+El uso de try y except asegura que si el valor no coincide con ningún 
+tipo en TokenType, el programa no se detenga debido a una excepción.
+
+Propósito del método __post_init__
+El método __post_init__ sirve para automatizar la asignación del tipo
+de token basado en su valor. Esto es útil porque permite que la creación 
+de tokens sea más flexible y menos propensa a errores. En lugar de tener 
+que especificar explícitamente el tipo de cada token al crearlo, el 
+método __post_init__ intenta deducirlo automáticamente.
+
+Ejemplo de uso
+Cuando se crea un token, por ejemplo:
+
+token = Token(lineno=1, value="=", tipo=TokenType.TNothing)
+
+El método __post_init__ intentará asignar TokenType.TEqual al atributo 
+tipo del token, porque el valor "=" coincide con TokenType.TEqual.
+
+En resumen, la clase Token y su método __post_init__ están 
+diseñados para representar tokens de manera eficiente y automatizar
+la asignación de tipos de tokens basados en sus valores, facilitando 
+el proceso de análisis léxico.
+
+"""
+
+# ODOT oicicrejE 4

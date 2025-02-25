@@ -104,8 +104,7 @@ class Token:
 dfa = defaultdict(lambda:None)
 dfa[(TokenType.TNothing, TypesLiteral.TyNumber)] = TokenType.TNumber
 
-# TODO
-# Rellenar el DFA
+# TODO Ejercicio1: Rellenar el DFA
 dfa[(TokenType.TNothing, TypesLiteral.TyComma)] = TokenType.TComma
 dfa[(TokenType.TNothing, TypesLiteral.TyChar)] = TokenType.TIdentifier
 dfa[(TokenType.TNothing, TypesLiteral.TyLeftParen)] = TokenType.TLeftParen
@@ -176,12 +175,11 @@ dfa[(TokenType.TComment, TypesLiteral.TyGreater)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TyQuote)] = TokenType.TComment
 dfa[(TokenType.TIdentifier, TypesLiteral.TySpace)] = None
 dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
+# ODOT oicicrejE 1: Rellenar el DFA
 
-
-
-
-# ODOT
-
+# TODO Ejercicio 2: Implementar transiciones para no devolver tokens a ignorar
+tokens_to_ignore = [TokenType.TSpace, TokenType.TComment, TokenType.TCommentLine]
+# ODOT oicicrejE 2: Parte 1
 
 def is_final_state(state):
     return (state not in [TokenType.THalfString, TokenType.TNothing])
@@ -242,8 +240,10 @@ def tokenize(entrada):
             pos_final = pos + 1 if is_final_state(state) else pos_final
             pos = pos + 1
         else:
-            yield Token(line, entrada[:pos_final],
-                        state)
+            #TODO Ejercicio 2: Parte 2: Ignorar tokens
+            if state not in tokens_to_ignore:
+            #ODOT oicicrejE 2: Parte 2
+                yield Token(line, entrada[:pos_final], state)
             pos = 0
             entrada = entrada[pos_final:]
             if type_literal == TypesLiteral.TyLine:
@@ -258,14 +258,20 @@ prueba2 = "a"
 prueba3 = '"esto es un string" b'
 prueba4 = "or and "
 
-for i in tokenize(prueba4):
+for i in tokenize(prueba1):
     print("El token es ", i)
 
 
 # salida de prueba 1
 
 """
-[Token(lineno=1, value='a', tipo=TokenType.TIdentifier),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='=', tipo=TokenType.TEqual),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='1', tipo=TokenType.TNumber),Token(lineno=2, value='\n ', tipo=TokenType.TSpace),Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]
+[Token(lineno=1, value='a', tipo=TokenType.TIdentifier),
+Token(lineno=1, value=' ', tipo=TokenType.TSpace),
+Token(lineno=1, value='=', tipo=TokenType.TEqual),
+Token(lineno=1, value=' ', tipo=TokenType.TSpace),
+Token(lineno=1, value='1', tipo=TokenType.TNumber),
+Token(lineno=2, value='\n ', tipo=TokenType.TSpace),
+Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]
 """
 
 # salida de prueba 2
@@ -278,11 +284,16 @@ for i in tokenize(prueba4):
 # salida de prueba 3
 
 """
-[Token(lineno=1, value='"esto es un string"', tipo=TokenType.TString),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='b', tipo=TokenType.TIdentifier)]
+[Token(lineno=1, value='"esto es un string"', tipo=TokenType.TString),
+Token(lineno=1, value=' ', tipo=TokenType.TSpace),
+Token(lineno=1, value='b', tipo=TokenType.TIdentifier)]
 """
 
 # salida de prueba 4
 
 """
-[Token(lineno=1, value='or', tipo=TokenType.TOr),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='and', tipo=TokenType.TAnd),Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
+[Token(lineno=1, value='or', tipo=TokenType.TOr),
+Token(lineno=1, value=' ', tipo=TokenType.TSpace),
+Token(lineno=1, value='and', tipo=TokenType.TAnd),
+Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
 """

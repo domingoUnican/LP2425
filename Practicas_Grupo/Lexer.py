@@ -4,6 +4,7 @@ from sly import Lexer
 import os
 import re
 import sys
+import string as str
 
 
 class Comentario(Lexer):
@@ -53,24 +54,18 @@ class CoolLexer(Lexer):
         t.type = 'INT_CONST'
         return t
     
-    @_(r'"[\w\s]*"')
+    @_(r'"(\w|\\|\s|,)*"')
     def STR_CONST(self, t):
         t.type = 'STR_CONST'
         # Ignoro las comillas, los /b, /t, /n y /r, pero sustitullo los /. por el caracter correspondiente
         print("Antes", t.value)
-        t.value = re.sub(r'\\([^\Wbtnr])', r'\1', t.value)
+        t.value = re.sub(r'\\([^btnr])', r'\1', t.value)
         print("Despues", t.value)
         return t
 
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
-    
-    @_(r'.')
-    def ERROR(self, t):
-        print(t)
-        if t.value in self.literals:
-            t.type = t.value
     
     @_(r'\w+')
     def TYPEID(self, t):
@@ -86,6 +81,12 @@ class CoolLexer(Lexer):
     @_(r'\(\*')
     def IR(self, t):
         self.begin(Comentario)
+
+    @_(r'.')
+    def ERROR(self, t):
+        print(t)
+        if t.value in self.literals:
+            t.type = t.value
 
     def error(self, t):
         self.index += 1
@@ -128,5 +129,5 @@ if __name__ == '__main__':
     };
     """
 
-    for tk in CoolLexer().tokenize(text):
+    for tk in CoolLexer().tokenize('"Aqui\n"'):
         print(tk)

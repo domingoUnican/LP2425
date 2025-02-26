@@ -34,6 +34,7 @@ class TokenType(Enum):
     THalfString = "_Unfinised String"
     TString = '"text"'
     TNumber = "_Number"  # or '123.45'
+    TDecimalNumber = "_DecimalNumber"
     TIdentifier = "_Identificador"
     # Keywords
     TAnd = "and"
@@ -85,7 +86,12 @@ class TypesLiteral(Enum):
 # Esto es por si queremos quitar TypesLiteral a todos los tokens    
 # globals().update(TypesLiteral.__members__)
 
-    
+""" 
+@dataclass sirve para que autogeneren las funciones __init__ y __repr__.
+La clase Token sirve para retornar los Tokens en un único objeto.
+El __post_init__ se ejecuta después de la inicialización y hace que las palabras resevadas (and, or...) 
+se identifiquen con el tipo correcto y no TIdentifier.
+"""
 @dataclass
 class Token:
     lineno: int = 0
@@ -97,11 +103,14 @@ class Token:
             self.tipo = TokenType(self.value)
         except:
             pass
+
+        #para los decimales sean TNumber
+        if self.tipo == TokenType.TDecimalNumber:
+            self.tipo = TokenType.TNumber
     
-    #cambiado para que el print sea igual al resultado
+    # cambiado para que el print sea igual al resultado 
     def __repr__(self):
         return f"Token(lineno={self.lineno}, value={self.value}, tipo={self.tipo})"
-       
 
 
 
@@ -127,6 +136,9 @@ dfa[(TokenType.TNothing, TypesLiteral.TyQuote)] = TokenType.THalfString
 dfa[(TokenType.TNothing, TypesLiteral.TyLine)] = TokenType.TLine
 dfa[(TokenType.TNothing, TypesLiteral.TySpace)] = TokenType.TSpace
 dfa[(TokenType.TNumber, TypesLiteral.TyNumber)] = TokenType.TNumber
+dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TDecimalNumber
+dfa[(TokenType.TDecimalNumber, TypesLiteral.TyNumber)] = TokenType.TDecimalNumber
+dfa[(TokenType.TDot, TypesLiteral.TyNumber)] = TokenType.TDecimalNumber
 dfa[(TokenType.TBang, TypesLiteral.TyEqual)] = TokenType.TBangEqual
 dfa[(TokenType.TEqual, TypesLiteral.TyEqual)] = TokenType.TEqualEqual
 dfa[(TokenType.TLess, TypesLiteral.TyEqual)] = TokenType.TLessEqual
@@ -154,7 +166,6 @@ dfa[(TokenType.THalfString, TypesLiteral.TyLess)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyGreater)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyQuote)] = TokenType.TString
 dfa[(TokenType.THalfString, TypesLiteral.TyLine)] = TokenType.THalfString
-dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TNumber
 dfa[(TokenType.TSlash, TypesLiteral.TySlash)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TyLine)] = TokenType.TCommentLine
 dfa[(TokenType.TComment, TypesLiteral.TyChar)] = TokenType.TComment
@@ -255,12 +266,11 @@ def tokenize(entrada):
 
 prueba1 = "a = 1\n a"
 prueba2 = "a"
-prueba3 = '"esto es un string..." b 3.1415'
-prueba4 = "or and "
+prueba3 = '"esto es un string..." b 3.14.15 3..15'
+prueba4 = "or and else"
 
-for i in tokenize(prueba3):
+for i in tokenize(prueba4):
     print("El token es", i)
-
 
 # salida de prueba 1
 

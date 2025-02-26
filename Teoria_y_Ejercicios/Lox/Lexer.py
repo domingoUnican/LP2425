@@ -185,7 +185,6 @@ dfa[(TokenType.TIdentifier, TypesLiteral.TySpace)] = None
 dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
 dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TDecimalNumber
 dfa[(TokenType.TDecimalNumber, TypesLiteral.TyNumber)] = TokenType.TDecimalNumber
-dfa[(TokenType.TDecimalNumber, TypesLiteral.TyDecimalNumber)] = TokenType.TDecimalNumber
 dfa[(TokenType.TDecimalNumber, TypesLiteral.TySpace)] = None
 dfa[(TokenType.TDecimalNumber, TypesLiteral.TyDot)] = None
 

@@ -34,6 +34,7 @@ class TokenType(Enum):
     THalfString = "_Unfinised String"
     TString = '"text"'
     TNumber = "_Number"  # or '123.45'
+    TDecimalNumber = "_DecimalNumber"
     TIdentifier = "_Identificador"
     # Keywords
     TAnd = "and"
@@ -84,8 +85,19 @@ class TypesLiteral(Enum):
 # globals().update(TokenType.__members__)
 # Esto es por si queremos quitar TypesLiteral a todos los tokens    
 # globals().update(TypesLiteral.__members__)
-
-    
+"""
+Hay una variable estado que va actualizando su valor según el estado
+anterior y el tipo del nuevo caracter. Cuando se llega a un estado
+del que no se puede seguir, se crea el token con el tipo del último
+estado posible. Estos momentos llegan cuando hay espacios, excepto
+cuando estemos en un estado half string, que solo finaliza al llegar
+a las comillas de cierre finales.
+La funcion __post_init__ sirve para asignar el estado correctamente 
+después de haberlo inicializado, para el caso de las palabras reservadas
+que de otro modo serían TIdentifier, ya que son caracteres fuera de las
+comillas de strings, y es como que se "da cuenta" de que los characteres
+forman una palabra reservada tras la creación del token.
+"""
 @dataclass
 class Token:
     lineno: int = 0
@@ -97,11 +109,13 @@ class Token:
             self.tipo = TokenType(self.value)
         except:
             pass
+        #para los decimales sean TNumber
+        if self.tipo == TokenType.TDecimalNumber:
+            self.tipo = TokenType.TNumber
     
-    #cambiado para que el print sea igual al resultado
+    # cambiado para que el print sea igual al resultado 
     def __repr__(self):
         return f"Token(lineno={self.lineno}, value={self.value}, tipo={self.tipo})"
-       
 
 
 
@@ -127,6 +141,9 @@ dfa[(TokenType.TNothing, TypesLiteral.TyQuote)] = TokenType.THalfString
 dfa[(TokenType.TNothing, TypesLiteral.TyLine)] = TokenType.TLine
 dfa[(TokenType.TNothing, TypesLiteral.TySpace)] = TokenType.TSpace
 dfa[(TokenType.TNumber, TypesLiteral.TyNumber)] = TokenType.TNumber
+dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TDecimalNumber
+dfa[(TokenType.TDecimalNumber, TypesLiteral.TyNumber)] = TokenType.TDecimalNumber
+dfa[(TokenType.TDot, TypesLiteral.TyNumber)] = TokenType.TDecimalNumber
 dfa[(TokenType.TBang, TypesLiteral.TyEqual)] = TokenType.TBangEqual
 dfa[(TokenType.TEqual, TypesLiteral.TyEqual)] = TokenType.TEqualEqual
 dfa[(TokenType.TLess, TypesLiteral.TyEqual)] = TokenType.TLessEqual
@@ -154,7 +171,6 @@ dfa[(TokenType.THalfString, TypesLiteral.TyLess)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyGreater)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyQuote)] = TokenType.TString
 dfa[(TokenType.THalfString, TypesLiteral.TyLine)] = TokenType.THalfString
-dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TNumber
 dfa[(TokenType.TSlash, TypesLiteral.TySlash)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TyLine)] = TokenType.TCommentLine
 dfa[(TokenType.TComment, TypesLiteral.TyChar)] = TokenType.TComment
@@ -178,6 +194,7 @@ dfa[(TokenType.TComment, TypesLiteral.TyQuote)] = TokenType.TComment
 dfa[(TokenType.TIdentifier, TypesLiteral.TySpace)] = None
 dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
 
+#TODO: arreglar el numero para que funcione bien con punto 3.4 valido 3.4.4 no valido, 3..4 no valido
 
 
 def is_final_state(state):
@@ -254,7 +271,7 @@ def tokenize(entrada):
 
 prueba1 = "a = 1\n a"
 prueba2 = "a"
-prueba3 = '"esto es un string..." b 3.1415'
+prueba3 = 'a and "esto es un string..." b 3.14.15 3..15'
 prueba4 = "or and "
 
 for i in tokenize(prueba3):

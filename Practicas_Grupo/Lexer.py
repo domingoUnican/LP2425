@@ -33,15 +33,39 @@ class CoolLexer(Lexer):
     
     @_(r'\b[a-z][A-Z0-9_a-z]*\b')
     def OBJECTID(self, t):
+        if (t.value.upper() in self.tokens):
+            t.type = t.value.upper()
+        else:
+            t.type = 'OBJECTID'
         return t
+    
+    @_(r'\b[A-Z][A-Z0-9_a-z]*\b')
+    def TYPEID(self, t):
+        if (t.value.upper() in self.tokens):
+            t.type = t.value.upper()
+        else:
+            t.type = 'TYPEID'
+        return t
+    
+    @_(r'[0-9]+')
+    def INT_CONST(self, t):
+        t.value = int(t.value)
+        t.type = 'INT_CONST'
+        return t
+    
+    @_(r'"[\w\s]*"')
+    def STR_CONST(self, t):
+        t.type = 'STR_CONST'
+        # Ignoro las comillas, los /b, /t, /n y /r, pero sustitullo los /. por el caracter correspondiente
+        print("Antes", t.value)
+        t.value = re.sub(r'\\([^\Wbtnr])', r'\1', t.value)
+        print("Despues", t.value)
+        return t
+
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
     
-    @_(r'\b[wW][hH][iI][lL][eE]\b')
-    def WHILE(self, t):
-        t.value = (t.value) + 'dddd'
-        return t
     @_(r'.')
     def ERROR(self, t):
         print(t)
@@ -89,3 +113,20 @@ class CoolLexer(Lexer):
                 result = f'#{token.lineno} {token.type}'
             list_strings.append(result)
         return list_strings
+
+if __name__ == '__main__':
+    lexer = CoolLexer()
+    text = """
+
+    class Main {
+        main(): Object {
+            out_string("Hello, World mohamed\n");
+            out_int(0);
+            out_string("\n");
+            return 0;
+        };
+    };
+    """
+
+    for tk in CoolLexer().tokenize(text):
+        print(tk)

@@ -6,11 +6,11 @@ from termcolor import colored
 init()
 
 
-DIRECTORIO = os.path.expanduser("~/Repositorio/Docencia/Asignaturas/LP/Proyecto/")
+DIRECTORIO = os.path.expanduser("C:\Users\David\Documents\Ing. Informática\Teoria del Cuarto Curso de ing. Informatica\LenguajesDeProgramacion\Repositorios\LP2425")
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
-#from Parser import *
+from Parser import *
 from Clases import *
 
 PRACTICA = "01" # Practica que hay que evaluar

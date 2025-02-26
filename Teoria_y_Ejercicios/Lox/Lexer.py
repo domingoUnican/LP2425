@@ -34,6 +34,7 @@ class TokenType(Enum):
     THalfString = "_Unfinised String"
     TString = '"text"'
     TNumber = "_Number"  # or '123.45'
+    TFloat = "_Float"
     TIdentifier = "_Identificador"
     # Keywords
     TAnd = "and"
@@ -94,6 +95,8 @@ class Token:
     tipo: TokenType = TokenType.TNothing
 
     def __post_init__(self):
+        if self.tipo == TokenType.TFloat:
+            self.tipo = TokenType.TNumber
         try:
             self.tipo = TokenType(self.value)
         except:
@@ -122,7 +125,8 @@ dfa[(TokenType.TNothing, TypesLiteral.TyQuote)] = TokenType.THalfString
 dfa[(TokenType.TNothing, TypesLiteral.TyLine)] = TokenType.TLine
 dfa[(TokenType.TNothing, TypesLiteral.TySpace)] = TokenType.TSpace
 dfa[(TokenType.TNumber, TypesLiteral.TyNumber)] = TokenType.TNumber
-dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TNumber
+dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TFloat  # ej.3
+dfa[(TokenType.TFloat, TypesLiteral.TyNumber)] = TokenType.TFloat  # ej.3
 dfa[(TokenType.TBang, TypesLiteral.TyEqual)] = TokenType.TBangEqual
 dfa[(TokenType.TEqual, TypesLiteral.TyEqual)] = TokenType.TEqualEqual
 dfa[(TokenType.TLess, TypesLiteral.TyEqual)] = TokenType.TLessEqual
@@ -242,9 +246,6 @@ def tokenize(entrada):
             # Notacion xarlie:TODO Ejercicio 2: Parte 2: Ignorar tokens
             if state not in tokens_to_ignore:
                 # Notacion xarlie:ODOT oicicrejE 2: Parte 2
-                # # # # # # # # t = Token(line, entrada[:pos_final], state)
-                # # # # # # # # if t.tipo == TokenType.TNumber and t.value[-1] == ".":
-                # # # # # # # #     t.tipo = TokenType.THalfString
                 yield Token(line, entrada[:pos_final], state)
             pos = 0
             entrada = entrada[pos_final:]
@@ -256,7 +257,7 @@ def tokenize(entrada):
         yield Token(line, entrada, state)
 
 
-prueba1 = "a = 1\n a"
+prueba1 = "a = 1\n a 1.2.3.6 and 1...5"
 prueba2 = "a"
 prueba3 = '"esto es un string" b'
 prueba4 = "or and "
@@ -314,6 +315,9 @@ test4 = [
 tests = [test1, test2, test3, test4]
 
 for test, salida in zip(tests, salidas):
-    print(test)
-    print(salida)
+    # print(test)
+    # print(salida)
     assert test == salida if test == 2 else True
+
+for tk in salidas[0]:
+    print(tk)

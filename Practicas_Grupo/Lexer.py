@@ -26,7 +26,7 @@ class CoolLexer(Lexer):
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
               POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
-    ignore = '\t '
+    ignore = '\t '  
     literals = {'.'}
     ELSE = r'\b[eE][lL][sS][eE]\b'
     STR_CONST = r'"[a-zA-Z0-9_/]*"'

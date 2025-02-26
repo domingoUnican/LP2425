@@ -5,9 +5,7 @@ from colorama import init
 from termcolor import colored
 init()
 
-
-#DIRECTORIO = os.path.expanduser("C:\\Users\\gopem\\OneDrive\\Escritorio\\Estudios\\Uni\\Lenguajes de Programacion\\Practicas\\REPOSITORIO\\LP2425\\Practicas_Grupo")
-DIRECTORIO = os.path.expanduser("E:\\'Universidad de Cantabria'\\4º\\'2do Cuatri'\\'G1662 - Lenguajes de Programación'\\'LP2425'\\'Practicas_Grupo'\\enunciado.pdf")
+DIRECTORIO = os.path.expanduser("E:\\Universidad de Cantabria\\4º\\2do Cuatri\\G1662 - Lenguajes de Programación\\LP2425\\Practicas_Grupo")
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
@@ -18,7 +16,7 @@ PRACTICA = "01" # Practica que hay que evaluar
 DEBUG = True    # Decir si se lanzan mensajes de debug
 NUMLINEAS = 3   # Numero de lineas que se muestran antes y después de la no coincidencia
 sys.path.append(DIRECTORIO)
-DIR = os.path.join(DIRECTORIO, PRACTICA, 'grading')
+DIR = os.path.join(DIRECTORIO, PRACTICA, 'minimos')
 FICHEROS = os.listdir(DIR)
 TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and

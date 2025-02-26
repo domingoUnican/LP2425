@@ -33,7 +33,9 @@ class TokenType(Enum):
     # Literals
     THalfString = "_Unfinised String"
     TString = '"text"'
-    TNumber = "_Number"  # or '123.45'
+    TNumber = "_Number"
+    TWholeNumber = "_WholeNumber"
+    TDecNumber = "_DecNumber"
     TIdentifier = "_Identificador"
     # Keywords
     TAnd = "and"
@@ -85,7 +87,6 @@ class TypesLiteral(Enum):
 # Esto es por si queremos quitar TypesLiteral a todos los tokens    
 # globals().update(TypesLiteral.__members__)
 
-    
 @dataclass
 class Token:
     lineno: int = 0
@@ -97,12 +98,14 @@ class Token:
             self.tipo = TokenType(self.value)
         except:
             pass
+        if self.tipo == TokenType.TWholeNumber or self.tipo == TokenType.TDecNumber:
+            self.tipo = TokenType.TNumber
        
 
 
 
 dfa = defaultdict(lambda:None)
-dfa[(TokenType.TNothing, TypesLiteral.TyNumber)] = TokenType.TNumber
+dfa[(TokenType.TNothing, TypesLiteral.TyNumber)] = TokenType.TWholeNumber
 dfa[(TokenType.TNothing, TypesLiteral.TyChar)] = TokenType.TIdentifier
 dfa[(TokenType.TNothing, TypesLiteral.TyLeftParen)] = TokenType.TLeftParen
 dfa[(TokenType.TNothing, TypesLiteral.TyRightParen)] = TokenType.TRightParen
@@ -122,7 +125,9 @@ dfa[(TokenType.TNothing, TypesLiteral.TyGreater)] = TokenType.TGreater
 dfa[(TokenType.TNothing, TypesLiteral.TyQuote)] = TokenType.THalfString
 dfa[(TokenType.TNothing, TypesLiteral.TyLine)] = TokenType.TLine
 dfa[(TokenType.TNothing, TypesLiteral.TySpace)] = TokenType.TSpace
-dfa[(TokenType.TNumber, TypesLiteral.TyNumber)] = TokenType.TNumber
+dfa[(TokenType.TWholeNumber, TypesLiteral.TyNumber)] = TokenType.TWholeNumber
+dfa[(TokenType.TDecNumber, TypesLiteral.TyNumber)] = TokenType.TDecNumber
+dfa[(TokenType.TDot, TypesLiteral.TyNumber)] = TokenType.TDecNumber
 dfa[(TokenType.TBang, TypesLiteral.TyEqual)] = TokenType.TBangEqual
 dfa[(TokenType.TEqual, TypesLiteral.TyEqual)] = TokenType.TEqualEqual
 dfa[(TokenType.TLess, TypesLiteral.TyEqual)] = TokenType.TLessEqual
@@ -150,7 +155,7 @@ dfa[(TokenType.THalfString, TypesLiteral.TyLess)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyGreater)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyQuote)] = TokenType.TString
 dfa[(TokenType.THalfString, TypesLiteral.TyLine)] = TokenType.THalfString
-dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TNumber
+dfa[(TokenType.TWholeNumber, TypesLiteral.TyDot)] = TokenType.TDecNumber
 dfa[(TokenType.TSlash, TypesLiteral.TySlash)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TyLine)] = TokenType.TCommentLine
 dfa[(TokenType.TComment, TypesLiteral.TyChar)] = TokenType.TComment
@@ -184,6 +189,7 @@ def tokenize(entrada):
     pos = 0
     pos_final = 0
     state = TokenType.TNothing
+    ignored_tokens = [TokenType.TSpace, TokenType.TDot, TokenType.TComma]
     while pos < len(entrada):
         ch = entrada[pos]
         if ch == '\n':
@@ -234,8 +240,8 @@ def tokenize(entrada):
             pos_final = pos + 1 if is_final_state(state) else pos_final
             pos = pos + 1
         else:
-            yield Token(line, entrada[:pos_final],
-                        state)
+            if state not in ignored_tokens:
+                yield Token(line, entrada[:pos_final], state)
             pos = 0
             entrada = entrada[pos_final:]
             if type_literal == TypesLiteral.TyLine:
@@ -243,14 +249,15 @@ def tokenize(entrada):
                 pos += 1
             state = TokenType.TNothing
     if state != TokenType.TNothing:
-        yield Token(line, entrada, state)
+        if state not in ignored_tokens:
+            yield Token(line, entrada, state)
 
 prueba1 = "a = 1\n a"
 prueba2 = "a"
-prueba3 = '"esto es un string" b 3.141592'
+prueba3 = '"esto es un string" b 3..1'
 prueba4 = "or and "
 
-for i in tokenize(prueba4):
+for i in tokenize(prueba3):
     print("El token es ", i)
 
 

@@ -30,8 +30,17 @@ class CoolLexer(Lexer):
     ignore = '\t '
     literals = {'.'}
     ELSE = r'\b[eE][lL][sS][eE]\b'
-    STR_CONST = r'"[a-zA-Z0-9_/]*"'
+    STR_CONST = r'"[\w,\s\\]*"'
     
+    #@_(r'')
+    def STR_CONST(self, t):
+        t.type = 'STR_CONST'
+        # Ignoro las comillas, los /b, /t, /n y /r, pero sustitullo los /. por el caracter correspondiente
+        print("Antes", t.value)
+        t.value = re.sub(r'\/([^btnr])', r'\1', t.value)
+        print("Despues", t.value)
+        return t
+
     @_(r'\b[a-z][A-Z0-9_a-z]*\b')
     def OBJECTID(self, t):
         if (t.value.upper() in self.tokens):
@@ -53,24 +62,15 @@ class CoolLexer(Lexer):
         t.value = int(t.value)
         t.type = 'INT_CONST'
         return t
-    
-    @_(r'"(\w|\\|\s|,)*"')
-    def STR_CONST(self, t):
-        t.type = 'STR_CONST'
-        # Ignoro las comillas, los /b, /t, /n y /r, pero sustitullo los /. por el caracter correspondiente
-        print("Antes", t.value)
-        t.value = re.sub(r'\\([^btnr])', r'\1', t.value)
-        print("Despues", t.value)
-        return t
 
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
-    
+    '''
     @_(r'\w+')
     def TYPEID(self, t):
         return t
-
+    '''
     def error(self, t):
         self.index += 1
     
@@ -87,9 +87,6 @@ class CoolLexer(Lexer):
         print(t)
         if t.value in self.literals:
             t.type = t.value
-
-    def error(self, t):
-        self.index += 1
         
     def salida(self, texto):
         lexer = CoolLexer()
@@ -117,17 +114,9 @@ class CoolLexer(Lexer):
 
 if __name__ == '__main__':
     lexer = CoolLexer()
-    text = """
+    text1 = open("./prueba.txt", "r").read()
 
-    class Main {
-        main(): Object {
-            out_string("Hello, World mohamed\n");
-            out_int(0);
-            out_string("\n");
-            return 0;
-        };
-    };
-    """
+    text2  = r'"Hello, World Nicolas\n"'
 
-    for tk in CoolLexer().tokenize('"Aqui\n"'):
+    for tk in CoolLexer().tokenize(text1):
         print(tk)

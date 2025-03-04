@@ -9,7 +9,7 @@ init()
 DIRECTORIO = os.path.expanduser("~/Repositorio/Docencia/Asignaturas/LP/Proyecto/")
 sys.path.append(DIRECTORIO)
 
-from LexerJairo import *
+from Lexer import *
 #from Parser import *
 from Clases import *
 

@@ -321,3 +321,6 @@ for test, salida in zip(tests, salidas):
 
 for tk in salidas[0]:
     print(tk)
+
+
+#Respeusta a ejercico 4 del enunciado en fichero txt aparte.

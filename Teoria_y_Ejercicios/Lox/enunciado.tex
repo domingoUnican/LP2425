@@ -1,0 +1,37 @@
+% Created 2025-02-25 mar 12:32
+% Intended LaTeX compiler: pdflatex
+\input{$HOME/Git_Repositories/encargos/ALGT/hojas/source/cabeza}
+\author{Helmut Krauser}
+\date{\today}
+\title{}
+\begin{document}
+
+\vspace{5mm}\centerline{\large\bf Especificación léxica}\vspace{5mm}
+\label{sec:orgeffdd14}
+
+El lenguage \href{https://craftinginterpreters.com/the-lox-language.html}{Lox} es un lenguaje creado para ser Turing Completo y fácil de traducir.
+En este práctica individual, hay que completar y corregir el archivo Lexer.py, de forma que la 
+función Tokenize devuelva siempre una lista de tokens a las diferentes entradas.
+
+La representación gráfica del autómata finito esta dado en el fichero \href{./dfa.dot}{dfa.dot}
+
+\prop{Complete la definición de la variable dfa, que es la representación de un autómata finito.}
+\label{sec:org6783240}
+
+
+Hay algunos tokens, como el token de comentario de varias lineas que se devuelven, igual que el token de comentario de una linea.
+
+\prop{Modifique el código de la función tokenize para que halla una lista de tokens a ignorar}
+\label{sec:orgf19f0da}
+
+En el autómata anterior, los números que se representan son solo de tipo entero, pero la especificación de Lox admite también números de punto flotante.
+
+\prop{Modifique el autómata para que se admitan tanto números enteros como números de punto flotante, pero que sean del tipo Number, no haga distinciones.}
+\label{sec:orgc046b2f}
+
+
+Una peculiaridad de la implementación elegida es que utiliza tipos enumerados, tanto para representar los caracteres de entrada, como los tipos de los tokens.
+
+\prop{Comente como funciona la clase Token, porque tiene esa estructura y para que sirve el método \underline{\underline{post\_init}}}
+\label{sec:orgca7fc96}
+\end{document}

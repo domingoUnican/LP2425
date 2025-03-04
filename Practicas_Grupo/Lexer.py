@@ -22,21 +22,41 @@ class Comentario(Lexer):
 
 
 class CoolLexer(Lexer):
-    tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
-              ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
-              INHERITS, ISVOID, LET, LOOP, NEW, OF,
-              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
+    tokens = {STR_CONST, BOOL_CONST, OBJECTID, INT_CONST, ELSE, TYPEID, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS, INHERITS, ISVOID, LET, LOOP, NEW, OF, POOL, THEN, WHILE, LE, DARROW, ASSIGN}
     ignore = '\t '
-    literals = {'.'}
-    ELSE = r'\b[eE][lL][sS][eE]\b'
-    STR_CONST = r'"[a-zA-Z0-9_/]*"'
+    literals = {'=','+','-','*','/','(',')','.','>','<',',',';',':','@',' '}
+
+    LE = r'<='
+    DARROW = r'=>'
+    ASSIGN = r'<-'
+    STR_CONST = r'"[a-zA-Z0-9_/\:\\\s]*"'
+
+    PalabrasReservadas = ("ELSE", "IF", "FI", "THEN", "NOT", "IN", "CASE", "ESAC", "CLASS", "INHERITS", "ISVOID", "LET", "LOOP", "NEW", "OF", "POOL", "THEN", "WHILE")
+    
+    @_(r't[rR][uU][eE]')
+    def BOOL_CONST(self, t):
+        t.value = True
+        return t
     
     @_(r'\b[a-z][A-Z0-9_a-z]*\b')
     def OBJECTID(self, t):
+        if t.value.upper() in self.PalabrasReservadas:
+            t.type = t.value.upper()
+        return t
+    
+    @_(r'\b[A-Z][A-Z0-9_a-z]*\b')
+    def TYPEID(self, t):
+        if t.value.upper() in self.PalabrasReservadas:
+            t.type = t.value.upper()
         return t
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
+        
+    @_(r'-?\d+')
+    def INT_CONST(self, t):
+        t.value = int(t.value)
+        return t
     
     @_(r'\b[wW][hH][iI][lL][eE]\b')
     def WHILE(self, t):
@@ -48,9 +68,9 @@ class CoolLexer(Lexer):
         if t.value in self.literals:
             t.type = t.value
     
-    @_(r'\w+')
-    def TYPEID(self, t):
-        return t
+    # @_(r'\w+')
+    # def TYPEID(self, t):
+    #     return t
 
     def error(self, t):
         self.index += 1

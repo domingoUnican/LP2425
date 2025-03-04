@@ -1,0 +1,58 @@
+% Created 2025-03-04 mar 10:02
+% Intended LaTeX compiler: pdflatex
+\input{$HOME/Git_Repositories/encargos/ALGT/hojas/source/cabeza}
+\author{Helmut Krauser}
+\date{\today}
+\title{}
+\begin{document}
+
+\vspace{5mm}\centerline{\large\bf Representación de Código}\vspace{5mm}
+\label{sec:orgc66f9a9}
+
+Para poder trabajar con código Lox de una manera eficiente, es necesario poder 
+tener una representación de este código dentro del lenguaje donde escribamos un compilador.
+
+El código del lenguaje Lox tiene una estructura, que está definida por una \href{https://craftinginterpreters.com/appendix-i.html}{gramática libre de contexto}.
+Nuestro objetivo en está práctica es preparar una representación del código de Lox dentro del fichero \emph{Representacion.py}.
+
+Como Python permite la programación orientada a objetos, vamos a utilizar clases para representar código Lox.
+Demos un extracto del código que debemos generar:
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos=]{python}
+from dataclasses import dataclass
+from typing import List 
+
+@dataclass
+class Program:
+    declarations: List[Declaration]
+
+@dataclass
+class Declaration:
+    pass
+
+@dataclass
+class ClassDeclaration(Declaration):
+    name: str
+    father: str
+    methods: List[Function]
+
+@dataclass
+class FunctionDeclaration(Declaration):
+    fun: Function
+
+@dataclass
+class VarDeclaration(Declaration):
+    name: str
+    expr: Expression
+
+@dataclass
+class statement(Declaration):
+    pass
+
+@dataclass
+class Function:
+    name: str
+    params: List[Parameter]
+    body: Block
+
+\end{minted}
+\end{document}

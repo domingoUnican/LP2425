@@ -4,14 +4,40 @@ from typing import List, Optional
 
 @dataclass
 class Declaration:
-    pass
+    classDecl: Optional["ClassDeclaration"]=None
+    funDecl: Optional["FunctionDeclaration"]=None
+    varDecl: Optional["VarDeclaration"]=None
+    statement: Optional["Statement"]=None
+
 
 @dataclass
 class Primary:
+    number: Optional["Number"]=None
+    string: Optional["String"]=None
+    id: Optional["Identifier"]=None
+
+@dataclass
+class Logic_OR:
+    logic_and:Logic_AND
+    logic_and:Logic_AND
+    
+@dataclass
+class Assignment:
     pass
 
+@dataclass
+class AssignmentWithAssignment:
+    call: Optional["Call"]=None
+    identificator: str
+    assignment: Assignment
 
+@dataclass
+class AssignmentWithLogicOR:
+    logicOR: Logic_OR
 
+@dataclass
+class Expression:
+    assignment: Assignment
 
 @dataclass
 class Unary:
@@ -20,7 +46,18 @@ class Unary:
 
 @dataclass
 class Call:
-    base: Primary
+    primary: Primary
+
+@dataclass
+class CallAtribute(Call):
+    identificator: str
+    additional_call: Call
+
+@dataclass
+class CallMethod(Call):
+    arguments: List
+    additional_call: Call
+
 
 @dataclass
 class Number(Primary):
@@ -67,7 +104,12 @@ class VarDeclaration(Declaration):
 
 @dataclass
 class Statement(Declaration):
-    pass
+    exprStmt: Optional['ExpressionStatement']=None
+    blockStmt: Optional['Block']=None
+    ifStmt: Optional['IfStatement']=None
+    whileStmt: Optional['WhileStatement']=None
+    returnStmt: Optional['ReturnStatement']=None
+
 
 @dataclass
 class Program:

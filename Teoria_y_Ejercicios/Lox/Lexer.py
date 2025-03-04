@@ -91,8 +91,8 @@ class TypesLiteral(Enum):
 @dataclass # Decorador para crear una clase de datos
 class Token:
     """
-    Token class, representa un token dentro del código y almacena información relevante 
-    sobre cada uno de ellos.
+    Esta clase representa un token dentro del código y almacena información relevante 
+    sobre cada uno de ellos como el número de línea, el valor y el tipo.
 
     Atributos:
         lineno: int -> Número de línea en el que se encuentra el token.
@@ -100,25 +100,32 @@ class Token:
         tipo: TokenType -> Tipo de token.
 
     Métodos:
-        __post_init__: -> Inicializa el tipo correcto al token basado en su valor
+        __post_init__: -> Inicializa correctamente el tipo del token basándose en su valor.
+
 
     """
-
+    # Atributos del token
     lineno: int = 0
     value: str = ""
     tipo: TokenType = TokenType.TNothing
 
     def __post_init__(self):
         try:
+            # Si el valor del token es de tipo Float, se asigna automáticamente el tipo Number
             if self.tipo == TokenType.TFloat:
-                # Si el valor coincide con un TokenType, se asigna automáticamente el tipo
                 self.tipo = TokenType.TNumber
+            
+            # Si el valor coincide con un TokenType, se asigna automáticamente el tipo    
             else:
                 self.tipo = TokenType(self.value)
+        # Si hay excepción, como por ejemplo que el valor no coincida con ningún TokenType, se ignora
         except:
             pass
        
-
+# La clase Token tiene esta estructura para poder cumplir con el propósito en el contexto
+# de analizador léxico. Esta clase es fundamental en el proceso de analizador léxico para poder
+# identificar y clasificar los tokens en el código fuente. La estructura de la clase y el método
+# __post_init__ son necesarios para que cada token se asigne correctamente a su valor.
 
 
 dfa = defaultdict(lambda:None)

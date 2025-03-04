@@ -116,7 +116,10 @@ class Factor:
 
 Con este código se puede realizar la siguiente llamada:
  #+BEGIN_SRC python
-Factor(op="/", first_un=Number(tok=Token(lineno=0, value="10", tipo="Int")), second_un=Number(tok=Token(lineno=0, value="10", tipo="Int"))).tostring(2)
+Factor(op="/", first_un=Number(tok=Token(lineno=0, value="10", tipo="Int"))
+       ,
+       second_un=Number(tok=Token(lineno=0, value="10",tipo="Int")))
+.tostring(2)
  #+END_SRC
 
 y obtener la siguiente salida

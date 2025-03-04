@@ -175,36 +175,36 @@ def tokenize(entrada):
     if state != TokenType.TNothing:
         yield Token(line, entrada, state)
 
-prueba1 = "a = 1\n a"
-prueba2 = "a"
-prueba3 = '"esto es un string" b'
-prueba4 = "or and "
+# prueba1 = "a = 1\n a"
+# prueba2 = "a"
+# prueba3 = '"esto es un string" b'
+# prueba4 = "or and "
 
-for i in tokenize(prueba3):
-    print("El token es ", i)
-
-
-# salida de prueba 1
-
-"""
-[Token(lineno=1, value='a', tipo=TokenType.TIdentifier),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='=', tipo=TokenType.TEqual),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='1', tipo=TokenType.TNumber),Token(lineno=2, value='\n ', tipo=TokenType.TSpace),Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]
-"""
-
-# salida de prueba 2
-
-"""
-[Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
-"""
+# for i in tokenize(prueba3):
+#     print("El token es ", i)
 
 
-# salida de prueba 3
+# # salida de prueba 1
 
-"""
-[Token(lineno=1, value='"esto es un string"', tipo=TokenType.TString),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='b', tipo=TokenType.TIdentifier)]
-"""
+# """
+# [Token(lineno=1, value='a', tipo=TokenType.TIdentifier),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='=', tipo=TokenType.TEqual),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='1', tipo=TokenType.TNumber),Token(lineno=2, value='\n ', tipo=TokenType.TSpace),Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]
+# """
 
-# salida de prueba 4
+# # salida de prueba 2
 
-"""
-[Token(lineno=1, value='or', tipo=TokenType.TOr),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='and', tipo=TokenType.TAnd),Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
-"""
+# """
+# [Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
+# """
+
+
+# # salida de prueba 3
+
+# """
+# [Token(lineno=1, value='"esto es un string"', tipo=TokenType.TString),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='b', tipo=TokenType.TIdentifier)]
+# """
+
+# # salida de prueba 4
+
+# """
+# [Token(lineno=1, value='or', tipo=TokenType.TOr),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='and', tipo=TokenType.TAnd),Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
+# """

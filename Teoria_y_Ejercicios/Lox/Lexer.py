@@ -319,8 +319,9 @@ for test, salida in zip(tests, salidas):
     # print(salida)
     assert test == salida if test == 2 else True
 
-for tk in salidas[0]:
-    print(tk)
+if 0:
+    for tk in salidas[0]:
+        print(tk)
 
 
 #Respeusta a ejercico 4 del enunciado en fichero txt aparte.

@@ -7,11 +7,12 @@ class Declaration:
     pass
 
 @dataclass
-class Primary:
+class Expression:
     pass
 
-
-
+@dataclass
+class Primary(Expression):
+    pass
 
 @dataclass
 class Unary:
@@ -20,6 +21,7 @@ class Unary:
 
 @dataclass
 class Call:
+    #call   → primary ( "(" arguments? ")" | "." IDENTIFIER )* ;
     base: Primary
 
 @dataclass
@@ -68,6 +70,66 @@ class VarDeclaration(Declaration):
 @dataclass
 class Statement(Declaration):
     pass
+
+@dataclass
+class Literal(Expression):
+    value: object
+
+@dataclass
+class Grouping(Expression):
+    expression: Expression
+
+@dataclass
+class Binary(Expression):
+    left: Expression
+    operator: Token
+    right: Expression
+
+@dataclass
+class Logical(Expression):
+    left: Expression
+    operator: Token
+    right: Expression
+
+@dataclass
+class Assign(Expression):
+    name: Token
+    value: Expression
+
+@dataclass
+class ExpressionStmt(Statement):
+    expression: Expression
+
+@dataclass
+class PrintStmt(Statement):
+    expression: Expression
+
+@dataclass
+class ReturnStmt(Statement):
+    keyword: Token
+    value: Optional[Expression]
+
+@dataclass
+class IfStmt(Statement):
+    condition: Expression
+    then_branch: Statement
+    else_branch: Optional[Statement]
+
+@dataclass
+class WhileStmt(Statement):
+    condition: Expression
+    body: Statement
+
+@dataclass
+class ForStmt(Statement):
+    initializer: Optional[Declaration]
+    condition: Optional[Expression]
+    increment: Optional[Expression]
+    body: Statement
+
+@dataclass
+class Block(Statement):
+    statements: List[Declaration]
 
 @dataclass
 class Program:

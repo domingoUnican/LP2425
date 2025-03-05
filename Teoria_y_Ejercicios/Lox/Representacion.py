@@ -5,17 +5,17 @@ from typing import List, Optional
 @dataclass
 class Declaration:
     def tostring(self, n=0):
-        return " " * n + "Declaration"
+        return " " * n + "Declaration " # Esto es para que se vea bonito el output
 
 @dataclass
 class Expression:
     def tostring(self, n=0):
-        return " " * n + "Expression"
+        return " " * n + "Expression" # Esto es para que se vea bonito el output
 
 @dataclass
 class Primary(Expression):
     def tostring(self, n=0):
-        return " " * n + "Primary"
+        return " " * n + "Primary Expression" + "\n"
 
 @dataclass
 class Unary:
@@ -59,7 +59,13 @@ class Function:
     params: List['Parameter']
     body: 'Block'
     def tostring(self, n=0):
-        return " " * n + f"Function: {self.name}"
+        return " " * n + f"Function: {self.name} " + "\n" + self.body.tostring(n+2) # Aquí llamamos al tostring de Block
+
+@dataclass
+class Parameter:
+    name: str
+    def tostring(self, n=0):
+        return " " * n + f"Parameter: {self.name} "
 
 @dataclass
 class ClassDeclaration(Declaration):
@@ -67,37 +73,38 @@ class ClassDeclaration(Declaration):
     father: str
     methods: List[Function]
     def tostring(self, n=0):
-        return " " * n + f"Class: {self.name}"
+        return " " * n + f"Class: {self.name} < {self.father} > " + "\n" + " " * n + "Methods:\n" + "\n".join([method.tostring(n+2) for method in self.methods])
 
 @dataclass
 class FunctionDeclaration(Declaration):
     fun: Function
     def tostring(self, n=0):
-        return " " * n + "FunctionDeclaration"
+        return " " * n + "FunctionDeclaration" + "\n" + self.fun.tostring(n+2)  # Aquí llamamos al tostring de Function
+    
 
 @dataclass
 class VarDeclaration(Declaration):
     name: str
     expr: 'Expression'
     def tostring(self, n=0):
-        return " " * n + f"VarDeclaration: {self.name}"
+        return " " * n + f"VarDeclaration: {self.name} = {self.expr.tostring(0)} "  # Aquí llamamos al tostring de Expression
 
 @dataclass
 class Statement(Declaration):
     def tostring(self, n=0):
-        return " " * n + "Statement"
+        return " " * n + "Statement " # Esto es para que se vea bonito el output
 
 @dataclass
 class Literal(Expression):
     value: object
     def tostring(self, n=0):
-        return " " * n + f"Literal: {self.value}"
+        return " " * n + f"Literal: {self.value} "
 
 @dataclass
 class Grouping(Expression):
     expression: Expression
     def tostring(self, n=0):
-        return " " * n + "Grouping" + "\n" + self.expression.tostring(n+2)
+        return " " * n + "Grouping" + "\n" + self.expression.tostring(n+2) # Aquí llamamos al tostring de Expression
 
 @dataclass
 class Binary(Expression):

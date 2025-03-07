@@ -28,7 +28,7 @@ TESTS = [
     and re.search(r"^[a-zA-Z].*\.(cool|test|cl)$", fich)
 ]
 TESTS.sort()
-#TESTS = ["stringcomment.cool"]
+# TESTS = ["stringcomment.cool"]
 
 if True:
     for fich in TESTS:
@@ -42,6 +42,7 @@ if True:
         texto = ""
         entrada = f.read()
         f.close()
+        
         if PRACTICA == "01":
             texto = "\n".join(lexer.salida(entrada))
             texto = f'#name "{fich}"\n' + texto

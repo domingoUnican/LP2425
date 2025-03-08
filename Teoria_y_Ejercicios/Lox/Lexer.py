@@ -508,18 +508,3 @@ ejecutar_prueba(prueba8, "", 8)
 ejecutar_prueba(prueba9, "", 9)
 ejecutar_prueba(prueba10, "", 10)
 ejecutar_prueba(prueba11, "", 11)
-
-
-# --------------------------------------------------------------------------------------------
-
-# dudas:
-# preguntar por los float porque no entiendo el sentido.
-# El token es Token(lineno=1, value='x', tipo=<TokenType.TIdentifier: '_Identificador'>)
-# El token es Token(lineno=1, value='=', tipo=<TokenType.TEqual: '='>)
-# El token es Token(lineno=1, value='12.31.23', tipo=<TokenType.TNumber: '_Number'>)
-# ahi detecta todo a la vez pero para que no deberia tener memoria o como funciona?
-
-# tambien que hacer cuando hay varios puntos si está bien así.
-# y tambien si va bien de normal pq se cambia a que sea number sin mas
-
-# seria mejor poner un tipo de dato float no?

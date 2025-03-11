@@ -307,7 +307,6 @@ def tokenize(entrada):
     if state != TokenType.TNothing and state not in tokens_a_ignorar:
         yield Token(line, entrada, state)
 
-<<<<<<< HEAD
 prueba1 = "a = 1\n a"
 prueba2 = "a"
 prueba3 = '"esto es un string" b'
@@ -317,31 +316,18 @@ prueba6 = "esto es un numero 43.5.5.5 y 9.a"
 
 # d = [Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
 # print(d)
-=======
-# prueba1 = "a = 1\n a"
-# prueba2 = "a"
-# prueba3 = '"esto es un string" b'
-# prueba4 = "or and "
 
-# for i in tokenize(prueba3):
-#     print("El token es ", i)
->>>>>>> 4a3593908ba31089da9436bfc305b91f4786bc70
+# pruebas = [prueba1, prueba2, prueba3, prueba4, prueba5, prueba6]
+# c = 1
+# for prueba in pruebas:
+#     print("Prueba: ", c)
+#     c += 1
+#     for i in tokenize(prueba):
+#         print("El token es ", i)
 
-pruebas = [prueba1, prueba2, prueba3, prueba4, prueba5, prueba6]
-c = 1
-for prueba in pruebas:
-    print("Prueba: ", c)
-    c += 1
-    for i in tokenize(prueba):
-        print("El token es ", i)
-
-<<<<<<< HEAD
 # for i in tokenize(prueba6):
 #     print("El token es ", i)
 # salida de prueba 1
-=======
-# # salida de prueba 1
->>>>>>> 4a3593908ba31089da9436bfc305b91f4786bc70
 
 # """
 # [Token(lineno=1, value='a', tipo=TokenType.TIdentifier),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='=', tipo=TokenType.TEqual),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='1', tipo=TokenType.TNumber),Token(lineno=2, value='\n ', tipo=TokenType.TSpace),Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]

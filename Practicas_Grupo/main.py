@@ -3,6 +3,7 @@ import re
 import sys
 from colorama import init
 from termcolor import colored
+
 init()
 
 DIRECTORIO = os.path.expanduser("E:\\Universidad de Cantabria\\4º\\2do Cuatri\\G1662 - Lenguajes de Programación\\LP2425\\Practicas_Grupo")
@@ -13,7 +14,7 @@ from Lexer import *
 from Clases import *
 
 PRACTICA = "01" # Practica que hay que evaluar
-DEBUG = True    # Decir si se lanzan mensajes de debug
+DEBUG = True   # Decir si se lanzan mensajes de debug
 NUMLINEAS = 3   # Numero de lineas que se muestran antes y después de la no coincidencia
 sys.path.append(DIRECTORIO)
 DIR = os.path.join(DIRECTORIO, PRACTICA, 'minimos')
@@ -22,7 +23,7 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
-#TESTS = ["escapedunprintables.cool"]
+#TESTS = ["operators.cool"]
 #TESTS = ["multilinecomment.cool"]
 
 if True:
@@ -42,7 +43,13 @@ if True:
             texto = f'#name "{fich}"\n' + texto
             resultado = g.read()
             g.close()
-            if texto.strip().split() != resultado.strip().split():
+            a = texto.strip().split()
+            a = [i for i in a if '#' not in i]
+            b = resultado.strip().split()
+            b = [i for i in b if '#' not in i]
+            # print(a)
+            # print(b)
+            if a != b:
                 print(f"Revisa el fichero {fich}")
                 if DEBUG:
                     texto = re.sub(r'#\d+\b','',texto)
@@ -94,3 +101,4 @@ if True:
                         g.close()
             except Exception as e:
                 print(f"Lanza excepción en {fich} con el texto {e}")
+

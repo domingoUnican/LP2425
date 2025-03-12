@@ -11,14 +11,14 @@ class Comentario(Lexer):
 
     _numero_anidados = 1
 
-    
+
     @_(r'\n')
     def LINEA(self, t):
         self.lineno += 1
         if self._numero_anidados == 0:
             self.begin(CoolLexer)
-        
-        
+
+
     @_(r'\*\)')
     def VOLVER(self, t):
         self._numero_anidados -= 1
@@ -26,8 +26,6 @@ class Comentario(Lexer):
             self.begin(CoolLexer)
         pass
 
-    
-        
     @_(r'\(\*')
     def ANIDAR(self, t):
         if self._numero_anidados != 0:
@@ -37,45 +35,157 @@ class Comentario(Lexer):
     def PASAR(self, t):
         pass
 
+class CadenaTexto(Lexer):
+    tokens = {}
+    _cadena = ''
 
+    @_(r'\"')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.value = '"' + self._cadena +'"'
+        t.type = 'STR_CONST'
+        self._cadena = ''
+        return t
+
+    @_(r'\\[rbf]')
+    def NUEVA_LINEA(self, t):
+        self._cadena += t.value[1]
+
+    @_(r'\t')
+    def BARRA_T(self, t):
+        self._cadena += '\\t'
+
+    @_(r'.')
+    def CUALQUIER_COSA(self, t):
+        self._cadena += t.value
+
+class ASSIGN(Lexer):
+    tokens = {}
+
+
+    @_(r'\-')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.type = 'ASSIGN'
+        t.value = ''
+        return t
+
+    @_(r'.')
+    def CUALQUIER_COSA(self, t):
+        self.begin(CoolLexer)
+        return t
+    
+class BOOLEANT(Lexer):
+    tokens = {}
+    _cadena = 'tru'
+
+    @_(r'[^eE][a-zA-Z0-9]*')
+    def VOLVERNOBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
+
+    @_(r'[eE][a-zA-Z0-9]+')
+    def VOLVERCASIBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
+    
+    @_(r'[eE]')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.type = 'BOOL_CONST'
+        t.value = True
+        return t
+
+class BOOLEANF(Lexer):
+    tokens = {}
+    _cadena = 'fals'
+
+    @_(r'[^eE][a-zA-Z0-9]*')
+    def VOLVERNOBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
+
+    @_(r'[eE][a-zA-Z0-9]+')
+    def VOLVERCASIBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
+    
+    @_(r'[eE]')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.type = 'BOOL_CONST'
+        t.value = False
+        return t
 
 class CoolLexer(Lexer):
     tokens = {BOOL_CONST, OBJECTID, INT_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
-              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN, 
-              TRUE, FALSE, COMMENT, COMMENT1LINEA}
+              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN,
+              TRUE, FALSE, COMMENT, COMMENT1LINEA, LE}
     ignore = '\t '
     literals = {'=', '+', '-', '*', '/',
                 '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}'}
-    key_words = {'else', 'if', 'fi', 'then', 'not', 'in', 'case', 'esac', 'class', 'inherits', 'isvoid', 
+    key_words = {'else', 'if', 'fi', 'then', 'not', 'in', 'case', 'esac', 'class', 'inherits', 'isvoid',
                  'let', 'loop', 'new', 'of', 'pool', 'then', 'while'}
-    
-    LE = r'\b[lL][eE]\b'
-    DARROW = r'\b[\=][\>]\b'
-    ASSIGN = r'\b[\<][\-]\b'
+
+    #LE = r'\b[lL][eE]\b'
+    #DARROW = r'\b[\=][\>]\b'
+   # ASSIGN = r'\b[\<][\-]\b'
     #STR_CONST = r'"[a-zA-Z0-9_\:\\\s\b\r\n]*"'
 
-    
+
     _numero_anidados = 0
-    
 
-    @_(r'"[a-zA-Z0-9_\:\\\s\t\b\f\015\033]*"')
-    def STR_CONST(self, t):
-        t.value = t.value.replace('\t', r't').replace('\b', r'b').replace('\f', r'f').replace('\015', '\\015').replace('\033', '\\033')
+
+    # @_(r'\"[a-zA-Z0-9_\-\:\\\s\t\b\f\015\033]*\"')
+    # def STR_CONST(self, t):
+    #     t.value = t.value.replace('\t', r't').replace('\b', r'b').replace('\f', r'f').replace('\015', '\\015').replace('\033', '\\033')
+    #     return t
+
+    @_(r'\=\>')
+    def DARROW(self, t):
+        t.type = 'DARROW'
+        return t
+    
+    @_(r'\<\=')
+    def LE(self, t):
+        t.type = 'LE'
         return t
 
+    @_(r'\<\-')
+    def ASSIGN(self, t):
+        t.type = 'ASSIGN'
+        return t
 
-    @_(r'-?\d+')
+    @_(r'\"')
+    def STRING(self, t):
+        self.begin(CadenaTexto)
+
+    #aqui antes iba '-?\d+'
+    @_(r'\d+')
     def INT_CONST(self, t):
-        t.value = int(t.value)
+        #t.value = int(t.value)
         return t
-    
-    @_(r't[rR][uU][eE]')
-    def BOOL_CONST(self, t):
-        t.value = True
-        return t
-    
+
+    @_(r't[rR][uU]')
+    def BOOL_CONSTT(self, t):
+        t.type = 'BOOL_CONST'
+        self.begin(BOOLEANT)
+
+    @_(r'f[aA][lL][sS]')
+    def BOOL_CONSTF(self, t):
+        t.type = 'BOOL_CONST'
+        self.begin(BOOLEANF)
+
     @_(r'[a-z][A-Z0-9_a-z]*')
     def OBJECTID(self, t):
         if t.value.lower() in self.key_words:
@@ -89,39 +199,39 @@ class CoolLexer(Lexer):
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
-    
+
     @_(r'\b[wW][hH][iI][lL][eE]\b')
     def WHILE(self, t):
         t.value = (t.value) + 'dddd'
         return t
-    
+
     @_(r'\(\*')
     def COMMENT(self, t):
         self._numero_anidados += 1
         self.begin(Comentario)
-    
+
     @_(r'\*\)')
     def ERRORCIERRE(self, t):
         t.value = '"Unmatched *)"'
         t.type = 'ERROR'
         return t
-        
+
     @_(r'--.*')
     def COMMENT1LINEA(self, t):
         pass
 
     @_(r'.')
-    def ERROR(self, t):
-        print(t)
+    def ERROR(self, t): 
         if t.value in self.literals:
             t.type = t.value
             return t
-        
+        print(t)
+
     def error(self, t):
         self.index += 1
 
-    
-    
+
+
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']
                           for j in range(16)] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
@@ -131,7 +241,7 @@ class CoolLexer(Lexer):
 
     def error(self, t):
         self.index += 1
-        
+
     def salida(self, texto):
         lexer = CoolLexer()
         list_strings = []
@@ -143,20 +253,21 @@ class CoolLexer(Lexer):
                 result += f'-- {token.value}'
             elif token.type == 'STR_CONST':
                 result += token.value
-            elif token.type == 'BOOL_CONST':
-                result += "true" if token.value else "false"
             elif token.type == 'OBJECTID':
                 result += f"{token.value}"
+            elif token.type == 'BOOL_CONST':
+                result += "true" if token.value else "false"
             elif token.type == 'TYPEID':
                 result += f"{str(token.value)}"
+            elif token.type == 'ASSIGN':
+                result = f" {token.type}"
             elif token.type in self.literals:
-                result = f'#{token.lineno} \'{token.type}\' '
-
+                result = f'#{token.lineno} \'{token.type}\''
             elif token.type == 'INT_CONST':
                 result += str(token.value)
             elif token.type == 'ERROR':
                 result = f'#{token.lineno} {token.type} {token.value}'
             else:
                 result = f'#{token.lineno} {token.type}'
-            list_strings.append(result)
+            list_strings.append('\n'+result)
         return list_strings

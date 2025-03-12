@@ -264,13 +264,13 @@ def tokenize(entrada):
         if (state not in ignore_token_state):
             yield Token(line, entrada, state)
 
-# prueba1 = "a = 1\n a"
-# prueba2 = "a"
-# prueba3 = '"esto es un string..." b 3.14.15 3..15'
-# prueba4 = "or and else"
+prueba1 = "a = 1\n a"
+prueba2 = "a"
+prueba3 = '"esto es un string..." b 3.14.15 3..15'
+prueba4 = "or and else"
 
-# for i in tokenize(prueba4):
-#     print("El token es", i)
+for i in tokenize(prueba4):
+    print("El token es", i)
 
 # salida de prueba 1
 

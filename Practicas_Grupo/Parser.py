@@ -60,6 +60,7 @@ a = CoolLexer()
 b = CoolParser()
 aux = a.tokenize("a = 5")
 #aux = a.tokenize("a = 5 + 5 - 2\na + 2")
+#
 # for i in aux:
 #     print(i)
 # print("\n->AUX (tokenizado)=", aux, "\n")

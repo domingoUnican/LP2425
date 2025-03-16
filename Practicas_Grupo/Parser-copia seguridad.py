@@ -8,8 +8,10 @@ from Clases import *
 
 
 class CoolParser(Parser):
-    nombre_fichero = ""
-    tokens = CoolLexer.tokens.union((CoolLexer.literals))
+    nombre_fichero = ''
+    tokens = CoolLexer.tokens
+    literals = CoolLexer.literals
+    # reservados = CoolLexer._key_words
     debugfile = "salida.out"
     errores = []
 
@@ -118,3 +120,8 @@ print(objecto.str(0))
 # @_("", "atributo", "metodo", "serie_atr_met atributo", "serie_atr_met metodo")
 # def serie_atr_met(self, p):
 #     pass
+
+
+
+
+# CON OPERACION BINARIA SE PUEDE HACER LO DE PONER MUCHAS JUNTAS

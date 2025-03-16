@@ -110,7 +110,7 @@ class Strings(Lexer):
         """
         self.contador += 1
         self._caracteres += r"\t"
-        
+
     @_(r"\n")
     def SALTO_LINEA(self, t):
         """
@@ -162,34 +162,57 @@ class CoolLexer(Lexer):
     # Definición de los tokens para Cool. (aqui da igual el orden)
     tokens = {
         # Palabras clave del lenguaje Cool
-        ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC,
-        CLASS, INHERITS, ISVOID, LET, LOOP,
-        NEW, OF, POOL, THEN, WHILE,
-
+        ELSE,
+        IF,
+        FI,
+        THEN,
+        NOT,
+        IN,
+        CASE,
+        ESAC,
+        CLASS,
+        INHERITS,
+        ISVOID,
+        LET,
+        LOOP,
+        NEW,
+        OF,
+        POOL,
+        THEN,
+        WHILE,
         # Cadenas de texto
         STR_CONST,  # Constantes de tipo string
-
         # Operadores y símbolos especiales
-        LE,     # Operador <= (menor o igual)
-        DARROW, # Flecha => (usada en case)
+        LE,  # Operador <= (menor o igual)
+        DARROW,  # Flecha => (usada en case)
         ASSIGN,  # Operador <- (asignación)
-       
-        BOOL_CONST, # Constantes booleanas (true, false)
+        BOOL_CONST,  # Constantes booleanas (true, false)
         INT_CONST,  # Constantes enteras (números)
-        OBJECTID,   # Identificadores de variables o métodos en minúsculas
-        TYPEID,     # Identificadores de tipos (nombres de clases, comienzan con mayúscula) 
-        
-        ERROR # token para los errores
+        OBJECTID,  # Identificadores de variables o métodos en minúsculas
+        TYPEID,  # Identificadores de tipos (nombres de clases, comienzan con mayúscula)
+        ERROR,  # token para los errores
     }
 
     # Lista de caracteres literales que el lexer reconoce directamente sin
     # asociarlos a un token específico.
     literals = {
-        '=', '+', '-', '*', '/',  # Operadores matemáticos
-        '(', ')',                 # Paréntesis para agrupaciones
-        '<', '>',                 # Operadores relacionales
-        '.', '~', ',', ';',       # Símbolos de sintaxis
-        ':', '@', '{', '}'        # Otros símbolos usados en la gramática de Cool
+        "=",
+        "+",
+        "-",
+        "*",
+        "/",  # Operadores matemáticos
+        "(",
+        ")",  # Paréntesis para agrupaciones
+        "<",
+        ">",  # Operadores relacionales
+        ".",
+        "~",
+        ",",
+        ";",  # Símbolos de sintaxis
+        ":",
+        "@",
+        "{",
+        "}",  # Otros símbolos usados en la gramática de Cool
     }
 
     # tiene que haber un ignore y luego ya los demas les pones el nombre con _
@@ -209,16 +232,22 @@ class CoolLexer(Lexer):
 
     # Constantes y tipos
     INT_CONST = r"\d+"  # Constantes enteras (números)
-    BOOL_CONST = r"\bt[rR][uU][eE]\b|\bf[aA][lL][sS][eE]\b" # Constantes booleanas (true, false)
+    BOOL_CONST = (
+        r"\bt[rR][uU][eE]\b|\bf[aA][lL][sS][eE]\b"  # Constantes booleanas (true, false)
+    )
     STR_CONST = r'"'  # Constantes de tipo string (entre comillas dobles)
 
     # Identificadores (lo ultimo porque es muy general)
-    OBJECTID = r"[a-z][A-Z0-9_a-z]*"  # Identificadores de variables o métodos en minúsculas
+    OBJECTID = (
+        r"[a-z][A-Z0-9_a-z]*"  # Identificadores de variables o métodos en minúsculas
+    )
     TYPEID = r"[A-Z][a-zA-Z0-9_]*"  # Identificadores de tipos (nombres de clases, comienzan con mayúscula)
 
-    CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
-                        for i in ['0', '1']
-                        for j in range(16)] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
+    CARACTERES_CONTROL = [
+        bytes.fromhex(i + hex(j)[-1]).decode("ascii")
+        for i in ["0", "1"]
+        for j in range(16)
+    ] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
 
     # una vez definidos los tokens, se pueden definir las funciones que se encargan de manejar los tokens
     # para que hagan cosas especiales
@@ -376,169 +405,3 @@ class CoolLexer(Lexer):
             list_strings.append(result)
 
         return list_strings  # Se devuelve la lista de tokens procesados como strings
-
-
-# -------------------------------------------------------------------------------
-# COSAS QUE FALTAN Y SON PARA COSAS DE GRADING (creo) NO DE MINIMOS
-
-
-# EN COOL LEXER
-
-#  @_(r'[!#$%^&_>\?`\[\]\\\|\x00]')
-#     def ERROR2(self, t):
-#         t.type = "ERROR"
-#         if t.value == '\\':
-#             t.value = '\\\\'
-#         if t.value in self.CARACTERES_CONTROL:
-#             t.value = '\\' + \
-#                 str(oct(int(t.value.encode("ascii").hex(), 16)
-#                         ).replace('o', '0')[-3:])
-#         t.value = '"'+t.value+'"'
-#         return t
-
-#     @_(r'\(\*\*\)')
-#     def COMMENT0(self, t):
-#         pass
-#     @_(r'\(\*$')
-#     def ERROR7(self, t):
-#         t.type = "ERROR"
-#         t.value = '"EOF in comment"'
-#         return t
-
-
-# EN COMENTARIO
-
-# def salida(self, texto):
-#     return ['#1 ERROR "EOF in string constant"']
-
-# @_(r'\n?\(\*\*\)')
-# def COMMENTOPEN(self, t):
-#     pass
-
-
-# EN STRINGS
-
-# def error(self, t):
-#     print(f'ERROR en linea {t.lineno} por {t.value}\n')
-
-
-# @_(r".")
-# def CONSTRUIR_STRING_PRO(self, t):
-#     """
-#     Maneja la construcción de una cadena de caracteres, transformando
-#     los caracteres de control en su representación octal.
-#     """
-#     self.contador += 1  # Incrementa el contador de caracteres procesados.
-#     self._caracteres += t.value
-#     if t.value in CoolLexer.CARACTERES_CONTROL:
-#         # Convierte el carácter de control a su representación octal.
-#         self._caracteres += (
-#             "\\"
-#             + str(oct(int(t.value.encode("ascii").hex(), 16))).replace("o", "0")[
-#                 -3:
-#             ]
-#         )
-#     else:
-#         # Si no es un carácter de control, lo añade tal cual.
-#         self._caracteres += t.value
-
-# @_(r'.*\x00[^"]*"?')
-# def CARACTER_FIN(self, t):
-#     self._caracteres = '"'
-#     t.type = "ERROR"
-#     if '\\\x00' in t.value:
-#         t.value = '"String contains escaped null character."'
-#     else:
-#         t.value = '"String contains null character."'
-#     self.begin(CoolLexer)
-#     return t
-
-
-# @_(r'([^"]|(\\\n))$')
-# def ERROR_FIN_FICHERO_3(self, t):
-#     """
-#     Maneja el final de archivo (EOF) dentro de una cadena sin cerrar.
-#     Se genera un error de "EOF in string constant".
-#     """
-#     t.type = "ERROR"  # Marca el token como error.
-#     t.value = '"EOF in string constant"'  # Mensaje de error.
-#     self._caracteres = '"'  # Resetea la cadena en construcción.
-#     self.begin(CoolLexer)  # Reinicia el lexer para continuar el análisis.
-#     return t
-
-
-# @_(r"\\\n$")
-# def ERROR_FIN_FICHERO_2(self, t):
-#     """
-#     Maneja el caso donde un salto de línea escapado aparece justo antes del EOF.
-#     Genera un error "EOF in string constant".
-#     """
-#     self.lineno += (
-#         1  # Incrementa el número de línea, ya que detectó un salto de línea.
-#     )
-#     self._caracteres = '"'  # Resetea la construcción de la cadena.
-
-#     t.type = "ERROR"  # Marca el token como error.
-#     t.value = '"EOF in string constant"'  # Mensaje de error indicando que la cadena no se cerró.
-
-#     self.contador = 0  # Resetea el contador de caracteres procesados.
-#     self.begin(CoolLexer)  # Reinicia el lexer en su estado principal.
-#     return t
-
-# @_(r'\\"$')
-# def ERROR_FIN_FICHERO(self, t):
-#     """
-#     Detecta una comilla escapada (`\"`) al final del archivo sin cerrar la cadena.
-#     Genera un error "EOF in string constant".
-#     """
-#     self.lineno += 1  # Incrementa el número de línea.
-#     self._caracteres = '"'  # Resetea la construcción de la cadena.
-
-#     t.type = "ERROR"  # Marca el token como error.
-#     t.value = '"EOF in string constant"'  # Mensaje de error.
-
-#     self.contador = 0  # Reinicia el contador de caracteres.
-#     self.begin(CoolLexer)  # Vuelve al lexer en su estado principal.
-#     return t
-
-# @_(r'\\\n')
-# def ADD_LINE(self, t):
-#     self.contador += 1
-#     self.lineno += 1
-#     self._caracteres += r'\n'
-
-
-# @_(r"\\\w")
-# def CARACTERES_ESCAPE_NO_CONOCIDOS(self, t):
-#     """
-#     Maneja caracteres de escape no reconocidos.
-#     Se elimina la barra invertida y solo se mantiene el carácter siguiente.
-#     """
-#     self.contador += 1
-#     self._caracteres += t.value[-1]  # Añade solo el carácter después de '\'.
-
-# @_(r'\\[\\"ntbf]')
-# def CARACTERES_ESCAPE_CONOCIDOS(self, t):
-#     """
-#     Maneja caracteres de escape válidos dentro de una cadena.
-#     Agrega el carácter escapado a la cadena en construcción.
-#     """
-#     self.contador += 1  # Incrementa el contador de caracteres procesados.
-#     self._caracteres += t.value  # Añade el carácter escapado a la cadena.
-
-
-# @_(r"\n")
-# def SALTO_LINEA(self, t):
-#     """
-#     Maneja el caso en que una cadena de texto no se cierra antes de un salto de línea.
-#     Se genera un error de "Unterminated string constant".
-#     """
-#     self._caracteres = '"'  # Resetea la cadena parcial detectada.
-#     self.lineno += (
-#         1  # Incrementa el número de línea, ya que se encontró un salto de línea.
-#     )
-#     t.type = "ERROR"  # Marca el token como un error.
-#     t.value = '"Unterminated string constant"'  # Mensaje de error.
-#     self.contador = 0  # Resetea el contador de caracteres procesados.
-#     self.begin(CoolLexer)  # Reinicia el lexer en su estado principal.
-#     return t

@@ -38,7 +38,7 @@ class CoolLexer(Lexer):
                       "ISVOID","LET", "LOOP", "NEW", "OF", "POOL", 
                       "THEN", "WHILE", "TRUE", "FALSE")
     ignore = '\t '
-    literals = ('.')
+    literals = ('.','+','-','*','/','<','<=','=','(',')','~')
     ELSE = r'\b[eE][lL][sS][eE]\b'
     STR_CONST = r'"[a-zA-Z0-9_/]*"'
     
@@ -80,13 +80,14 @@ class CoolLexer(Lexer):
     
     @_(r'[A-Z][A-Z0-9_a-z]*')
     def TYPEID(self, t):
-        if t.value.upper() not in self.RESERVED_WORDS:
-            t.type = "TYPEID"
+        print(t)
+        if t.value.upper() in self.RESERVED_WORDS:
+            t.type = t.value.upper()
+        print(t)
         return t
 
     @_(r'.')
     def ERROR(self, t):
-        print(t)
         if t.value in self.literals:
             t.type = t.value
             return t

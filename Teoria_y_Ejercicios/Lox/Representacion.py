@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from Lexer import Token
-from typing import List, Optional
+from typing import List, Optional, Any
 
 @dataclass
 class Declaration:
@@ -8,9 +8,8 @@ class Declaration:
 
 @dataclass
 class Primary:
+    value: Any
     pass
-
-
 
 
 @dataclass
@@ -20,7 +19,19 @@ class Unary:
 
 @dataclass
 class Call:
+    pass
+
+@dataclass
+class CallAtribute(Call):
     base: Primary
+    name_atribute = str
+    otras: Call
+
+@dataclass
+class callFunction(Call):
+    base: Primary
+    args: List
+    otras: Call
 
 @dataclass
 class Number(Primary):
@@ -42,13 +53,22 @@ class Factor:
         output += self.first_un.tostring(n+2) + "\n"
         output += self.second_un.tostring(n+2) + "\n"
         return output
-            
+             
+@dataclass
+class Parameter:
+    name: str
+    body: Optional[str]    
 
 @dataclass
 class Function:
     name: str
     params: List['Parameter']
     body: 'Block'
+
+
+@dataclass
+class Statement(Declaration):
+    pass
 
 @dataclass
 class ClassDeclaration(Declaration):
@@ -61,13 +81,24 @@ class FunctionDeclaration(Declaration):
     fun: Function
 
 @dataclass
+class Assignment:
+    name: str
+    atr: Optional["Assignment"]
+
+
+@dataclass
+class Expression(Primary):
+    assgn: Assignment
+
+@dataclass
+class ExprStmt(Statement):
+    expr: Expression
+
+
+@dataclass
 class VarDeclaration(Declaration):
     name: str
     expr: 'Expression'
-
-@dataclass
-class Statement(Declaration):
-    pass
 
 @dataclass
 class Program:

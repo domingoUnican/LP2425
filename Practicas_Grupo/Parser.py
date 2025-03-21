@@ -13,6 +13,14 @@ class CoolParser(Parser):
     debugfile = "salida.out"
     errores = []
 
+    @_("INT_CONST")
+    def expression(self, p):
+        return Entero(valor=p[0])
+    
+    @_("expression '+' expression")
+    def expression(self, p):
+        return Suma(izquierda=p[2], derecha=p[0])
+'''
     @_("Clase ';'")
     def Programa(self, p):
         pass
@@ -33,5 +41,8 @@ class CoolParser(Parser):
     @_("", "atributo", "metodo", "serie_atr_met atributo", "serie_atr_met metodo")
     def serie_atr_met(self, p):
         pass
-
-    
+'''
+a = CoolLexer()
+b = CoolParser()
+objeto = b.parse(a.tokenize("1+2+3"))
+print(objeto.str(0))    

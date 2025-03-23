@@ -269,8 +269,8 @@ prueba2 = "a"
 prueba3 = '"esto es un string" b'
 prueba4 = "or and if "
 
-for i in tokenize(prueba4):
-    print("El token es ", i)
+#for i in tokenize(prueba4):
+    #print("El token es ", i)
 
 
 # salida de prueba 1

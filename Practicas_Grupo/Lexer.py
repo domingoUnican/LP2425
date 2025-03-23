@@ -38,14 +38,19 @@ class CoolLexer(Lexer):
     literals = {'==', '+', '-', '*', '/',
                 '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}','='}
     ELSE = r'\b[eE][lL][sS][eE]\b'
-    STR_CONST = r'"[a-zA-Z0-9_/]*"'
+    STR_CONST = r'"[\w,\s\\]*"'
     
     @_(r'\(\*')
-    def COMMENT(self, t):
+    def BLOCKCOMMENT(self, t):
         self.begin(Comentario)
     
+    def STR_CONST(self, t):
+        t.type = 'STR_CONST'
+        t.value = re.sub(r'\\([^btnr])', r'\1', t.value)
+        return t
+    
     @_(r'--.*')
-    def COMMENT(self, t):
+    def LINECOMMENT(self, t):
         pass
 
     @_(r'[a-z][A-Z0-9_a-z]*')
@@ -62,11 +67,7 @@ class CoolLexer(Lexer):
                                "POOL", "THEN", "WHILE", "TRUE", "FALSE"):
             t.type = t.value.upper()
         return t
-    @_(r'.')
-    def LITERAL(self, t):
-        if t.value in self.literals:
-            t.type = "LITERAL"
-        return t
+    
     @_(r'-?[0-9]+')
     def INT_CONST(self, t):
         t.value = int(t.value)
@@ -80,27 +81,24 @@ class CoolLexer(Lexer):
     @_(r'<-')
     def ASSIGN(self, t):
         return t
-    @_(r'/s')
+    @_(r'\s')
     def SPACE(self, t):
         pass
-    @_(r'"\w*"')
-    def STR_CONST(self, t):
-        t.type = 'STR_CONST'
-        t.value = re.sub(r'\\([^\Wbtnr"])', r'\1', t.value)
-        return t
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
+
+    @_(r'.')
+    def LITERAL(self, t):
+        if t.value in self.literals:
+            t.type = t.value
+        return t
 
     @_(r'.')
     def ERROR(self, t):
         print(t)
         if t.value in self.literals:
             t.type = t.value
-    
-    @_(r'\w+')
-    def TYPEID(self, t):
-        return t
 
     def error(self, t):
         self.index += 1
@@ -109,9 +107,6 @@ class CoolLexer(Lexer):
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']
                           for j in range(16)] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
-    @_(r'\(\*')
-    def IR(self, t):
-        self.begin(Comentario)
 
     def error(self, t):
         self.index += 1
@@ -141,19 +136,12 @@ class CoolLexer(Lexer):
         return list_strings
         
 if __name__ == '__main__':
-    lexer = CoolLexer()
-    texto = """ a <- 1;
-    b = c;
-    e = "hola\t";
-    while (b < c)
-    {
-        a++;
-    }
-    """
-    comentario = """(* fjkdsj (* fjk
-                        dl;sa bjk;lfjk;a fd
-                        saj;l jk
-                        kd;a *)
-                """
-    for i in lexer.tokenize(comentario):
-        print(i)
+    
+    directory = './01/grading'
+    for filename in os.listdir(directory):
+        if filename.endswith(".txt"):
+            filepath = os.path.join(directory, filename)
+            with open(filepath, 'r', encoding='utf-8') as file:
+                content = file.read()
+                for token in lexer.tokenize(content):
+                    print(token)

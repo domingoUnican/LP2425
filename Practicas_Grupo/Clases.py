@@ -188,7 +188,7 @@ class Nueva(Nodo):
         resultado = super().str(n)
         resultado += f'{(n)*" "}_new\n'
         resultado += f'{(n+2)*" "}{self.tipo}\n'
-        resultado += f'{(n)*" "}: {self.cast}\n'
+        # resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
 

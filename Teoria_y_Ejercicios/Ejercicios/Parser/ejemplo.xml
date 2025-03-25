@@ -1,0 +1,34 @@
+<library>
+    <book id="1">
+        <title>El Quijote</title>
+        <author>
+            <name>Miguel de Cervantes</name>
+            <birthdate>1547-09-29</birthdate>
+        </author>
+        <genre>Fiction</genre>
+        <published>1605</published>
+    </book>
+    <book id="2">
+        <title>Cien Años de Soledad</title>
+        <author>
+            <name>Gabriel García Márquez</name>
+            <birthdate>1927-03-06</birthdate>
+        </author>
+        <genre>Magical Realism</genre>
+        <published>1967</published>
+    </book>
+    <magazine id="1">
+        <title>National Geographic</title>
+        <issue>March 2025</issue>
+        <articles>
+            <article>
+                <title>Exploring the Amazon</title>
+                <author>Jane Doe</author>
+            </article>
+            <article>
+                <title>Climate Change Impacts</title>
+                <author>John Smith</author>
+            </article>
+        </articles>
+    </magazine>
+</library>

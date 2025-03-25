@@ -1,0 +1,2244 @@
+Grammar:
+
+Rule 0     S' -> expression
+Rule 1     expression -> _1_expressions_repeat
+Rule 2     _1_expressions_repeat -> _1_expressions_items
+Rule 3     _1_expressions_repeat -> <empty>
+Rule 4     _1_expressions_items -> _1_expressions_items _1_expressions_item
+Rule 5     _1_expressions_items -> _1_expressions_item
+Rule 6     _1_expressions_item -> expressions
+Rule 7     expression -> WHILE expression LOOP expression POOL
+Rule 8     expression -> IF expression THEN expression ELSE expression FI
+Rule 9     expression -> ~ expression )
+Rule 10    expression -> ISVOID expression )
+Rule 11    expression -> NOT expression )
+Rule 12    expression -> ( expression )
+Rule 13    expression -> expression = expression
+Rule 14    expression -> expression <= expression
+Rule 15    expression -> expression < expression
+Rule 16    expression -> expression / expression
+Rule 17    expression -> expression * expression
+Rule 18    expression -> expression - expression
+Rule 19    expression -> expression + expression
+Rule 20    expression -> BOOL_CONST
+Rule 21    expression -> STR_CONST
+Rule 22    expression -> INT_CONST
+Rule 23    expression -> OBJECTID
+Rule 24    expression -> NEW TYPEID
+Rule 25    expressions -> expressions expression ;
+Rule 26    expressions -> expression ;
+
+Unused terminals:
+
+    ASSIGN
+    DARROW
+    .
+    CASE
+    IN
+    {
+    LET
+    INHERITS
+    LE
+    }
+    CLASS
+    OF
+    ESAC
+
+Terminals, with rules where they appear:
+
+(                    : 12
+)                    : 9 10 11 12
+*                    : 17
++                    : 19
+-                    : 18
+.                    : 
+/                    : 16
+;                    : 25 26
+<                    : 15
+<=                   : 14
+=                    : 13
+ASSIGN               : 
+BOOL_CONST           : 20
+CASE                 : 
+CLASS                : 
+DARROW               : 
+ELSE                 : 8
+ESAC                 : 
+FI                   : 8
+IF                   : 8
+IN                   : 
+INHERITS             : 
+INT_CONST            : 22
+ISVOID               : 10
+LE                   : 
+LET                  : 
+LOOP                 : 7
+NEW                  : 24
+NOT                  : 11
+OBJECTID             : 23
+OF                   : 
+POOL                 : 7
+STR_CONST            : 21
+THEN                 : 8
+TYPEID               : 24
+WHILE                : 7
+error                : 
+{                    : 
+}                    : 
+~                    : 9
+
+Nonterminals, with rules where they appear:
+
+_1_expressions_item  : 4 5
+_1_expressions_items : 2 4
+_1_expressions_repeat : 1
+expression           : 7 7 8 8 8 9 10 11 12 13 13 14 14 15 15 16 16 17 17 18 18 19 19 25 26 0
+expressions          : 6 25
+
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 1
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 1
+
+    (0) S' -> expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 2
+
+    (1) expression -> _1_expressions_repeat .
+    =               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    <=              reduce using rule 1 (expression -> _1_expressions_repeat .)
+    <               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    /               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    *               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    -               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    +               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    ;               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    $end            reduce using rule 1 (expression -> _1_expressions_repeat .)
+    LOOP            reduce using rule 1 (expression -> _1_expressions_repeat .)
+    THEN            reduce using rule 1 (expression -> _1_expressions_repeat .)
+    )               reduce using rule 1 (expression -> _1_expressions_repeat .)
+    POOL            reduce using rule 1 (expression -> _1_expressions_repeat .)
+    ELSE            reduce using rule 1 (expression -> _1_expressions_repeat .)
+    FI              reduce using rule 1 (expression -> _1_expressions_repeat .)
+
+
+state 3
+
+    (7) expression -> WHILE . expression LOOP expression POOL
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 25
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 4
+
+    (8) expression -> IF . expression THEN expression ELSE expression FI
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 26
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 5
+
+    (9) expression -> ~ . expression )
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 27
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 6
+
+    (10) expression -> ISVOID . expression )
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 28
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 7
+
+    (11) expression -> NOT . expression )
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 29
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 8
+
+    (12) expression -> ( . expression )
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 30
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 9
+
+    (20) expression -> BOOL_CONST .
+    =               reduce using rule 20 (expression -> BOOL_CONST .)
+    <=              reduce using rule 20 (expression -> BOOL_CONST .)
+    <               reduce using rule 20 (expression -> BOOL_CONST .)
+    /               reduce using rule 20 (expression -> BOOL_CONST .)
+    *               reduce using rule 20 (expression -> BOOL_CONST .)
+    -               reduce using rule 20 (expression -> BOOL_CONST .)
+    +               reduce using rule 20 (expression -> BOOL_CONST .)
+    ;               reduce using rule 20 (expression -> BOOL_CONST .)
+    $end            reduce using rule 20 (expression -> BOOL_CONST .)
+    LOOP            reduce using rule 20 (expression -> BOOL_CONST .)
+    THEN            reduce using rule 20 (expression -> BOOL_CONST .)
+    )               reduce using rule 20 (expression -> BOOL_CONST .)
+    POOL            reduce using rule 20 (expression -> BOOL_CONST .)
+    ELSE            reduce using rule 20 (expression -> BOOL_CONST .)
+    FI              reduce using rule 20 (expression -> BOOL_CONST .)
+
+
+state 10
+
+    (21) expression -> STR_CONST .
+    =               reduce using rule 21 (expression -> STR_CONST .)
+    <=              reduce using rule 21 (expression -> STR_CONST .)
+    <               reduce using rule 21 (expression -> STR_CONST .)
+    /               reduce using rule 21 (expression -> STR_CONST .)
+    *               reduce using rule 21 (expression -> STR_CONST .)
+    -               reduce using rule 21 (expression -> STR_CONST .)
+    +               reduce using rule 21 (expression -> STR_CONST .)
+    ;               reduce using rule 21 (expression -> STR_CONST .)
+    $end            reduce using rule 21 (expression -> STR_CONST .)
+    LOOP            reduce using rule 21 (expression -> STR_CONST .)
+    THEN            reduce using rule 21 (expression -> STR_CONST .)
+    )               reduce using rule 21 (expression -> STR_CONST .)
+    POOL            reduce using rule 21 (expression -> STR_CONST .)
+    ELSE            reduce using rule 21 (expression -> STR_CONST .)
+    FI              reduce using rule 21 (expression -> STR_CONST .)
+
+
+state 11
+
+    (22) expression -> INT_CONST .
+    =               reduce using rule 22 (expression -> INT_CONST .)
+    <=              reduce using rule 22 (expression -> INT_CONST .)
+    <               reduce using rule 22 (expression -> INT_CONST .)
+    /               reduce using rule 22 (expression -> INT_CONST .)
+    *               reduce using rule 22 (expression -> INT_CONST .)
+    -               reduce using rule 22 (expression -> INT_CONST .)
+    +               reduce using rule 22 (expression -> INT_CONST .)
+    ;               reduce using rule 22 (expression -> INT_CONST .)
+    $end            reduce using rule 22 (expression -> INT_CONST .)
+    LOOP            reduce using rule 22 (expression -> INT_CONST .)
+    THEN            reduce using rule 22 (expression -> INT_CONST .)
+    )               reduce using rule 22 (expression -> INT_CONST .)
+    POOL            reduce using rule 22 (expression -> INT_CONST .)
+    ELSE            reduce using rule 22 (expression -> INT_CONST .)
+    FI              reduce using rule 22 (expression -> INT_CONST .)
+
+
+state 12
+
+    (23) expression -> OBJECTID .
+    =               reduce using rule 23 (expression -> OBJECTID .)
+    <=              reduce using rule 23 (expression -> OBJECTID .)
+    <               reduce using rule 23 (expression -> OBJECTID .)
+    /               reduce using rule 23 (expression -> OBJECTID .)
+    *               reduce using rule 23 (expression -> OBJECTID .)
+    -               reduce using rule 23 (expression -> OBJECTID .)
+    +               reduce using rule 23 (expression -> OBJECTID .)
+    ;               reduce using rule 23 (expression -> OBJECTID .)
+    $end            reduce using rule 23 (expression -> OBJECTID .)
+    LOOP            reduce using rule 23 (expression -> OBJECTID .)
+    THEN            reduce using rule 23 (expression -> OBJECTID .)
+    )               reduce using rule 23 (expression -> OBJECTID .)
+    POOL            reduce using rule 23 (expression -> OBJECTID .)
+    ELSE            reduce using rule 23 (expression -> OBJECTID .)
+    FI              reduce using rule 23 (expression -> OBJECTID .)
+
+
+state 13
+
+    (24) expression -> NEW . TYPEID
+    TYPEID          shift and go to state 31
+
+
+state 14
+
+    (2) _1_expressions_repeat -> _1_expressions_items .
+    (4) _1_expressions_items -> _1_expressions_items . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+  ! reduce/reduce conflict for ; resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+  ! reduce/reduce conflict for = resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+  ! reduce/reduce conflict for <= resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+  ! reduce/reduce conflict for < resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+  ! reduce/reduce conflict for / resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+  ! reduce/reduce conflict for * resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+  ! reduce/reduce conflict for - resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+  ! reduce/reduce conflict for + resolved using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    =               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    <=              reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    <               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    /               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    *               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    -               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    +               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    ;               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    $end            reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    LOOP            reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    THEN            reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    )               reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    POOL            reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    ELSE            reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    FI              reduce using rule 2 (_1_expressions_repeat -> _1_expressions_items .)
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 32
+    expressions                    shift and go to state 16
+    expression                     shift and go to state 33
+    _1_expressions_repeat          shift and go to state 2
+
+state 15
+
+    (5) _1_expressions_items -> _1_expressions_item .
+    WHILE           reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    IF              reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    ~               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    ISVOID          reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    NOT             reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    (               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    BOOL_CONST      reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    STR_CONST       reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    INT_CONST       reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    OBJECTID        reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    NEW             reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    ;               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    =               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    <=              reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    <               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    /               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    *               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    -               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    +               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    $end            reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    LOOP            reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    THEN            reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    )               reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    POOL            reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    ELSE            reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+    FI              reduce using rule 5 (_1_expressions_items -> _1_expressions_item .)
+
+
+state 16
+
+    (6) _1_expressions_item -> expressions .
+    (25) expressions -> expressions . expression ;
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+  ! shift/reduce conflict for WHILE resolved as shift
+  ! shift/reduce conflict for IF resolved as shift
+  ! shift/reduce conflict for ~ resolved as shift
+  ! shift/reduce conflict for ISVOID resolved as shift
+  ! shift/reduce conflict for NOT resolved as shift
+  ! shift/reduce conflict for ( resolved as shift
+  ! shift/reduce conflict for BOOL_CONST resolved as shift
+  ! shift/reduce conflict for STR_CONST resolved as shift
+  ! shift/reduce conflict for INT_CONST resolved as shift
+  ! shift/reduce conflict for OBJECTID resolved as shift
+  ! shift/reduce conflict for NEW resolved as shift
+  ! reduce/reduce conflict for ; resolved using rule 3 (_1_expressions_repeat -> .)
+  ! reduce/reduce conflict for = resolved using rule 3 (_1_expressions_repeat -> .)
+  ! reduce/reduce conflict for <= resolved using rule 3 (_1_expressions_repeat -> .)
+  ! reduce/reduce conflict for < resolved using rule 3 (_1_expressions_repeat -> .)
+  ! reduce/reduce conflict for / resolved using rule 3 (_1_expressions_repeat -> .)
+  ! reduce/reduce conflict for * resolved using rule 3 (_1_expressions_repeat -> .)
+  ! reduce/reduce conflict for - resolved using rule 3 (_1_expressions_repeat -> .)
+  ! reduce/reduce conflict for + resolved using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 6 (_1_expressions_item -> expressions .)
+    LOOP            reduce using rule 6 (_1_expressions_item -> expressions .)
+    THEN            reduce using rule 6 (_1_expressions_item -> expressions .)
+    )               reduce using rule 6 (_1_expressions_item -> expressions .)
+    POOL            reduce using rule 6 (_1_expressions_item -> expressions .)
+    ELSE            reduce using rule 6 (_1_expressions_item -> expressions .)
+    FI              reduce using rule 6 (_1_expressions_item -> expressions .)
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expressions                    shift and go to state 16
+    expression                     shift and go to state 34
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+
+state 17
+
+    (13) expression -> expression = . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 35
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 18
+
+    (14) expression -> expression <= . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 36
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 19
+
+    (15) expression -> expression < . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 37
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 20
+
+    (16) expression -> expression / . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 38
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 21
+
+    (17) expression -> expression * . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 39
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 22
+
+    (18) expression -> expression - . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 40
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 23
+
+    (19) expression -> expression + . expression
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+    $end            reduce using rule 3 (_1_expressions_repeat -> .)
+    LOOP            reduce using rule 3 (_1_expressions_repeat -> .)
+    THEN            reduce using rule 3 (_1_expressions_repeat -> .)
+    )               reduce using rule 3 (_1_expressions_repeat -> .)
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 41
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 24
+
+    (26) expressions -> expression ; .
+    WHILE           reduce using rule 26 (expressions -> expression ; .)
+    IF              reduce using rule 26 (expressions -> expression ; .)
+    ~               reduce using rule 26 (expressions -> expression ; .)
+    ISVOID          reduce using rule 26 (expressions -> expression ; .)
+    NOT             reduce using rule 26 (expressions -> expression ; .)
+    (               reduce using rule 26 (expressions -> expression ; .)
+    BOOL_CONST      reduce using rule 26 (expressions -> expression ; .)
+    STR_CONST       reduce using rule 26 (expressions -> expression ; .)
+    INT_CONST       reduce using rule 26 (expressions -> expression ; .)
+    OBJECTID        reduce using rule 26 (expressions -> expression ; .)
+    NEW             reduce using rule 26 (expressions -> expression ; .)
+    ;               reduce using rule 26 (expressions -> expression ; .)
+    =               reduce using rule 26 (expressions -> expression ; .)
+    <=              reduce using rule 26 (expressions -> expression ; .)
+    <               reduce using rule 26 (expressions -> expression ; .)
+    /               reduce using rule 26 (expressions -> expression ; .)
+    *               reduce using rule 26 (expressions -> expression ; .)
+    -               reduce using rule 26 (expressions -> expression ; .)
+    +               reduce using rule 26 (expressions -> expression ; .)
+    $end            reduce using rule 26 (expressions -> expression ; .)
+    LOOP            reduce using rule 26 (expressions -> expression ; .)
+    THEN            reduce using rule 26 (expressions -> expression ; .)
+    )               reduce using rule 26 (expressions -> expression ; .)
+    POOL            reduce using rule 26 (expressions -> expression ; .)
+    ELSE            reduce using rule 26 (expressions -> expression ; .)
+    FI              reduce using rule 26 (expressions -> expression ; .)
+
+
+state 25
+
+    (7) expression -> WHILE expression . LOOP expression POOL
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    LOOP            shift and go to state 42
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 26
+
+    (8) expression -> IF expression . THEN expression ELSE expression FI
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    THEN            shift and go to state 43
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 27
+
+    (9) expression -> ~ expression . )
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    )               shift and go to state 44
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 28
+
+    (10) expression -> ISVOID expression . )
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    )               shift and go to state 45
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 29
+
+    (11) expression -> NOT expression . )
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    )               shift and go to state 46
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 30
+
+    (12) expression -> ( expression . )
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    )               shift and go to state 47
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 31
+
+    (24) expression -> NEW TYPEID .
+    =               reduce using rule 24 (expression -> NEW TYPEID .)
+    <=              reduce using rule 24 (expression -> NEW TYPEID .)
+    <               reduce using rule 24 (expression -> NEW TYPEID .)
+    /               reduce using rule 24 (expression -> NEW TYPEID .)
+    *               reduce using rule 24 (expression -> NEW TYPEID .)
+    -               reduce using rule 24 (expression -> NEW TYPEID .)
+    +               reduce using rule 24 (expression -> NEW TYPEID .)
+    ;               reduce using rule 24 (expression -> NEW TYPEID .)
+    $end            reduce using rule 24 (expression -> NEW TYPEID .)
+    LOOP            reduce using rule 24 (expression -> NEW TYPEID .)
+    THEN            reduce using rule 24 (expression -> NEW TYPEID .)
+    )               reduce using rule 24 (expression -> NEW TYPEID .)
+    POOL            reduce using rule 24 (expression -> NEW TYPEID .)
+    ELSE            reduce using rule 24 (expression -> NEW TYPEID .)
+    FI              reduce using rule 24 (expression -> NEW TYPEID .)
+
+
+state 32
+
+    (4) _1_expressions_items -> _1_expressions_items _1_expressions_item .
+    (5) _1_expressions_items -> _1_expressions_item .
+  ! reduce/reduce conflict for WHILE resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for IF resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for ~ resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for ISVOID resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for NOT resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for ( resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for BOOL_CONST resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for STR_CONST resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for INT_CONST resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for OBJECTID resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for NEW resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for ; resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for = resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for <= resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for < resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for / resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for * resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for - resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+  ! reduce/reduce conflict for + resolved using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    WHILE           reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    IF              reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    ~               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    ISVOID          reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    NOT             reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    (               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    BOOL_CONST      reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    STR_CONST       reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    INT_CONST       reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    OBJECTID        reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    NEW             reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    ;               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    =               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    <=              reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    <               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    /               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    *               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    -               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    +               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    $end            reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    LOOP            reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    THEN            reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    )               reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    POOL            reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    ELSE            reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+    FI              reduce using rule 4 (_1_expressions_items -> _1_expressions_items _1_expressions_item .)
+
+
+state 33
+
+    (26) expressions -> expression . ;
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    ;               shift and go to state 24
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+
+
+state 34
+
+    (25) expressions -> expressions expression . ;
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    ;               shift and go to state 48
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+
+
+state 35
+
+    (13) expression -> expression = expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+  ! shift/reduce conflict for = resolved as shift
+  ! shift/reduce conflict for <= resolved as shift
+  ! shift/reduce conflict for < resolved as shift
+  ! shift/reduce conflict for / resolved as shift
+  ! shift/reduce conflict for * resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for ; resolved as shift
+    $end            reduce using rule 13 (expression -> expression = expression .)
+    LOOP            reduce using rule 13 (expression -> expression = expression .)
+    THEN            reduce using rule 13 (expression -> expression = expression .)
+    )               reduce using rule 13 (expression -> expression = expression .)
+    POOL            reduce using rule 13 (expression -> expression = expression .)
+    ELSE            reduce using rule 13 (expression -> expression = expression .)
+    FI              reduce using rule 13 (expression -> expression = expression .)
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 36
+
+    (14) expression -> expression <= expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+  ! shift/reduce conflict for = resolved as shift
+  ! shift/reduce conflict for <= resolved as shift
+  ! shift/reduce conflict for < resolved as shift
+  ! shift/reduce conflict for / resolved as shift
+  ! shift/reduce conflict for * resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for ; resolved as shift
+    $end            reduce using rule 14 (expression -> expression <= expression .)
+    LOOP            reduce using rule 14 (expression -> expression <= expression .)
+    THEN            reduce using rule 14 (expression -> expression <= expression .)
+    )               reduce using rule 14 (expression -> expression <= expression .)
+    POOL            reduce using rule 14 (expression -> expression <= expression .)
+    ELSE            reduce using rule 14 (expression -> expression <= expression .)
+    FI              reduce using rule 14 (expression -> expression <= expression .)
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 37
+
+    (15) expression -> expression < expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+  ! shift/reduce conflict for = resolved as shift
+  ! shift/reduce conflict for <= resolved as shift
+  ! shift/reduce conflict for < resolved as shift
+  ! shift/reduce conflict for / resolved as shift
+  ! shift/reduce conflict for * resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for ; resolved as shift
+    $end            reduce using rule 15 (expression -> expression < expression .)
+    LOOP            reduce using rule 15 (expression -> expression < expression .)
+    THEN            reduce using rule 15 (expression -> expression < expression .)
+    )               reduce using rule 15 (expression -> expression < expression .)
+    POOL            reduce using rule 15 (expression -> expression < expression .)
+    ELSE            reduce using rule 15 (expression -> expression < expression .)
+    FI              reduce using rule 15 (expression -> expression < expression .)
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 38
+
+    (16) expression -> expression / expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+  ! shift/reduce conflict for = resolved as shift
+  ! shift/reduce conflict for <= resolved as shift
+  ! shift/reduce conflict for < resolved as shift
+  ! shift/reduce conflict for / resolved as shift
+  ! shift/reduce conflict for * resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for ; resolved as shift
+    $end            reduce using rule 16 (expression -> expression / expression .)
+    LOOP            reduce using rule 16 (expression -> expression / expression .)
+    THEN            reduce using rule 16 (expression -> expression / expression .)
+    )               reduce using rule 16 (expression -> expression / expression .)
+    POOL            reduce using rule 16 (expression -> expression / expression .)
+    ELSE            reduce using rule 16 (expression -> expression / expression .)
+    FI              reduce using rule 16 (expression -> expression / expression .)
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 39
+
+    (17) expression -> expression * expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+  ! shift/reduce conflict for = resolved as shift
+  ! shift/reduce conflict for <= resolved as shift
+  ! shift/reduce conflict for < resolved as shift
+  ! shift/reduce conflict for / resolved as shift
+  ! shift/reduce conflict for * resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for ; resolved as shift
+    $end            reduce using rule 17 (expression -> expression * expression .)
+    LOOP            reduce using rule 17 (expression -> expression * expression .)
+    THEN            reduce using rule 17 (expression -> expression * expression .)
+    )               reduce using rule 17 (expression -> expression * expression .)
+    POOL            reduce using rule 17 (expression -> expression * expression .)
+    ELSE            reduce using rule 17 (expression -> expression * expression .)
+    FI              reduce using rule 17 (expression -> expression * expression .)
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 40
+
+    (18) expression -> expression - expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+  ! shift/reduce conflict for = resolved as shift
+  ! shift/reduce conflict for <= resolved as shift
+  ! shift/reduce conflict for < resolved as shift
+  ! shift/reduce conflict for / resolved as shift
+  ! shift/reduce conflict for * resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for ; resolved as shift
+    $end            reduce using rule 18 (expression -> expression - expression .)
+    LOOP            reduce using rule 18 (expression -> expression - expression .)
+    THEN            reduce using rule 18 (expression -> expression - expression .)
+    )               reduce using rule 18 (expression -> expression - expression .)
+    POOL            reduce using rule 18 (expression -> expression - expression .)
+    ELSE            reduce using rule 18 (expression -> expression - expression .)
+    FI              reduce using rule 18 (expression -> expression - expression .)
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 41
+
+    (19) expression -> expression + expression .
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+  ! shift/reduce conflict for = resolved as shift
+  ! shift/reduce conflict for <= resolved as shift
+  ! shift/reduce conflict for < resolved as shift
+  ! shift/reduce conflict for / resolved as shift
+  ! shift/reduce conflict for * resolved as shift
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+  ! shift/reduce conflict for ; resolved as shift
+    $end            reduce using rule 19 (expression -> expression + expression .)
+    LOOP            reduce using rule 19 (expression -> expression + expression .)
+    THEN            reduce using rule 19 (expression -> expression + expression .)
+    )               reduce using rule 19 (expression -> expression + expression .)
+    POOL            reduce using rule 19 (expression -> expression + expression .)
+    ELSE            reduce using rule 19 (expression -> expression + expression .)
+    FI              reduce using rule 19 (expression -> expression + expression .)
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 42
+
+    (7) expression -> WHILE expression LOOP . expression POOL
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    POOL            reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 49
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 43
+
+    (8) expression -> IF expression THEN . expression ELSE expression FI
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    ELSE            reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 50
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 44
+
+    (9) expression -> ~ expression ) .
+    =               reduce using rule 9 (expression -> ~ expression ) .)
+    <=              reduce using rule 9 (expression -> ~ expression ) .)
+    <               reduce using rule 9 (expression -> ~ expression ) .)
+    /               reduce using rule 9 (expression -> ~ expression ) .)
+    *               reduce using rule 9 (expression -> ~ expression ) .)
+    -               reduce using rule 9 (expression -> ~ expression ) .)
+    +               reduce using rule 9 (expression -> ~ expression ) .)
+    ;               reduce using rule 9 (expression -> ~ expression ) .)
+    $end            reduce using rule 9 (expression -> ~ expression ) .)
+    LOOP            reduce using rule 9 (expression -> ~ expression ) .)
+    THEN            reduce using rule 9 (expression -> ~ expression ) .)
+    )               reduce using rule 9 (expression -> ~ expression ) .)
+    POOL            reduce using rule 9 (expression -> ~ expression ) .)
+    ELSE            reduce using rule 9 (expression -> ~ expression ) .)
+    FI              reduce using rule 9 (expression -> ~ expression ) .)
+
+
+state 45
+
+    (10) expression -> ISVOID expression ) .
+    =               reduce using rule 10 (expression -> ISVOID expression ) .)
+    <=              reduce using rule 10 (expression -> ISVOID expression ) .)
+    <               reduce using rule 10 (expression -> ISVOID expression ) .)
+    /               reduce using rule 10 (expression -> ISVOID expression ) .)
+    *               reduce using rule 10 (expression -> ISVOID expression ) .)
+    -               reduce using rule 10 (expression -> ISVOID expression ) .)
+    +               reduce using rule 10 (expression -> ISVOID expression ) .)
+    ;               reduce using rule 10 (expression -> ISVOID expression ) .)
+    $end            reduce using rule 10 (expression -> ISVOID expression ) .)
+    LOOP            reduce using rule 10 (expression -> ISVOID expression ) .)
+    THEN            reduce using rule 10 (expression -> ISVOID expression ) .)
+    )               reduce using rule 10 (expression -> ISVOID expression ) .)
+    POOL            reduce using rule 10 (expression -> ISVOID expression ) .)
+    ELSE            reduce using rule 10 (expression -> ISVOID expression ) .)
+    FI              reduce using rule 10 (expression -> ISVOID expression ) .)
+
+
+state 46
+
+    (11) expression -> NOT expression ) .
+    =               reduce using rule 11 (expression -> NOT expression ) .)
+    <=              reduce using rule 11 (expression -> NOT expression ) .)
+    <               reduce using rule 11 (expression -> NOT expression ) .)
+    /               reduce using rule 11 (expression -> NOT expression ) .)
+    *               reduce using rule 11 (expression -> NOT expression ) .)
+    -               reduce using rule 11 (expression -> NOT expression ) .)
+    +               reduce using rule 11 (expression -> NOT expression ) .)
+    ;               reduce using rule 11 (expression -> NOT expression ) .)
+    $end            reduce using rule 11 (expression -> NOT expression ) .)
+    LOOP            reduce using rule 11 (expression -> NOT expression ) .)
+    THEN            reduce using rule 11 (expression -> NOT expression ) .)
+    )               reduce using rule 11 (expression -> NOT expression ) .)
+    POOL            reduce using rule 11 (expression -> NOT expression ) .)
+    ELSE            reduce using rule 11 (expression -> NOT expression ) .)
+    FI              reduce using rule 11 (expression -> NOT expression ) .)
+
+
+state 47
+
+    (12) expression -> ( expression ) .
+    =               reduce using rule 12 (expression -> ( expression ) .)
+    <=              reduce using rule 12 (expression -> ( expression ) .)
+    <               reduce using rule 12 (expression -> ( expression ) .)
+    /               reduce using rule 12 (expression -> ( expression ) .)
+    *               reduce using rule 12 (expression -> ( expression ) .)
+    -               reduce using rule 12 (expression -> ( expression ) .)
+    +               reduce using rule 12 (expression -> ( expression ) .)
+    ;               reduce using rule 12 (expression -> ( expression ) .)
+    $end            reduce using rule 12 (expression -> ( expression ) .)
+    LOOP            reduce using rule 12 (expression -> ( expression ) .)
+    THEN            reduce using rule 12 (expression -> ( expression ) .)
+    )               reduce using rule 12 (expression -> ( expression ) .)
+    POOL            reduce using rule 12 (expression -> ( expression ) .)
+    ELSE            reduce using rule 12 (expression -> ( expression ) .)
+    FI              reduce using rule 12 (expression -> ( expression ) .)
+
+
+state 48
+
+    (25) expressions -> expressions expression ; .
+    (26) expressions -> expression ; .
+  ! reduce/reduce conflict for WHILE resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for IF resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for ~ resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for ISVOID resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for NOT resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for ( resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for BOOL_CONST resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for STR_CONST resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for INT_CONST resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for OBJECTID resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for NEW resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for ; resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for = resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for <= resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for < resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for / resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for * resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for - resolved using rule 26 (expressions -> expression ; .)
+  ! reduce/reduce conflict for + resolved using rule 26 (expressions -> expression ; .)
+    $end            reduce using rule 25 (expressions -> expressions expression ; .)
+    LOOP            reduce using rule 25 (expressions -> expressions expression ; .)
+    THEN            reduce using rule 25 (expressions -> expressions expression ; .)
+    )               reduce using rule 25 (expressions -> expressions expression ; .)
+    POOL            reduce using rule 25 (expressions -> expressions expression ; .)
+    ELSE            reduce using rule 25 (expressions -> expressions expression ; .)
+    FI              reduce using rule 25 (expressions -> expressions expression ; .)
+    WHILE           reduce using rule 26 (expressions -> expression ; .)
+    IF              reduce using rule 26 (expressions -> expression ; .)
+    ~               reduce using rule 26 (expressions -> expression ; .)
+    ISVOID          reduce using rule 26 (expressions -> expression ; .)
+    NOT             reduce using rule 26 (expressions -> expression ; .)
+    (               reduce using rule 26 (expressions -> expression ; .)
+    BOOL_CONST      reduce using rule 26 (expressions -> expression ; .)
+    STR_CONST       reduce using rule 26 (expressions -> expression ; .)
+    INT_CONST       reduce using rule 26 (expressions -> expression ; .)
+    OBJECTID        reduce using rule 26 (expressions -> expression ; .)
+    NEW             reduce using rule 26 (expressions -> expression ; .)
+    ;               reduce using rule 26 (expressions -> expression ; .)
+    =               reduce using rule 26 (expressions -> expression ; .)
+    <=              reduce using rule 26 (expressions -> expression ; .)
+    <               reduce using rule 26 (expressions -> expression ; .)
+    /               reduce using rule 26 (expressions -> expression ; .)
+    *               reduce using rule 26 (expressions -> expression ; .)
+    -               reduce using rule 26 (expressions -> expression ; .)
+    +               reduce using rule 26 (expressions -> expression ; .)
+
+
+state 49
+
+    (7) expression -> WHILE expression LOOP expression . POOL
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    POOL            shift and go to state 51
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 50
+
+    (8) expression -> IF expression THEN expression . ELSE expression FI
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    ELSE            shift and go to state 52
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 51
+
+    (7) expression -> WHILE expression LOOP expression POOL .
+    =               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    <=              reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    <               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    /               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    *               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    -               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    +               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    ;               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    $end            reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    LOOP            reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    THEN            reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    )               reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    POOL            reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    ELSE            reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+    FI              reduce using rule 7 (expression -> WHILE expression LOOP expression POOL .)
+
+
+state 52
+
+    (8) expression -> IF expression THEN expression ELSE . expression FI
+    (1) expression -> . _1_expressions_repeat
+    (7) expression -> . WHILE expression LOOP expression POOL
+    (8) expression -> . IF expression THEN expression ELSE expression FI
+    (9) expression -> . ~ expression )
+    (10) expression -> . ISVOID expression )
+    (11) expression -> . NOT expression )
+    (12) expression -> . ( expression )
+    (13) expression -> . expression = expression
+    (14) expression -> . expression <= expression
+    (15) expression -> . expression < expression
+    (16) expression -> . expression / expression
+    (17) expression -> . expression * expression
+    (18) expression -> . expression - expression
+    (19) expression -> . expression + expression
+    (20) expression -> . BOOL_CONST
+    (21) expression -> . STR_CONST
+    (22) expression -> . INT_CONST
+    (23) expression -> . OBJECTID
+    (24) expression -> . NEW TYPEID
+    (2) _1_expressions_repeat -> . _1_expressions_items
+    (3) _1_expressions_repeat -> .
+    (4) _1_expressions_items -> . _1_expressions_items _1_expressions_item
+    (5) _1_expressions_items -> . _1_expressions_item
+    (6) _1_expressions_item -> . expressions
+    (25) expressions -> . expressions expression ;
+    (26) expressions -> . expression ;
+    WHILE           shift and go to state 3
+    IF              shift and go to state 4
+    ~               shift and go to state 5
+    ISVOID          shift and go to state 6
+    NOT             shift and go to state 7
+    (               shift and go to state 8
+    BOOL_CONST      shift and go to state 9
+    STR_CONST       shift and go to state 10
+    INT_CONST       shift and go to state 11
+    OBJECTID        shift and go to state 12
+    NEW             shift and go to state 13
+    FI              reduce using rule 3 (_1_expressions_repeat -> .)
+    =               reduce using rule 3 (_1_expressions_repeat -> .)
+    <=              reduce using rule 3 (_1_expressions_repeat -> .)
+    <               reduce using rule 3 (_1_expressions_repeat -> .)
+    /               reduce using rule 3 (_1_expressions_repeat -> .)
+    *               reduce using rule 3 (_1_expressions_repeat -> .)
+    -               reduce using rule 3 (_1_expressions_repeat -> .)
+    +               reduce using rule 3 (_1_expressions_repeat -> .)
+    ;               reduce using rule 3 (_1_expressions_repeat -> .)
+
+    expression                     shift and go to state 53
+    _1_expressions_repeat          shift and go to state 2
+    _1_expressions_items           shift and go to state 14
+    _1_expressions_item            shift and go to state 15
+    expressions                    shift and go to state 16
+
+state 53
+
+    (8) expression -> IF expression THEN expression ELSE expression . FI
+    (13) expression -> expression . = expression
+    (14) expression -> expression . <= expression
+    (15) expression -> expression . < expression
+    (16) expression -> expression . / expression
+    (17) expression -> expression . * expression
+    (18) expression -> expression . - expression
+    (19) expression -> expression . + expression
+    (26) expressions -> expression . ;
+    FI              shift and go to state 54
+    =               shift and go to state 17
+    <=              shift and go to state 18
+    <               shift and go to state 19
+    /               shift and go to state 20
+    *               shift and go to state 21
+    -               shift and go to state 22
+    +               shift and go to state 23
+    ;               shift and go to state 24
+
+
+state 54
+
+    (8) expression -> IF expression THEN expression ELSE expression FI .
+    =               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    <=              reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    <               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    /               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    *               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    -               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    +               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    ;               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    $end            reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    LOOP            reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    THEN            reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    )               reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    POOL            reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    ELSE            reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+    FI              reduce using rule 8 (expression -> IF expression THEN expression ELSE expression FI .)
+
+
+Conflicts:
+
+shift/reduce conflict for WHILE in state 16 resolved as shift
+shift/reduce conflict for IF in state 16 resolved as shift
+shift/reduce conflict for ~ in state 16 resolved as shift
+shift/reduce conflict for ISVOID in state 16 resolved as shift
+shift/reduce conflict for NOT in state 16 resolved as shift
+shift/reduce conflict for ( in state 16 resolved as shift
+shift/reduce conflict for BOOL_CONST in state 16 resolved as shift
+shift/reduce conflict for STR_CONST in state 16 resolved as shift
+shift/reduce conflict for INT_CONST in state 16 resolved as shift
+shift/reduce conflict for OBJECTID in state 16 resolved as shift
+shift/reduce conflict for NEW in state 16 resolved as shift
+shift/reduce conflict for = in state 35 resolved as shift
+shift/reduce conflict for <= in state 35 resolved as shift
+shift/reduce conflict for < in state 35 resolved as shift
+shift/reduce conflict for / in state 35 resolved as shift
+shift/reduce conflict for * in state 35 resolved as shift
+shift/reduce conflict for - in state 35 resolved as shift
+shift/reduce conflict for + in state 35 resolved as shift
+shift/reduce conflict for ; in state 35 resolved as shift
+shift/reduce conflict for = in state 36 resolved as shift
+shift/reduce conflict for <= in state 36 resolved as shift
+shift/reduce conflict for < in state 36 resolved as shift
+shift/reduce conflict for / in state 36 resolved as shift
+shift/reduce conflict for * in state 36 resolved as shift
+shift/reduce conflict for - in state 36 resolved as shift
+shift/reduce conflict for + in state 36 resolved as shift
+shift/reduce conflict for ; in state 36 resolved as shift
+shift/reduce conflict for = in state 37 resolved as shift
+shift/reduce conflict for <= in state 37 resolved as shift
+shift/reduce conflict for < in state 37 resolved as shift
+shift/reduce conflict for / in state 37 resolved as shift
+shift/reduce conflict for * in state 37 resolved as shift
+shift/reduce conflict for - in state 37 resolved as shift
+shift/reduce conflict for + in state 37 resolved as shift
+shift/reduce conflict for ; in state 37 resolved as shift
+shift/reduce conflict for = in state 38 resolved as shift
+shift/reduce conflict for <= in state 38 resolved as shift
+shift/reduce conflict for < in state 38 resolved as shift
+shift/reduce conflict for / in state 38 resolved as shift
+shift/reduce conflict for * in state 38 resolved as shift
+shift/reduce conflict for - in state 38 resolved as shift
+shift/reduce conflict for + in state 38 resolved as shift
+shift/reduce conflict for ; in state 38 resolved as shift
+shift/reduce conflict for = in state 39 resolved as shift
+shift/reduce conflict for <= in state 39 resolved as shift
+shift/reduce conflict for < in state 39 resolved as shift
+shift/reduce conflict for / in state 39 resolved as shift
+shift/reduce conflict for * in state 39 resolved as shift
+shift/reduce conflict for - in state 39 resolved as shift
+shift/reduce conflict for + in state 39 resolved as shift
+shift/reduce conflict for ; in state 39 resolved as shift
+shift/reduce conflict for = in state 40 resolved as shift
+shift/reduce conflict for <= in state 40 resolved as shift
+shift/reduce conflict for < in state 40 resolved as shift
+shift/reduce conflict for / in state 40 resolved as shift
+shift/reduce conflict for * in state 40 resolved as shift
+shift/reduce conflict for - in state 40 resolved as shift
+shift/reduce conflict for + in state 40 resolved as shift
+shift/reduce conflict for ; in state 40 resolved as shift
+shift/reduce conflict for = in state 41 resolved as shift
+shift/reduce conflict for <= in state 41 resolved as shift
+shift/reduce conflict for < in state 41 resolved as shift
+shift/reduce conflict for / in state 41 resolved as shift
+shift/reduce conflict for * in state 41 resolved as shift
+shift/reduce conflict for - in state 41 resolved as shift
+shift/reduce conflict for + in state 41 resolved as shift
+shift/reduce conflict for ; in state 41 resolved as shift
+reduce/reduce conflict in state 14 resolved using rule _1_expressions_repeat -> _1_expressions_items
+rejected rule (_1_expressions_repeat -> <empty>) in state 14
+reduce/reduce conflict in state 16 resolved using rule _1_expressions_repeat -> <empty>
+rejected rule (_1_expressions_item -> expressions) in state 16
+reduce/reduce conflict in state 32 resolved using rule _1_expressions_items -> _1_expressions_items _1_expressions_item
+rejected rule (_1_expressions_items -> _1_expressions_item) in state 32
+reduce/reduce conflict in state 48 resolved using rule expressions -> expression ;
+rejected rule (expressions -> expressions expression ;) in state 48

@@ -10,8 +10,14 @@ class Comentario(Lexer):
     _nivel_anidado = 0
     tokens = {}
 
+    @_(r'\(\*')
+    def LINEA(self, t):
+        print("Detectado (* BBBBBBBBBBBBB")
+        nivel_anidado += 1
+
     @_(r'\*\)')
     def VOLVER(self, t):
+        print("Detectado *) AAAAAAAAAAAAAA")
         if self._nivel_anidado > 0: self._nivel_anidado -= 1
         if self._nivel_anidado == 0: self.begin(CoolLexer)
     
@@ -32,18 +38,20 @@ class CoolLexer(Lexer):
                       "ISVOID","LET", "LOOP", "NEW", "OF", "POOL", 
                       "THEN", "WHILE", "TRUE", "FALSE")
     ignore = '\t '
-    literals = ('.')
+    literals = ('.','+','-','*','/','<','<=','=','(',')','~', ';', '{', '}')
     ELSE = r'\b[eE][lL][sS][eE]\b'
     STR_CONST = r'"[a-zA-Z0-9_/]*"'
     
     @_(r'\(\*')
     def IR_BLOQUE(self, t):
+        print("Entrando a Comentario")
         Comentario._nivel_anidado += 1
         self.begin(Comentario)
     
     @_(r'--.*')
     def IR_LINEA(self, t):
         if Comentario._nivel_anidado != 0: pass
+        print("PAPAPAPAPAPA")
         self.lineno += 1
 
     @_(r'\*\)')
@@ -72,13 +80,14 @@ class CoolLexer(Lexer):
     
     @_(r'[A-Z][A-Z0-9_a-z]*')
     def TYPEID(self, t):
-        if t.value.upper() not in self.RESERVED_WORDS:
-            t.type = "TYPEID"
+        print(t)
+        if t.value.upper() in self.RESERVED_WORDS:
+            t.type = t.value.upper()
+        print(t)
         return t
 
     @_(r'.')
     def ERROR(self, t):
-        print(t)
         if t.value in self.literals:
             t.type = t.value
             return t

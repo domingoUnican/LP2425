@@ -107,6 +107,7 @@ class CoolLexer(Lexer):
     ELSE = r"\b[eE][lL][sS][eE]\b"
     STR_CONST = r'"[a-zA-Z0-9_/]*"'
 
+
     @_(r"--.*\n")
     def SIMPLE_COMMENT(self, t):
         t.type = "COMMENT"
@@ -122,6 +123,35 @@ class CoolLexer(Lexer):
         t.type = "COMMENT"
         Comentario.profundidad = 1
         self.begin(Comentario)
+
+    @_(r"<-")
+    def ASSIGN(self, t):
+        if t.value.lower() in self._key_words:
+            t.value = t.value.upper()
+            t.type = t.value
+        return t
+
+    @_(r"=>")
+    def DARROW(self, t):
+        if t.value.lower() in self._key_words:
+            t.value = t.value.upper()
+            t.type = t.value
+        return t
+
+    @_(r"<=")
+    def LE(self, t):
+        if t.value.lower() in self._key_words:
+            t.value = t.value.upper()
+            t.type = t.value
+        return t
+
+
+    @_(r"[]")
+    def STR_CONST(self, t):
+        if t.value.lower() in self._key_words:
+            t.value = t.value.upper()
+            t.type = t.value
+        return t
 
     @_(r"\bt[rR][uU][eE]\b|\bf[aA][lL][sS][eE]\b")
     def BOOL_CONST(self, t):
@@ -147,7 +177,7 @@ class CoolLexer(Lexer):
         t.type = "INT_CONST"
         return t
 
-    @_(r"\r|\n")
+    @_(r"\r\n")
     def LINEBREAK(self, t):
         self.lineno += 1
 

@@ -5,35 +5,43 @@
 __author__ = "Rubén Martínez Amodia"
 __version__ = "2025"
 
-from Lexer import Token
-
 from abc import ABC, abstractmethod
+
+from Scanner import Token
 
 
 class ExprVisitor(ABC):
     @abstractmethod
-    def visit_assign_expr(self, expr: "Assign"): pass
+    def visit_assign_expr(self, expr: "Assign"):
+        pass
 
     @abstractmethod
-    def visit_binary_expr(self, expr: "Binary"): pass
+    def visit_binary_expr(self, expr: "Binary"):
+        pass
 
     @abstractmethod
-    def visit_call_expr(self, expr: "Call"): pass
+    def visit_call_expr(self, expr: "Call"):
+        pass
 
     @abstractmethod
-    def visit_grouping_expr(self, expr: "Grouping"): pass
+    def visit_grouping_expr(self, expr: "Grouping"):
+        pass
 
     @abstractmethod
-    def visit_literal_expr(self, expr: "Literal"): pass
+    def visit_literal_expr(self, expr: "Literal"):
+        pass
 
     @abstractmethod
-    def visit_logical_expr(self, expr: "Logical"): pass
+    def visit_logical_expr(self, expr: "Logical"):
+        pass
 
     @abstractmethod
-    def visit_unary_expr(self, expr: "Unary"): pass
+    def visit_unary_expr(self, expr: "Unary"):
+        pass
 
     @abstractmethod
-    def visit_variable_expr(self, expr: "Variable"): pass
+    def visit_variable_expr(self, expr: "Variable"):
+        pass
 
 
 class Expr(ABC):
@@ -44,6 +52,7 @@ class Expr(ABC):
     @abstractmethod
     def tostring(self, n):
         pass
+
 
 class Assign(Expr):
     def __init__(self, name: Token, value: Expr):
@@ -159,28 +168,36 @@ class Variable(Expr):
 
 class StmtVisitor(ABC):
     @abstractmethod
-    def visit_block_stmt(self, stmt: "Block"): pass
+    def visit_block_stmt(self, stmt: "Block"):
+        pass
 
     @abstractmethod
-    def visit_expression_stmt(self, stmt: "Expression"): pass
+    def visit_expression_stmt(self, stmt: "Expression"):
+        pass
 
     @abstractmethod
-    def visit_function_stmt(self, stmt: "Function"): pass
+    def visit_function_stmt(self, stmt: "Function"):
+        pass
 
     @abstractmethod
-    def visit_if_stmt(self, stmt: "If"): pass
+    def visit_if_stmt(self, stmt: "If"):
+        pass
 
     @abstractmethod
-    def visit_print_stmt(self, stmt: "Print"): pass
+    def visit_print_stmt(self, stmt: "Print"):
+        pass
 
     @abstractmethod
-    def visit_return_stmt(self, stmt: "Return"): pass
+    def visit_return_stmt(self, stmt: "Return"):
+        pass
 
     @abstractmethod
-    def visit_var_stmt(self, stmt: "Var"): pass
+    def visit_var_stmt(self, stmt: "Var"):
+        pass
 
     @abstractmethod
-    def visit_while_stmt(self, stmt: "While"): pass
+    def visit_while_stmt(self, stmt: "While"):
+        pass
 
 
 class Stmt(ABC):

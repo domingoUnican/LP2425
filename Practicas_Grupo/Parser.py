@@ -23,16 +23,19 @@ class CoolParser(Parser):
 
     # Reglas de precedencia para evitar conflictos shift/reduce y ambigüedades
     precedence = (
-        ("left", "."),  # '.' (llamada a método de instancia) tiene la precedencia más alta
-        ("left", "@"),  # '@' (llamada a método estático) sigue en precedencia
-        ("left", "ISVOID"),  # 'isvoid' se evalúa antes que los operadores aritméticos
-        ("left", "*", "/"),  # '*' y '/' se agrupan de izquierda a derecha
-        ("left", "+", "-"),  # '+' y '-' se agrupan de izquierda a derecha
-        ("nonassoc", "LE", "<", "="),  # '<=', '<' y '=' no pueden encadenarse
-        ("left", "NOT"),  # 'not' se evalúa después de las comparaciones
-        ("right", "ASSIGN"),  # ':=' (asignación) tiene asociatividad derecha
+        ("left", "."),                # Llamada a método de instancia: obj.method()
+        ("left", "@"),                # Llamada a método estático: obj@Type.method()
+        ("left", "~"),                # Negación aritmética (unaria): ~e
+        ("left", "ISVOID"),           # Verificación de nulo: isvoid e
+        ("left", "*", "/"),           # Multiplicación y división
+        ("left", "+", "-"),           # Suma y resta
+        ("nonassoc", "LE", "<", "="), # Comparaciones: <=, <, =
+        ("left", "NOT"),              # Negación lógica: not e
+        ("right", "ASSIGN"),          # Asignación: x <- e
+        ("left", "LET", "IN"),        # Expresiones let/in
+        ("left", "DARROW")            # Flecha en case-of: => (más baja para evitar conflictos en CASE)
     )
-
+    
     ######### PROGRAMA ###########
     @_("clases")
     def program(self, p):
@@ -450,3 +453,8 @@ class CoolParser(Parser):
             padre = p.TYPEID1, 
             nombre_fichero = self.nombre_fichero, 
             caracteristicas = NoExpr())
+
+    
+    def error(self, p):
+        self.errores.append(f"Error{p}")
+

@@ -14,14 +14,14 @@ Rule 10    caracteristicas -> caracteristicas caracteristica ;
 Rule 11    caracteristicas -> caracteristica ;
 Rule 12    caracteristica -> OBJECTID ( formales ) : TYPEID { expression }
 Rule 13    caracteristica -> OBJECTID ( ) : TYPEID { expression }
-Rule 14    caracteristica -> OBJECTID : TYPEID ASSIGN expression  [precedence=right, level=8]
+Rule 14    caracteristica -> OBJECTID : TYPEID ASSIGN expression  [precedence=right, level=9]
 Rule 15    caracteristica -> OBJECTID : TYPEID
 Rule 16    formal -> OBJECTID : TYPEID
 Rule 17    formales -> formales , formal
 Rule 18    formales -> formal
 Rule 19    expression -> CASE expression OF darrowlist ESAC
 Rule 20    expression -> WHILE expression LOOP expression POOL
-Rule 21    expression -> LET let_list IN expression
+Rule 21    expression -> LET let_list IN expression  [precedence=left, level=10]
 Rule 22    expression -> IF expression THEN expression ELSE expression FI
 Rule 23    expression -> { expressions }
 Rule 24    expression -> BOOL_CONST
@@ -34,26 +34,26 @@ Rule 30    expression -> expression . OBJECTID ( parametros )
 Rule 31    expression -> expression . OBJECTID ( )
 Rule 32    expression -> expression @ TYPEID . OBJECTID ( parametros )
 Rule 33    expression -> expression @ TYPEID . OBJECTID ( )
-Rule 34    expression -> ~ expression
+Rule 34    expression -> ~ expression  [precedence=left, level=3]
 Rule 35    expression -> NEW TYPEID
-Rule 36    expression -> ISVOID expression  [precedence=left, level=3]
-Rule 37    expression -> NOT expression  [precedence=left, level=7]
+Rule 36    expression -> ISVOID expression  [precedence=left, level=4]
+Rule 37    expression -> NOT expression  [precedence=left, level=8]
 Rule 38    expression -> ( expression )
-Rule 39    expression -> expression = expression  [precedence=nonassoc, level=6]
-Rule 40    expression -> expression LE expression  [precedence=nonassoc, level=6]
-Rule 41    expression -> expression < expression  [precedence=nonassoc, level=6]
-Rule 42    expression -> expression / expression  [precedence=left, level=4]
-Rule 43    expression -> expression * expression  [precedence=left, level=4]
-Rule 44    expression -> expression - expression  [precedence=left, level=5]
-Rule 45    expression -> expression + expression  [precedence=left, level=5]
-Rule 46    expression -> OBJECTID ASSIGN expression  [precedence=right, level=8]
+Rule 39    expression -> expression = expression  [precedence=nonassoc, level=7]
+Rule 40    expression -> expression LE expression  [precedence=nonassoc, level=7]
+Rule 41    expression -> expression < expression  [precedence=nonassoc, level=7]
+Rule 42    expression -> expression / expression  [precedence=left, level=5]
+Rule 43    expression -> expression * expression  [precedence=left, level=5]
+Rule 44    expression -> expression - expression  [precedence=left, level=6]
+Rule 45    expression -> expression + expression  [precedence=left, level=6]
+Rule 46    expression -> OBJECTID ASSIGN expression  [precedence=right, level=9]
 Rule 47    expressions -> expressions expression ;
 Rule 48    expressions -> expression ;
 Rule 49    parametros -> parametros , expression
 Rule 50    parametros -> expression
 Rule 51    let_list -> let_decl
 Rule 52    let_list -> let_list , let_decl
-Rule 53    let_decl -> OBJECTID : TYPEID ASSIGN expression  [precedence=right, level=8]
+Rule 53    let_decl -> OBJECTID : TYPEID ASSIGN expression  [precedence=right, level=9]
 Rule 54    let_decl -> OBJECTID : TYPEID
 Rule 55    darrowlist -> darrowlist OBJECTID : TYPEID DARROW expression ;
 Rule 56    darrowlist -> OBJECTID : TYPEID DARROW expression ;
@@ -1786,15 +1786,8 @@ state 81
     (43) expression -> expression . * expression
     (44) expression -> expression . - expression
     (45) expression -> expression . + expression
-  ! shift/reduce conflict for . resolved as shift
-  ! shift/reduce conflict for @ resolved as shift
-  ! shift/reduce conflict for = resolved as shift
-  ! shift/reduce conflict for LE resolved as shift
-  ! shift/reduce conflict for < resolved as shift
-  ! shift/reduce conflict for / resolved as shift
-  ! shift/reduce conflict for * resolved as shift
-  ! shift/reduce conflict for - resolved as shift
-  ! shift/reduce conflict for + resolved as shift
+    .               reduce using rule 34 (expression -> ~ expression .)
+    @               reduce using rule 34 (expression -> ~ expression .)
     ;               reduce using rule 34 (expression -> ~ expression .)
     OF              reduce using rule 34 (expression -> ~ expression .)
     LOOP            reduce using rule 34 (expression -> ~ expression .)
@@ -1806,8 +1799,6 @@ state 81
     ELSE            reduce using rule 34 (expression -> ~ expression .)
     IN              reduce using rule 34 (expression -> ~ expression .)
     FI              reduce using rule 34 (expression -> ~ expression .)
-    .               shift and go to state 63
-    @               shift and go to state 64
     =               shift and go to state 65
     LE              shift and go to state 66
     <               shift and go to state 67
@@ -2834,15 +2825,15 @@ state 119
     (43) expression -> expression . * expression
     (44) expression -> expression . - expression
     (45) expression -> expression . + expression
-  ! shift/reduce conflict for . resolved as shift
-  ! shift/reduce conflict for @ resolved as shift
-  ! shift/reduce conflict for = resolved as shift
-  ! shift/reduce conflict for LE resolved as shift
-  ! shift/reduce conflict for < resolved as shift
-  ! shift/reduce conflict for / resolved as shift
-  ! shift/reduce conflict for * resolved as shift
-  ! shift/reduce conflict for - resolved as shift
-  ! shift/reduce conflict for + resolved as shift
+    .               reduce using rule 21 (expression -> LET let_list IN expression .)
+    @               reduce using rule 21 (expression -> LET let_list IN expression .)
+    =               reduce using rule 21 (expression -> LET let_list IN expression .)
+    LE              reduce using rule 21 (expression -> LET let_list IN expression .)
+    <               reduce using rule 21 (expression -> LET let_list IN expression .)
+    /               reduce using rule 21 (expression -> LET let_list IN expression .)
+    *               reduce using rule 21 (expression -> LET let_list IN expression .)
+    -               reduce using rule 21 (expression -> LET let_list IN expression .)
+    +               reduce using rule 21 (expression -> LET let_list IN expression .)
     ;               reduce using rule 21 (expression -> LET let_list IN expression .)
     OF              reduce using rule 21 (expression -> LET let_list IN expression .)
     LOOP            reduce using rule 21 (expression -> LET let_list IN expression .)
@@ -2854,15 +2845,6 @@ state 119
     ELSE            reduce using rule 21 (expression -> LET let_list IN expression .)
     IN              reduce using rule 21 (expression -> LET let_list IN expression .)
     FI              reduce using rule 21 (expression -> LET let_list IN expression .)
-    .               shift and go to state 63
-    @               shift and go to state 64
-    =               shift and go to state 65
-    LE              shift and go to state 66
-    <               shift and go to state 67
-    /               shift and go to state 68
-    *               shift and go to state 69
-    -               shift and go to state 70
-    +               shift and go to state 71
 
 
 state 120
@@ -3550,25 +3532,3 @@ state 151
     (55) darrowlist -> darrowlist OBJECTID : TYPEID DARROW expression ; .
     ESAC            reduce using rule 55 (darrowlist -> darrowlist OBJECTID : TYPEID DARROW expression ; .)
     OBJECTID        reduce using rule 55 (darrowlist -> darrowlist OBJECTID : TYPEID DARROW expression ; .)
-
-
-Conflicts:
-
-shift/reduce conflict for . in state 81 resolved as shift
-shift/reduce conflict for @ in state 81 resolved as shift
-shift/reduce conflict for = in state 81 resolved as shift
-shift/reduce conflict for LE in state 81 resolved as shift
-shift/reduce conflict for < in state 81 resolved as shift
-shift/reduce conflict for / in state 81 resolved as shift
-shift/reduce conflict for * in state 81 resolved as shift
-shift/reduce conflict for - in state 81 resolved as shift
-shift/reduce conflict for + in state 81 resolved as shift
-shift/reduce conflict for . in state 119 resolved as shift
-shift/reduce conflict for @ in state 119 resolved as shift
-shift/reduce conflict for = in state 119 resolved as shift
-shift/reduce conflict for LE in state 119 resolved as shift
-shift/reduce conflict for < in state 119 resolved as shift
-shift/reduce conflict for / in state 119 resolved as shift
-shift/reduce conflict for * in state 119 resolved as shift
-shift/reduce conflict for - in state 119 resolved as shift
-shift/reduce conflict for + in state 119 resolved as shift

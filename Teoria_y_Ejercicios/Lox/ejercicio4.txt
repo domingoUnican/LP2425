@@ -1,0 +1,9 @@
+4) Comente como funciona la clase Token, porque tiene esa estructura y para que sirve el método post_init
+
+La clase token tiene 3 atributos: lineno, que actua como un contador; value, que almacena la cadena de simbolos mas
+larga posible aceptada como token; tipo, que define el tipo de token que es. 
+El método post_init se encarga de, una vez creado el objeto de la clase token, poder asignar en tipo adecuado. Este
+método se ejecuta después de crearse el propio objeto de esa clase, para asi poder basarse en atributos
+ya definidos (value) y asignarse el tipo correcto.
+
+

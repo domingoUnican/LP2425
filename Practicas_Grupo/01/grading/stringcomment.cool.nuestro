@@ -1,0 +1,24 @@
+#name "stringcomment.cool"
+ TYPEID This
+ IS
+ A
+ STRING
+ AND
+ IT
+ S
+ STILL
+ A
+ STRING
+ TYPEID This
+ IS
+ A
+ COMMENT
+ NOT
+ A
+ STRING
+ NOT
+ A
+ STRING
+ NOT
+ A
+ COMMENT

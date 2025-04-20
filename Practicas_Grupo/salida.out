@@ -1,0 +1,184 @@
+Grammar:
+
+Rule 0     S' -> expression
+Rule 1     expression -> expression - expression
+Rule 2     expression -> expression + expression
+Rule 3     expression -> OBJECTID ASSIGN expression
+Rule 4     expression -> INT_CONST
+
+Unused terminals:
+
+    FI
+    LOOP
+    NEW
+    BOOL_CONST
+    LE
+    THEN
+    ESAC
+    NOT
+    INHERITS
+    CASE
+    LET
+    IN
+    TYPEID
+    WHILE
+    DARROW
+    POOL
+    IF
+    CLASS
+    ISVOID
+    OF
+    ELSE
+    STR_CONST
+
+Terminals, with rules where they appear:
+
++                    : 2
+-                    : 1
+ASSIGN               : 3
+BOOL_CONST           : 
+CASE                 : 
+CLASS                : 
+DARROW               : 
+ELSE                 : 
+ESAC                 : 
+FI                   : 
+IF                   : 
+IN                   : 
+INHERITS             : 
+INT_CONST            : 4
+ISVOID               : 
+LE                   : 
+LET                  : 
+LOOP                 : 
+NEW                  : 
+NOT                  : 
+OBJECTID             : 3
+OF                   : 
+POOL                 : 
+STR_CONST            : 
+THEN                 : 
+TYPEID               : 
+WHILE                : 
+error                : 
+
+Nonterminals, with rules where they appear:
+
+expression           : 1 1 2 2 3 0
+
+
+state 0
+
+    (0) S' -> . expression
+    (1) expression -> . expression - expression
+    (2) expression -> . expression + expression
+    (3) expression -> . OBJECTID ASSIGN expression
+    (4) expression -> . INT_CONST
+    OBJECTID        shift and go to state 2
+    INT_CONST       shift and go to state 3
+
+    expression                     shift and go to state 1
+
+state 1
+
+    (0) S' -> expression .
+    (1) expression -> expression . - expression
+    (2) expression -> expression . + expression
+    -               shift and go to state 4
+    +               shift and go to state 5
+
+
+state 2
+
+    (3) expression -> OBJECTID . ASSIGN expression
+    ASSIGN          shift and go to state 6
+
+
+state 3
+
+    (4) expression -> INT_CONST .
+    -               reduce using rule 4 (expression -> INT_CONST .)
+    +               reduce using rule 4 (expression -> INT_CONST .)
+    $end            reduce using rule 4 (expression -> INT_CONST .)
+
+
+state 4
+
+    (1) expression -> expression - . expression
+    (1) expression -> . expression - expression
+    (2) expression -> . expression + expression
+    (3) expression -> . OBJECTID ASSIGN expression
+    (4) expression -> . INT_CONST
+    OBJECTID        shift and go to state 2
+    INT_CONST       shift and go to state 3
+
+    expression                     shift and go to state 7
+
+state 5
+
+    (2) expression -> expression + . expression
+    (1) expression -> . expression - expression
+    (2) expression -> . expression + expression
+    (3) expression -> . OBJECTID ASSIGN expression
+    (4) expression -> . INT_CONST
+    OBJECTID        shift and go to state 2
+    INT_CONST       shift and go to state 3
+
+    expression                     shift and go to state 8
+
+state 6
+
+    (3) expression -> OBJECTID ASSIGN . expression
+    (1) expression -> . expression - expression
+    (2) expression -> . expression + expression
+    (3) expression -> . OBJECTID ASSIGN expression
+    (4) expression -> . INT_CONST
+    OBJECTID        shift and go to state 2
+    INT_CONST       shift and go to state 3
+
+    expression                     shift and go to state 9
+
+state 7
+
+    (1) expression -> expression - expression .
+    (1) expression -> expression . - expression
+    (2) expression -> expression . + expression
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+    $end            reduce using rule 1 (expression -> expression - expression .)
+    -               shift and go to state 4
+    +               shift and go to state 5
+
+
+state 8
+
+    (2) expression -> expression + expression .
+    (1) expression -> expression . - expression
+    (2) expression -> expression . + expression
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+    $end            reduce using rule 2 (expression -> expression + expression .)
+    -               shift and go to state 4
+    +               shift and go to state 5
+
+
+state 9
+
+    (3) expression -> OBJECTID ASSIGN expression .
+    (1) expression -> expression . - expression
+    (2) expression -> expression . + expression
+  ! shift/reduce conflict for - resolved as shift
+  ! shift/reduce conflict for + resolved as shift
+    $end            reduce using rule 3 (expression -> OBJECTID ASSIGN expression .)
+    -               shift and go to state 4
+    +               shift and go to state 5
+
+
+Conflicts:
+
+shift/reduce conflict for - in state 7 resolved as shift
+shift/reduce conflict for + in state 7 resolved as shift
+shift/reduce conflict for - in state 8 resolved as shift
+shift/reduce conflict for + in state 8 resolved as shift
+shift/reduce conflict for - in state 9 resolved as shift
+shift/reduce conflict for + in state 9 resolved as shift

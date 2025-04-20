@@ -1,0 +1,23 @@
+#name "s26.test.cool"
+ THIS
+ WORKS
+ AND
+ THE
+ LANG
+ SPEC
+ DOESN
+ T
+ SAY
+ IT
+ SHOULDN
+ T
+ THIS
+ IS
+ NUMERIC
+ LITERAL
+ STR_CONST "3"
+ AND
+ OBJECT
+ ID
+ STR_CONST "a"
+ A

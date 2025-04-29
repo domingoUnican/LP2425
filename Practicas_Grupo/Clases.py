@@ -39,12 +39,6 @@ class Asignacion(Expresion):
         resultado += self.cuerpo.str(n+2)
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
-    def Tipo(self, ambito):
-        self.cuerpo.Tipo(ambito)
-        if ambito.es_subtipo(ambito.get_tipo_variable(self.nombre), self.cuerpo.cast):
-            self.cast = self.cuerpo.cast
-        else:
-            self.cast = 'Object'
 
 
 @dataclass
@@ -276,9 +270,6 @@ class LeIgual(OperacionBinaria):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def Tipo(self, ambito):
-        self.izquierda.Tipo(ambito)
-        self.derecha.Tipo(ambito)
 
 
 @dataclass
@@ -352,8 +343,6 @@ class Objeto(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    def Tipo(self, ambito):
-        self.cast = ambito.dame_tipo_variable(self.nombre)
 
 @dataclass
 class NoExpr(Expresion):
@@ -376,8 +365,7 @@ class Entero(Expresion):
         resultado += f'{(n+2)*" "}{self.valor}\n'
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
-    def Tipo(self, ambito):
-        self.cast = 'Int'
+
 
 @dataclass
 class String(Expresion):
@@ -389,8 +377,7 @@ class String(Expresion):
         resultado += f'{(n+2)*" "}{self.valor}\n'
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
-    def Tipo(self, ambito):
-        self.cast = 'String'
+
     
 
 
@@ -419,8 +406,6 @@ class Programa(IterableNodo):
         resultado += ''.join([c.str(n+2) for c in self.secuencia])
         return resultado
 
-    def Tipo(self):
-        ambito = Ambito()
 
 @dataclass
 class Caracteristica(Nodo):

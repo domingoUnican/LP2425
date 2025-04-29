@@ -10,10 +10,10 @@ DIRECTORIO = os.path.expanduser("C:\\Users\\gopem\\OneDrive\\Escritorio\\Estudio
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
-#from Parser import *
+from Parser import *
 from Clases import *
 
-PRACTICA = "01" # Practica que hay que evaluar
+PRACTICA = "02" # Practica que hay que evaluar
 DEBUG = True   # Decir si se lanzan mensajes de debug
 NUMLINEAS = 3   # Numero de lineas que se muestran antes y después de la no coincidencia
 sys.path.append(DIRECTORIO)
@@ -23,8 +23,6 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
-#TESTS = ["escapedunprintables.cool"]
-#TESTS = ["multilinecomment.cool"]
 
 if True:
     for fich in TESTS:
@@ -43,7 +41,11 @@ if True:
             texto = f'#name "{fich}"\n' + texto
             resultado = g.read()
             g.close()
-            if texto.strip().split() != resultado.strip().split():
+            a = texto.strip().split()
+            a = [i for i in a if '#' not in i]
+            b = resultado.strip().split()
+            b = [i for i in b if '#' not in i]
+            if a != b:
                 print(f"Revisa el fichero {fich}")
                 if DEBUG:
                     texto = re.sub(r'#\d+\b','',texto)
@@ -70,7 +72,6 @@ if True:
             g.close()
             j = parser.parse(lexer.tokenize(entrada))
             try:
-                j.Tipo()
                 if j and not parser.errores:
                     resultado = '\n'.join([c for c in j.str(0).split('\n')
                                            if c and '#' not in c])

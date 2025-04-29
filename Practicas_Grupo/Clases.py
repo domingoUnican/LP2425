@@ -9,7 +9,9 @@ class Nodo:
 
     def str(self, n):
         return f'{n*" "}#{self.linea}\n'
-
+    
+    def Tipo(self):
+        pass
 
 @dataclass
 class Formal(Nodo):

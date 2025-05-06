@@ -6,7 +6,11 @@ from typing import List
 @dataclass
 class Nodo:
     linea: int = 0
-
+    tipo: str = "_no_type"
+    
+    def Tipo(self):
+        return self.tipo
+    
     def str(self, n):
         return f'{n*" "}#{self.linea}\n'
 

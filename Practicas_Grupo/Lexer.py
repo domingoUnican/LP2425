@@ -94,7 +94,7 @@ class Comentario(Lexer):
 #            Strings
 # ---------------------------------
 class Strings(Lexer):
-    tokens = {ERROR, STR_CONST}  # tokens que puede devolver
+    tokens = {STR_CONST}  # tokens que puede devolver
     contador = 0
 
     # tiene que ser privada porque si no da error el lexer
@@ -190,7 +190,6 @@ class CoolLexer(Lexer):
         INT_CONST,  # Constantes enteras (números)
         OBJECTID,  # Identificadores de variables o métodos en minúsculas
         TYPEID,  # Identificadores de tipos (nombres de clases, comienzan con mayúscula)
-        ERROR,  # token para los errores
     }
 
     # Lista de caracteres literales que el lexer reconoce directamente sin

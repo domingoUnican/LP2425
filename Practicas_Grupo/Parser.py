@@ -23,19 +23,22 @@ class CoolParser(Parser):
 
     # Reglas de precedencia para evitar conflictos shift/reduce y ambigüedades
     precedence = (
-        ("left", "."),                # Llamada a método de instancia: obj.method()
-        ("left", "@"),                # Llamada a método estático: obj@Type.method()
-        ("left", "~"),                # Negación aritmética (unaria): ~e
-        ("left", "ISVOID"),           # Verificación de nulo: isvoid e
-        ("left", "*", "/"),           # Multiplicación y división
-        ("left", "+", "-"),           # Suma y resta
-        ("nonassoc", "LE", "<", "="), # Comparaciones: <=, <, =
-        ("left", "NOT"),              # Negación lógica: not e
-        ("right", "ASSIGN"),          # Asignación: x <- e
-        ("left", "LET", "IN"),        # Expresiones let/in
-        ("left", "DARROW")            # Flecha en case-of: => (más baja para evitar conflictos en CASE)
+        ("right", "ASSIGN"),  # Asignación: x <- e
+        ("left", "NOT"),  # Negación lógica: not e
+        ("nonassoc", "LE", "<", "="),  # Comparaciones: <=, <, =
+        ("left", "LET", "IN"),  # Expresiones let/in
+        ("left", "+", "-"),  # Suma y resta
+        ("left", "*", "/"),  # Multiplicación y división
+        (
+            "left",
+            "DARROW",
+        ),  # Flecha en case-of: => (más baja para evitar conflictos en CASE)
+        ("left", "ISVOID"),  # Verificación de nulo: isvoid e
+        ("left", "~"),  # Negación aritmética (unaria): ~e
+        ("left", "@"),  # Llamada a método estático: obj@Type.method()
+        ("left", "."),  # Llamada a método de instancia:
     )
-    
+
     ######### PROGRAMA ###########
     @_("clases")
     def program(self, p):
@@ -60,7 +63,7 @@ class CoolParser(Parser):
         return Clase(
             linea=p.lineno,
             nombre=p.TYPEID,
-            padre="OBJECT",
+            padre="Object",
             nombre_fichero=self.nombre_fichero,
             caracteristicas=[],
         )
@@ -82,7 +85,7 @@ class CoolParser(Parser):
         return Clase(
             linea=p.lineno,
             nombre=p.TYPEID,
-            padre="OBJECT",
+            padre="Object",
             nombre_fichero=self.nombre_fichero,
             caracteristicas=p.caracteristicas,
         )
@@ -431,30 +434,89 @@ class CoolParser(Parser):
             )
         )
         return lista
-    
-    ######### ERRORES ###########
-    # Errores de tipo Clase
-    @_("CLASS TYPEID '{' error '}'")
-    def clase(self, p):
-        """Regla para una clase con error en las características."""
-        return Clase(
-            linea = p.lineno, 
-            nombre = p.TYPEID, 
-            padre = 'OBJECT', 
-            nombre_fichero = self.nombre_fichero, 
-            caracteristicas = NoExpr())
-    
-    @_("CLASS TYPEID INHERITS TYPEID '{' error '}'")
-    def clase(self, p):
-        """Regla para una clase con error en las características y herencia."""
-        return Clase(
-            linea = p.lineno, 
-            nombre = p.TYPEID0, 
-            padre = p.TYPEID1, 
-            nombre_fichero = self.nombre_fichero, 
-            caracteristicas = NoExpr())
 
-    
+    ######### AHORA TODOS LOS ERRORES POR SEPARADO PARA TEST ###########
+
+    ######### PROGRAMA ###########
+
+    ######### CLASE ###########
+
+    ######### CARACTERISTICA (para atributo/metodo)###########
+
+    @_("OBJECTID '(' ')' ':' TYPEID '{' error '}'")
+    def caracteristica(self, p):
+        """Manejo de método sin parámetros con error en el cuerpo."""
+        return []
+
+    @_("OBJECTID ':' error ';'")
+    def caracteristicas(self, p):
+        """Define un atributo sin valor asignado con error en el tipo."""
+        return []
+
+    # @_("caracteristicas OBJECTID ':' TYPEID error")
+    # def caracteristicas(self, p):
+    #     """Define un atributo sin valor asignado (solo tipo y nombre)."""
+    #     return []
+
+    # @_("caracteristicas error ';'")
+    # def caracteristicas(self, p):
+    #     """Define un atributo sin valor asignado (solo tipo y nombre)."""
+    #     return []
+
+    ######### FORMAL ###########
+
+    @_("OBJECTID ':' error")
+    def formal(self, p):
+        """Define un formal con un nombre pero pones el tipo mal."""
+        return []
+
+    ######### ATRIBUTO ###########
+
+    @_("LET OBJECTID ':' TYPEID error IN expression")
+    def expression(self, p):
+        """Manejo de let con error en la inicialización."""
+        return []
+
+    @_("error TYPEID")
+    def expression(self, p):
+        """Manejo de expresión con error seguida de TYPEID."""
+        return []
+
+    # lista expresiones
+    @_("error ';'")
+    def expressions(self, p):
+        """Manejo de expresión con error seguida de ';'."""
+        return []
+
+    # while
+    @_("expressions WHILE expression error expression POOL ';'")
+    def expressions(self, p):
+        """Manejo de while con error en LOOP."""
+        return []
+
+    @_("expressions WHILE expression LOOP expression error ';'")
+    def expressions(self, p):
+        """Manejo de while con error en POOL."""
+        return []
+
+    # Case
+    @_("CASE error OF darrowlist ESAC")
+    def expression(self, p):
+        return []
+
+    ######### FUNCION PARA ERRORES ###########
     def error(self, p):
-        self.errores.append(f"Error{p}")
+        """Manejo de errores de sintaxis con recuperación para seguir reportando más errores."""
+        if p is None:
+            resultado = f'"{self.nombre_fichero}", line 0: syntax error at or near EOF'
+        elif p.type in CoolLexer.tokens:
+            if (p.type == p.value) or (p.value in self.literals) or (p.value == "<="):
+                resultado = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type}'
+            else:
+                resultado = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type} = {p.value}'
+        elif p.type in self.literals:
+            resultado = f"\"{self.nombre_fichero}\", line {p.lineno}: syntax error at or near '{p.type}'"
+        else:
+            resultado = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type} = {p.value}'
 
+        self.errores.append(resultado)

@@ -1,0 +1,23 @@
+_program
+  _class
+    Main
+    Object
+    "abort.cl"
+    (
+    _method
+      main
+      Int
+      _block
+        _dispatch
+          _object
+            self
+          : _no_type
+          abort
+          (
+          )
+        : _no_type
+        _int
+          0
+        : _no_type
+      : _no_type
+    )

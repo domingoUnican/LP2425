@@ -271,7 +271,12 @@ estados_no_finales: set = {TokenType.THalfString, TokenType.TNothing}
 
 # Los estados ignorados son los que no se deben tener en cuenta para la salida final.
 # Por ejemplo, los comentarios y los espacios no son tokens válidos.
-estados_ignorados: set = {TokenType.TComment, TokenType.TCommentLine, TokenType.TSpace, TokenType.TUnfinishedFloat}
+estados_ignorados: set = {
+    TokenType.TComment,
+    TokenType.TCommentLine,
+    TokenType.TSpace,
+    TokenType.TUnfinishedFloat,
+}
 
 
 def is_final_state(state):
@@ -473,53 +478,38 @@ prueba5_solucion = """
 
 # Función para ejecutar las pruebas y mostrar resultados
 
+if __name__ == "__main__":
 
-def ejecutar_prueba(prueba, solucion_esperada, num_prueba):
-    print(
-        f"{COLOR_TITULO}Prueba {num_prueba}:{COLOR_RESET}"
-    )  # Título de la prueba en azul
-    for i in tokenize(prueba):
-        print(f"{COLOR_TOKEN}El token es {i}{COLOR_RESET}")  # Tokens en verde
-    print(f"\n{COLOR_SALIDA_TITULO}Salida esperada:{COLOR_RESET}")
-    print(
-        f"{COLOR_SALIDA}{solucion_esperada}{COLOR_RESET}"
-    )  # Salida esperada en blanco
-    print("\n")
+    def ejecutar_prueba(prueba, solucion_esperada, num_prueba):
+        print(
+            f"{COLOR_TITULO}Prueba {num_prueba}:{COLOR_RESET}"
+        )  # Título de la prueba en azul
+        for i in tokenize(prueba):
+            print(f"{COLOR_TOKEN}El token es {i}{COLOR_RESET}")  # Tokens en verde
+        print(f"\n{COLOR_SALIDA_TITULO}Salida esperada:{COLOR_RESET}")
+        print(
+            f"{COLOR_SALIDA}{solucion_esperada}{COLOR_RESET}"
+        )  # Salida esperada en blanco
+        print("\n")
 
+    # Ejecutando las pruebas
+    # ejecutar_prueba(prueba1, prueba1_solucion, 1)
+    # ejecutar_prueba(prueba2, prueba2_solucion, 2)
+    # ejecutar_prueba(prueba3, prueba3_solucion, 3)
+    # ejecutar_prueba(prueba4, prueba4_solucion, 4)
+    # ejecutar_prueba(prueba5, prueba5_solucion, 5)
 
-# Ejecutando las pruebas
-# ejecutar_prueba(prueba1, prueba1_solucion, 1)
-# ejecutar_prueba(prueba2, prueba2_solucion, 2)
-# ejecutar_prueba(prueba3, prueba3_solucion, 3)
-# ejecutar_prueba(prueba4, prueba4_solucion, 4)
-# ejecutar_prueba(prueba5, prueba5_solucion, 5)
+    # mas pruebas para ver si funciona bien los casos dificiles
+    prueba6 = 'x = 2 "hola que tal'  # string cortado
+    prueba7 = "x = 2 \n y = 3"  # saltitos
+    prueba8 = "x = 123123"  # numeros enteros
+    prueba9 = "x = 1.23123"  # numeros decimales
+    prueba10 = "x = 12.31.23"  # numeros decimales error 1
+    prueba11 = "x = 12...31..23"  # numeros decimales error 2
 
-# mas pruebas para ver si funciona bien los casos dificiles
-prueba6 = 'x = 2 "hola que tal'  # string cortado
-prueba7 = "x = 2 \n y = 3"  # saltitos
-prueba8 = "x = 123123"  # numeros enteros
-prueba9 = "x = 1.23123"  # numeros decimales
-prueba10 = "x = 12.31.23"  # numeros decimales error 1
-prueba11 = "x = 12...31..23"  # numeros decimales error 2
-
-ejecutar_prueba(prueba6, "", 6)
-ejecutar_prueba(prueba7, "", 7)
-ejecutar_prueba(prueba8, "", 8)
-ejecutar_prueba(prueba9, "", 9)
-ejecutar_prueba(prueba10, "", 10)
-ejecutar_prueba(prueba11, "", 11)
-
-
-# --------------------------------------------------------------------------------------------
-
-# dudas:
-# preguntar por los float porque no entiendo el sentido.
-# El token es Token(lineno=1, value='x', tipo=<TokenType.TIdentifier: '_Identificador'>)
-# El token es Token(lineno=1, value='=', tipo=<TokenType.TEqual: '='>)
-# El token es Token(lineno=1, value='12.31.23', tipo=<TokenType.TNumber: '_Number'>)
-# ahi detecta todo a la vez pero para que no deberia tener memoria o como funciona?
-
-# tambien que hacer cuando hay varios puntos si está bien así.
-# y tambien si va bien de normal pq se cambia a que sea number sin mas
-
-# seria mejor poner un tipo de dato float no?
+    ejecutar_prueba(prueba6, "", 6)
+    ejecutar_prueba(prueba7, "", 7)
+    ejecutar_prueba(prueba8, "", 8)
+    ejecutar_prueba(prueba9, "", 9)
+    ejecutar_prueba(prueba10, "", 10)
+    ejecutar_prueba(prueba11, "", 11)

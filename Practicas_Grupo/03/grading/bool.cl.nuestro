@@ -1,0 +1,297 @@
+_program
+  _class
+    Main
+    Object
+    "bool.cl"
+    (
+    _method
+      main
+      Object
+      _let
+        t
+        Bool
+        _bool
+          1
+        : _no_type
+        _let
+          f
+          Bool
+          _bool
+            0
+          : _no_type
+          _let
+            t1
+            Object
+            _object
+              t
+            : _no_type
+            _let
+              t2
+              Object
+              _bool
+                1
+              : _no_type
+              _let
+                f1
+                Object
+                _object
+                  f
+                : _no_type
+                _let
+                  f2
+                  Object
+                  _bool
+                    0
+                  : _no_type
+                  _let
+                    b1
+                    Bool
+                    _no_expr
+                    : _no_type
+                    _let
+                      b2
+                      Object
+                      _no_expr
+                      : _no_type
+                      _let
+                        io
+                        IO
+                        _new
+                          IO
+                        : _no_type
+                        _block
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "t: "
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _dispatch
+                              _object
+                                t
+                              : _no_type
+                              type_name
+                              (
+                              )
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "\n"
+                            : _no_type
+                            )
+                          : _no_type
+                          _assign
+                            b1
+                            _object
+                              t
+                            : _no_type
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "b1: "
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _dispatch
+                              _object
+                                b1
+                              : _no_type
+                              type_name
+                              (
+                              )
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "\n"
+                            : _no_type
+                            )
+                          : _no_type
+                          _assign
+                            b2
+                            _object
+                              t1
+                            : _no_type
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "b2: "
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _dispatch
+                              _object
+                                b2
+                              : _no_type
+                              type_name
+                              (
+                              )
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "\n"
+                            : _no_type
+                            )
+                          : _no_type
+                          _assign
+                            b1
+                            _dispatch
+                              _object
+                                f
+                              : _no_type
+                              copy
+                              (
+                              )
+                            : _no_type
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "b1: "
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _dispatch
+                              _object
+                                b1
+                              : _no_type
+                              type_name
+                              (
+                              )
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "\n"
+                            : _no_type
+                            )
+                          : _no_type
+                          _assign
+                            b2
+                            _dispatch
+                              _object
+                                f2
+                              : _no_type
+                              copy
+                              (
+                              )
+                            : _no_type
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "b2: "
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _dispatch
+                              _object
+                                b2
+                              : _no_type
+                              type_name
+                              (
+                              )
+                            : _no_type
+                            )
+                          : _no_type
+                          _dispatch
+                            _object
+                              io
+                            : _no_type
+                            out_string
+                            (
+                            _string
+                              "\n"
+                            : _no_type
+                            )
+                          : _no_type
+                        : _no_type
+                      : _no_type
+                    : _no_type
+                  : _no_type
+                : _no_type
+              : _no_type
+            : _no_type
+          : _no_type
+        : _no_type
+      : _no_type
+    )

@@ -6,7 +6,7 @@
  OBJECTID it
  OBJECTID was
  ERROR "Unmatched *)"
- '.' 
+ '.'
  IF
  INT_CONST 5
  THEN

@@ -6,68 +6,93 @@ import sys
 import os
 from Clases import *
 
-
 class CoolParser(Parser):
     nombre_fichero = ''
     tokens = CoolLexer.tokens.union(CoolLexer.literals)
     debugfile = "salida.out"
     errores = []
 
+    precedence = (
+    ('left', '.'),          
+    ('left', '@'),
+    ('right', '~'),          
+    ('right', 'ISVOID'),    
+    ('left', '*', '/'), 
+    ('left', '+', '-'),   
+    ('nonassoc', 'LE', '<', '='),      
+    ('right', 'NOT'),    
+    ('right', 'ASSIGN')  
+)
+
+    #TODO:ARREGLAR QUE EN CLASE TIENE QUE HABER ATRIBUTOS Y METODOS Y NO EXPRESSIONS
+    #TODO: FIX Infinite recursion detected for symbol 'programa' e Infinite recursion detected for symbol 'clases'
+    #TODO: FIX WARNING: There are 8 unused tokens
+    #TODO: FIX WARNING: There are 2 unused rules
+    #TODO: FIX WARNING: Symbol 'atributo' is unreachable
+    #TODO: FIX WARNING: Symbol 'metodo' is unreachable
+    #TODO: FIX WARNING: Symbol 'formales' is unreachable
+    #TODO: FIX WARNING: Symbol 'formal' is unreachable
+
     @_("clases")
     def programa(self, p):
         return Programa()
     
+    @_("clase")
+    def clases(self, p):
+        return [p[0]]
+
     @_("clases clase")
     def clases(self, p):
         p[0].append(p[1])
         return p[0]
-
-    @_("CLASS TYPEID ';'")
-    def clase(self, p):
-        return Clase(nombre=p[1])
     
-    @_("CLASS TYPEID INHERITS TYPEID ';'")
-    def clase(self, p):
-        return Clase(nombre=p[1], padre=p[3])
-    
-    @_("CLASS TYPEID '{' expressions '}' ';'")
+    @_("CLASS TYPEID '{' caracteristicas '}' ';'")
     def clase(self, p):
         return Clase(nombre=p[1], caracteristicas=p[3])
     
-    @_("CLASS TYPEID INHERITS TYPEID '{' expressions '}' ';'")
+    @_("CLASS TYPEID INHERITS TYPEID '{' caracteristicas '}' ';'")
     def clase(self, p):
         return Clase(nombre=p[1], padre=p[3], caracteristicas=p[5])
     
     @_("OBJECTID ':' TYPEID ASSIGN expression ';'")
-    def atributo(self, p):
+    def caracteristica(self, p):
         return Atributo(nombre=p[0], tipo=p[2], cuerpo=p[4])
     
     @_("OBJECTID ':' TYPEID ';'")
-    def atributo(self, p):
+    def caracteristica(self, p):
         return Atributo(nombre=p[0], tipo=p[2], cuerpo=NoExpr())
 
     @_("OBJECTID '(' ')' ':' TYPEID '{' expressions '}' ';'")
-    def metodo(self, p):
+    def caracteristica(self, p):
         return Metodo(nombre=p[0], tipo=p[4], cuerpo=p[6])
 
     @_("OBJECTID '(' formal ')' ':' TYPEID '{' expressions '}' ';'")
-    def metodo(self, p):
+    def caracteristica(self, p):
         return Metodo(nombre=p[0], formales=p[2] ,tipo=p[5], cuerpo=p[7])
     
     @_("OBJECTID '(' formales ')' ':' TYPEID '{' expressions '}' ';'")
-    def metodo(self, p):
+    def caracteristica(self, p):
         return Metodo(nombre=p[0], formales=p[2] ,tipo=p[5], cuerpo=p[7])
+
+    @_("caracteristica")
+    def caracteristicas(self, p):
+        return [p[0]]
+
+    @_("caracteristicas caracteristica")
+    def caracteristicas(self, p):
+        p[0].append(p[1])
+        return p[0]
 
     # ⟨Formal⟩ ::= OBJECTID : TYPEID
     @_("OBJECTID ':' TYPEID")
     def formal(self, p):
         return Formal(nombre=p[0], tipo=p[2])
     
-    @_("formal ','")
+    @_("formal")
     def formales(self, p):
         return [p[0]]
     
-    @_("formales formal ','")
+    @_("formales ',' formal")
     def formales(self, p):
         p[0].append(p[1])
         return p[0]
@@ -76,31 +101,31 @@ class CoolParser(Parser):
     def expression(self, p):
         return Asignacion(identificador=p[0], expresion=p[2])
 
-    @_("expression + expression")
+    @_("expression '+' expression")
     def expression(self, p):
         return Suma(izquierda=p[0], derecha=p[2])
     
-    @_("expression - expression")
+    @_("expression '-' expression")
     def expression(self, p):
         return Resta(izquierda=p[0], derecha=p[2])
     
-    @_("expression * expression")
+    @_("expression '*' expression")
     def expression(self, p):
         return Multiplicacion(izquierda=p[0], derecha=p[2])
     
-    @_("expression / expression")
+    @_("expression '/' expression")
     def expression(self, p):
         return Division(izquierda=p[0], derecha=p[2])
     
-    @_("expression < expression")
+    @_("expression '<' expression")
     def expression(self, p):
         return Menor(izquierda=p[0], derecha=p[2])
     
-    @_("expression <= expression")
+    @_("expression LE expression")
     def expression(self, p):
         return LeIgual(izquierda=p[0], derecha=p[2])
     
-    @_("expression = expression")
+    @_("expression '=' expression")
     def expression(self, p):
         return Igual(izquierda=p[0], derecha=p[2])
     
@@ -108,15 +133,15 @@ class CoolParser(Parser):
     def expression(self, p):
         return p[1]
     
-    @_("NOT expression )")
+    @_("NOT expression")
     def expression(self, p):
         return Not(p[1])
     
-    @_("ISVOID expression )")
+    @_("ISVOID expression")
     def expression(self, p):
         return  EsNulo(p[1])
     
-    @_("~ expression )")
+    @_("'~' expression")
     def expression(self, p):
         return  Neg(p[1])
     
@@ -177,11 +202,11 @@ class CoolParser(Parser):
     def expression(self, p):
         return Let(nombre=p[1], tipo=p[3], cuerpo=p[6], inicializacion=p[4])
 
-    @_("LET OBJECTID ':' TYPEID',' variables IN expressions")
+    @_("LET OBJECTID ':' TYPEID ',' variables IN expressions")
     def expression(self, p):
         return Let(nombre=p[1], tipo=p[3], cuerpo=p[6], inicializacion=NoExpr())
     
-    @_("LET OBJECTID ':' TYPEID asignacion',' variables IN expressions")
+    @_("LET OBJECTID ':' TYPEID asignacion ',' variables IN expressions")
     def expression(self, p):
         return Let(nombre=p[1], tipo=p[3], cuerpo=p[5], inicializacion=p[4])
     
@@ -244,8 +269,13 @@ class CoolParser(Parser):
     def expression(self, p):
         return Bloque(expressions=p[1])
     
-
-a = CoolLexer()
-b = CoolParser()
-# objeto = b.parse(a.tokenize("{ 1 + 2; 3 + 4; }"))
-# print(objeto.str(0))
+    @_("INT_CONST")
+    def expression(self, p):
+        return Entero(valor=p[0])
+    @_("STR_CONST")
+    def expression(self, p):
+        return String(valor=p[0])
+    @_("BOOL_CONST")
+    def expression(self, p):
+        return Booleano(valor=p[0])
+    

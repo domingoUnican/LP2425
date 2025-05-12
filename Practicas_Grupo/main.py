@@ -6,7 +6,7 @@ from termcolor import colored
 init()
 
 
-DIRECTORIO = os.path.expanduser("./")
+DIRECTORIO = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
@@ -23,7 +23,7 @@ TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
 TESTS.sort()
-TESTS = ["all_else_true.cl.cool"]
+#TESTS = ["arithprecedence.test"]
 
 if True:
     for fich in TESTS:
@@ -47,13 +47,16 @@ if True:
                 if DEBUG:
                     texto = re.sub(r'#\d+\b','',texto)
                     resultado = re.sub(r'#\d+\b','',resultado)
+                    
                     nuestro = [linea for linea in texto.split('\n') if linea]
                     bien = [linea for linea in resultado.split('\n') if linea]
                     linea = 0
+                    
                     while nuestro[linea:linea+NUMLINEAS] == bien[linea:linea+NUMLINEAS]:
                         linea += 1
                     print(colored('\n'.join(nuestro[linea:linea+NUMLINEAS]), 'white', 'on_red'))
                     print(colored('\n'.join(bien[linea:linea+NUMLINEAS]), 'blue', 'on_green'))
+                    
                     f = open(os.path.join(DIR, fich)+'.nuestro', 'w')
                     g = open(os.path.join(DIR, fich)+'.bien', 'w')
                     f.write(texto.strip())

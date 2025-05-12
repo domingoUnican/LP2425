@@ -6,13 +6,39 @@ import re
 import sys
 
 
+# class Comentario(Lexer):
+#     _nivel_anidado = 0
+#     tokens = {}
+
+#     @_(r'\(\*')
+#     def LINEA(self, t):
+#         print("entra comentario")
+#         self._nivel_anidado += 1
+
+#     @_(r'\*\)')
+#     def VOLVER(self, t):
+#         print("vuelve de comentario")
+#         # if self._nivel_anidado > 0: self._nivel_anidado -= 1
+#         # if self._nivel_anidado == 0: self.begin(CoolLexer) #??? 
+#         self._nivel_anidado -= 1
+#         self.begin(CoolLexer)
+    
+
+#     @_(r'\n')
+#     def LINEBREAK(self, t):
+#         self.lineno += 1
+    
+#     @_(r'.')
+#     def PASAR(self, t):
+#         pass
+
 class Comentario(Lexer):
     _nivel_anidado = 0
     tokens = {}
 
     @_(r'\(\*')
     def LINEA(self, t):
-        nivel_anidado += 1
+        self._nivel_anidado += 1
 
     @_(r'\*\)')
     def VOLVER(self, t):
@@ -27,8 +53,6 @@ class Comentario(Lexer):
     def LINEBREAK(self, t):
         self.lineno += 1
 
-
-
 class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
               ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
@@ -40,21 +64,31 @@ class CoolLexer(Lexer):
                       "ISVOID","LET", "LOOP", "NEW", "OF", "POOL", 
                       "THEN", "WHILE")
     ignore = '\t '
-    literals = ('.','+','-','*','/','<','<=','=','(',')','~', ';', '{', '}', 
-                '[', ']',':', ',', '!', '@', '?', '>', '->', ':=', '~', '¬', '|', '<-')
+    literals = ('.','+','-','*','/','<','=','(',')','~', ';', '{', '}', 
+               ':', ',', '@', '~')
     ELSE = r'\b[eE][lL][sS][eE]\b'
-    STR_CONST = r'\"[^\"]*\"'
-    #STR_CONST = r'"[a-zA-Z0-9_/]*"'
+    # STR_CONST = r'\"[^\"]*\"'
+
+    #TODO: arith.cool esta bien pero no lo detecta
+    #TODO: io.cool ESTA MAL, no deberia escribir nada porque es todo un comentario
+    #TODO: integers2.cool no tiene sentido 0b es int 0 y objectid b y lo mismo con los valores 000001 no puede ser 1 tiene que ser 000001
+    #TODO: new_complex.cool esta mal con los parentesis y los brackets???
+    #TODO: arreglar comentarios
+    #TODO: arreglar TAB \t en strings (es una feature y no un bug?)
+    
+    @_(r'\"[^\"]*\"')
+    def STR_CONST(self, t):
+        t.value = t.value.replace("\t", "\\t")
+        return t
     
     @_(r'\(\*')
     def IR_BLOQUE(self, t):
-        print("Entrando a Comentario")
-        Comentario._nivel_anidado += 1
+        #Comentario._nivel_anidado += 1 #no hace falta porque al entrar en comentario tmb entra ahi en (*
         self.begin(Comentario)
     
     @_(r'--.*')
     def IR_LINEA(self, t):
-        if Comentario._nivel_anidado != 0: pass
+        # if Comentario._nivel_anidado != 0: pass # deberia dar igual porque al estar dentro de comentario se come todo lo que no sea entrada a comentario de bloque o salida
         self.lineno += 1
 
     @_(r'\*\)')
@@ -62,7 +96,7 @@ class CoolLexer(Lexer):
         t.type = "ERROR \"Unmatched *)\""
         return t
 
-    @_(r'\b[a-z][A-Z0-9_a-z]*\b')
+    @_(r'[a-z][A-Z0-9_a-z]*\b')
     def OBJECTID(self, t):
         if t.value.upper() in self.RESERVED_WORDS:
             t.type = t.value.upper()
@@ -74,14 +108,16 @@ class CoolLexer(Lexer):
     @_(r'\d+')
     def INT_CONST(self, t):
         t.type = "INT_CONST"
-        t.value = int(t.value)
+        t.value = t.value
+        #t.value = int(t.value)
+        #integers2.cool
         return t
 
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
     
-    @_(r'[A-Z][A-Z0-9_a-z]*')
+    @_(r'\b[A-Z][A-Z0-9_a-z]*')
     def TYPEID(self, t):
         if t.value.upper() not in self.RESERVED_WORDS:
             t.type = "TYPEID"
@@ -104,20 +140,15 @@ class CoolLexer(Lexer):
         t.value = "DARROW"
         return t
         
-
-    # @_(r'.')
-    # def ERROR(self, t):
-    #     if t.value in self.literals:
-    #         t.type = t.value
-    #         return t
-
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
 
-    def error(self, t):
-        self.index += 1
-    
+    @_(r'.')
+    def ERROR(self, t):
+        if t.value in self.literals:
+            t.type = t.value
+            return t
     
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
                           for i in ['0', '1']

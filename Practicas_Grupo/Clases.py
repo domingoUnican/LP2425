@@ -13,8 +13,6 @@ class Nodo:
     def Tipo(self):
         pass
 
-
-
 @dataclass
 class Formal(Nodo):
     nombre_variable: str = '_no_set'

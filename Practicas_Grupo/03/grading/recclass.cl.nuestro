@@ -1,0 +1,137 @@
+_program
+  _class
+    P
+    Object
+    "recclass.cl"
+    (
+    _attr
+      x
+      P
+      _no_expr
+      : _no_type
+    _method
+      foo
+      Object
+      _block
+        _assign
+          x
+          _new
+            P
+          : _no_type
+        : _no_type
+        _dispatch
+          _object
+            self
+          : _no_type
+          abort
+          (
+          )
+        : _no_type
+      : _no_type
+    _method
+      badGuy
+      Object
+      _dispatch
+        _object
+          x
+        : _no_type
+        foo
+        (
+        )
+      : _no_type
+    )
+  _class
+    C
+    P
+    "recclass.cl"
+    (
+    _method
+      foo
+      Object
+      _block
+        _dispatch
+          _new
+            IO
+          : _no_type
+          out_string
+          (
+          _string
+            "ok\n"
+          : _no_type
+          )
+        : _no_type
+        _assign
+          x
+          _new
+            C
+          : _no_type
+        : _no_type
+      : _no_type
+    )
+  _class
+    Main
+    Object
+    "recclass.cl"
+    (
+    _method
+      f1
+      _formal
+        p
+        P
+      Object
+      _block
+        _cond
+          _bool
+            0
+          : _no_type
+          _assign
+            p
+            _new
+              P
+            : _no_type
+          : _no_type
+          _int
+            0
+          : _no_type
+        : _no_type
+        _dispatch
+          _object
+            p
+          : _no_type
+          foo
+          (
+          )
+        : _no_type
+      : _no_type
+    _method
+      main
+      Object
+      _let
+        c
+        C
+        _new
+          C
+        : _no_type
+        _block
+          _dispatch
+            _object
+              self
+            : _no_type
+            f1
+            (
+            _object
+              c
+            : _no_type
+            )
+          : _no_type
+          _dispatch
+            _object
+              c
+            : _no_type
+            badGuy
+            (
+            )
+          : _no_type
+        : _no_type
+      : _no_type
+    )

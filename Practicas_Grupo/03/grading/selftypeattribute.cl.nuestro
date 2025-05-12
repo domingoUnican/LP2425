@@ -1,0 +1,105 @@
+_program
+  _class
+    A
+    Object
+    "selftypeattribute.cl"
+    (
+    _attr
+      x
+      SELF_TYPE
+      _no_expr
+      : _no_type
+    _method
+      init
+      Object
+      _assign
+        x
+        _new
+          SELF_TYPE
+        : _no_type
+      : _no_type
+    _method
+      foo
+      Int
+      _int
+        1
+      : _no_type
+    _method
+      getx
+      A
+      _object
+        x
+      : _no_type
+    )
+  _class
+    B
+    A
+    "selftypeattribute.cl"
+    (
+    _method
+      foo
+      Int
+      _int
+        2
+      : _no_type
+    )
+  _class
+    Main
+    IO
+    "selftypeattribute.cl"
+    (
+    _method
+      main
+      Object
+      _block
+        _let
+          a
+          A
+          _new
+            B
+          : _no_type
+          _block
+            _dispatch
+              _object
+                a
+              : _no_type
+              init
+              (
+              )
+            : _no_type
+            _dispatch
+              _object
+                self
+              : _no_type
+              out_int
+              (
+              _dispatch
+                _dispatch
+                  _object
+                    a
+                  : _no_type
+                  getx
+                  (
+                  )
+                : _no_type
+                foo
+                (
+                )
+              : _no_type
+              )
+            : _no_type
+          : _no_type
+        : _no_type
+        _dispatch
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          _string
+            "\n"
+          : _no_type
+          )
+        : _no_type
+      : _no_type
+    )

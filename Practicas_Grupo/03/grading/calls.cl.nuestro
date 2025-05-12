@@ -1,0 +1,112 @@
+_program
+  _class
+    Main
+    Object
+    "calls.cl"
+    (
+    _attr
+      io
+      IO
+      _new
+        IO
+      : _no_type
+    _method
+      main
+      Object
+      _block
+        _dispatch
+          _object
+            io
+          : _no_type
+          out_int
+          (
+          _dispatch
+            _object
+              self
+            : _no_type
+            f
+            (
+            _dispatch
+              _object
+                self
+              : _no_type
+              g
+              (
+              _int
+                1
+              : _no_type
+              )
+            : _no_type
+            _dispatch
+              _object
+                self
+              : _no_type
+              h
+              (
+              _int
+                2
+              : _no_type
+              )
+            : _no_type
+            )
+          : _no_type
+          )
+        : _no_type
+        _dispatch
+          _object
+            io
+          : _no_type
+          out_string
+          (
+          _string
+            "\n"
+          : _no_type
+          )
+        : _no_type
+      : _no_type
+    _method
+      f
+      _formal
+        x
+        Int
+      _formal
+        y
+        Int
+      Int
+      _plus
+        _object
+          x
+        : _no_type
+        _object
+          y
+        : _no_type
+      : _no_type
+    _method
+      g
+      _formal
+        x
+        Int
+      Int
+      _plus
+        _object
+          x
+        : _no_type
+        _int
+          5
+        : _no_type
+      : _no_type
+    _method
+      h
+      _formal
+        x
+        Int
+      Int
+      _plus
+        _object
+          x
+        : _no_type
+        _int
+          7
+        : _no_type
+      : _no_type
+    )

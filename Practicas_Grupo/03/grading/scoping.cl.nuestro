@@ -1,0 +1,181 @@
+_program
+  _class
+    Bob
+    IO
+    "scoping.cl"
+    (
+    _attr
+      x
+      Int
+      _no_expr
+      : _no_type
+    _attr
+      y
+      Int
+      _int
+        4
+      : _no_type
+    )
+  _class
+    Main
+    Bob
+    "scoping.cl"
+    (
+    _attr
+      z
+      Int
+      _int
+        23
+      : _no_type
+    _method
+      jack
+      _formal
+        q
+        Int
+      _formal
+        z
+        Int
+      Int
+      _block
+        _let
+          z
+          Int
+          _plus
+            _object
+              z
+            : _no_type
+            _object
+              y
+            : _no_type
+          : _no_type
+          _dispatch
+            _object
+              self
+            : _no_type
+            print_z
+            (
+            _object
+              z
+            : _no_type
+            )
+          : _no_type
+        : _no_type
+        _assign
+          y
+          _plus
+            _object
+              y
+            : _no_type
+            _int
+              4
+            : _no_type
+          : _no_type
+        : _no_type
+        _let
+          y
+          Int
+          _plus
+            _object
+              z
+            : _no_type
+            _object
+              y
+            : _no_type
+          : _no_type
+          _object
+            y
+          : _no_type
+        : _no_type
+      : _no_type
+    _method
+      print_z
+      _formal
+        z
+        Int
+      SELF_TYPE
+      _block
+        _dispatch
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          _string
+            "z = "
+          : _no_type
+          )
+        : _no_type
+        _dispatch
+          _object
+            self
+          : _no_type
+          out_int
+          (
+          _object
+            z
+          : _no_type
+          )
+        : _no_type
+        _dispatch
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          _string
+            "\n"
+          : _no_type
+          )
+        : _no_type
+      : _no_type
+    _method
+      main
+      Bob
+      _block
+        _dispatch
+          _object
+            self
+          : _no_type
+          print_z
+          (
+          _object
+            z
+          : _no_type
+          )
+        : _no_type
+        _let
+          z
+          Int
+          _dispatch
+            _object
+              self
+            : _no_type
+            jack
+            (
+            _int
+              5
+            : _no_type
+            _plus
+              _object
+                z
+              : _no_type
+              _int
+                2
+              : _no_type
+            : _no_type
+            )
+          : _no_type
+          _dispatch
+            _object
+              self
+            : _no_type
+            print_z
+            (
+            _object
+              z
+            : _no_type
+            )
+          : _no_type
+        : _no_type
+      : _no_type
+    )

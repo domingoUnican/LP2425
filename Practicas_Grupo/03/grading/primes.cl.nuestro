@@ -1,0 +1,207 @@
+_program
+  _class
+    Main
+    IO
+    "primes.cl"
+    (
+    _method
+      main
+      Int
+      _int
+        0
+      : _no_type
+    _attr
+      out
+      Int
+      _block
+        _dispatch
+          _object
+            self
+          : _no_type
+          out_string
+          (
+          _string
+            "2 is trivially prime.\n"
+          : _no_type
+          )
+        : _no_type
+        _int
+          2
+        : _no_type
+      : _no_type
+    _attr
+      testee
+      Int
+      _object
+        out
+      : _no_type
+    _attr
+      divisor
+      Int
+      _no_expr
+      : _no_type
+    _attr
+      stop
+      Int
+      _int
+        500
+      : _no_type
+    _attr
+      m
+      Object
+      _loop
+        _bool
+          1
+        : _no_type
+        _block
+          _assign
+            testee
+            _plus
+              _object
+                testee
+              : _no_type
+              _int
+                1
+              : _no_type
+            : _no_type
+          : _no_type
+          _assign
+            divisor
+            _int
+              2
+            : _no_type
+          : _no_type
+          _loop
+            _cond
+              _lt
+                _object
+                  testee
+                : _no_type
+                _mul
+                  _object
+                    divisor
+                  : _no_type
+                  _object
+                    divisor
+                  : _no_type
+                : _no_type
+              : _no_type
+              _bool
+                0
+              : _no_type
+              _cond
+                _eq
+                  _sub
+                    _object
+                      testee
+                    : _no_type
+                    _mul
+                      _object
+                        divisor
+                      : _no_type
+                      _divide
+                        _object
+                          testee
+                        : _no_type
+                        _object
+                          divisor
+                        : _no_type
+                      : _no_type
+                    : _no_type
+                  : _no_type
+                  _int
+                    0
+                  : _no_type
+                : _no_type
+                _bool
+                  0
+                : _no_type
+                _bool
+                  1
+                : _no_type
+              : _no_type
+            : _no_type
+            _assign
+              divisor
+              _plus
+                _object
+                  divisor
+                : _no_type
+                _int
+                  1
+                : _no_type
+              : _no_type
+            : _no_type
+          : _no_type
+          _cond
+            _lt
+              _object
+                testee
+              : _no_type
+              _mul
+                _object
+                  divisor
+                : _no_type
+                _object
+                  divisor
+                : _no_type
+              : _no_type
+            : _no_type
+            _block
+              _assign
+                out
+                _object
+                  testee
+                : _no_type
+              : _no_type
+              _dispatch
+                _object
+                  self
+                : _no_type
+                out_int
+                (
+                _object
+                  out
+                : _no_type
+                )
+              : _no_type
+              _dispatch
+                _object
+                  self
+                : _no_type
+                out_string
+                (
+                _string
+                  " is prime.\n"
+                : _no_type
+                )
+              : _no_type
+            : _no_type
+            _int
+              0
+            : _no_type
+          : _no_type
+          _cond
+            _leq
+              _object
+                stop
+              : _no_type
+              _object
+                testee
+              : _no_type
+            : _no_type
+            _dispatch
+              _string
+                "halt"
+              : _no_type
+              abort
+              (
+              )
+            : _no_type
+            _string
+              "continue"
+            : _no_type
+          : _no_type
+        : _no_type
+      : _no_type
+    )

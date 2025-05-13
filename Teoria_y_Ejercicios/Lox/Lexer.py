@@ -272,8 +272,8 @@ prueba4 = "or and "
 prueba5 = 'a = "fuera del comentario" // dentro del comentario\n b = 2'
 prueba6 = 'x = 1.5 \n y = 2.5.7 \n z = 4 a = 8.'
 
-for i in tokenize(prueba6):
-    print("El token es ", i)
+#for i in tokenize(prueba6):
+#    print("El token es ", i)
 
 
 # salida de prueba 1

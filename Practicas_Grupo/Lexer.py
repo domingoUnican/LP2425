@@ -239,7 +239,6 @@ class CoolLexer(Lexer):
         "(",
         ")",
         "<",
-        ">",
         ".",
         "~",
         ",",
@@ -348,12 +347,13 @@ class CoolLexer(Lexer):
         self.lineno += t.value.count("\n")
 
     def error(self, t):
-        """Si encontramos un caracter que no coincide con ninguna regla definida, indicamos que es ilegal.
-
-        Se avanza el indice del lexer manualmente para evitar un bucle infinito.
-        """
-        print("Illegal character '%s'" % t.value[0])
-        self.index += 1
+        """Si encontramos un caracter que no coincide con ninguna regla definida, lo devolvemos como error."""
+        t.type = "ERROR"
+        valor = repr(t.value[0])[1:-1]
+        t.value = f'"{valor}"'
+        t.lineno = self.lineno
+        self.index += 1  # Avanza el índice para evitar bucles
+        return t
 
     def salida(self, texto):
         lexer = CoolLexer()

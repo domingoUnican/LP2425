@@ -217,6 +217,10 @@ class CoolParser(Parser):
     # fin condicionales
 
     # ini bucles
+    @_("WHILE expresion LOOP error LOOP")
+    def expresion(self, p):
+        return Bucle(linea=p.lineno, condicion=p[1], cuerpo=NoExpr())
+
     @_("WHILE expresion LOOP expresion POOL")
     def expresion(self, p):
         return Bucle(linea=p.lineno, condicion=p[1], cuerpo=p[3])
@@ -404,7 +408,7 @@ class CoolParser(Parser):
 
 
 def main():
-    fichero = "while.test"
+    fichero = "casenoexpr.test"
     with open(f"02/grading/{fichero}", "r") as f:
         txt = f.read()
 

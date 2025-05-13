@@ -1,9 +1,0 @@
-#name "comment_in_string.cl.cool"
- LITERAL
- OBJECTID string
- OBJECTID string
- STR_CONST "
-"
- OBJECTID string
- LITERAL
- LITERAL

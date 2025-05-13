@@ -5,12 +5,9 @@
  OBJECTID thought
  OBJECTID it
  OBJECTID was
- LITERAL
- LITERAL
- LITERAL
- LITERAL
- LITERAL
+ '*' 
+ ')' 
+ '.' 
  IF
  INT_CONST 5
  THEN
- LITERAL

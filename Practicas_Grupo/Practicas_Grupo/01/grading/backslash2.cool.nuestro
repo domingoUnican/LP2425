@@ -1,57 +1,6 @@
 #name "backslash2.cool"
- LITERAL
- TYPEID I
- LITERAL
- OBJECTID m
- NOT
- OBJECTID going
- OBJECTID to
- OBJECTID escape
- OBJECTID this
- OBJECTID newline
- LITERAL
- STR_CONST "
-
-"
- TYPEID This
- OBJECTID is
- OBJECTID also
- NOT
- OBJECTID escaped
- LITERAL
- LITERAL
- LITERAL
- STR_CONST "
-
-"
- TYPEID This
- OBJECTID is
- LITERAL
- OBJECTID though
- LITERAL
- LITERAL
- LITERAL
- LITERAL
- STR_CONST "
-
-"
- LITERAL
- LITERAL
- STR_CONST "
-
-"
- TYPEID It
- LITERAL
- OBJECTID s
- OBJECTID fine
- OBJECTID to
- OBJECTID have
- OBJECTID this
- LITERAL
- LITERAL
- OBJECTID n
- IN
- OBJECTID a
- OBJECTID string
- LITERAL
- LITERAL
+ STR_CONST "I'm not going to escape this newline\n"
+ STR_CONST "This is also not escaped \\n"
+ STR_CONST "This is, though \\n"
+ STR_CONST "\"
+ STR_CONST "It's fine to have this: \n in a string"

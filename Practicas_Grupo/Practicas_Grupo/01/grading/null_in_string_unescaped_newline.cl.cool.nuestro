@@ -4,9 +4,9 @@
  OBJECTID character
  OBJECTID is
  OBJECTID here
- LITERAL
- LITERAL
+ '-' 
+ '>' 
  LITERAL
  ASSIGN
  OBJECTID a
- LITERAL
+ '+'

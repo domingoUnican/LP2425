@@ -1,44 +1,32 @@
 #name "escapedunprintables.cool"
+ STR_CONST "This is a tab:\t"
  LITERAL
- TYPEID This
- OBJECTID is
- OBJECTID a
- OBJECTID tab
- LITERAL
- LITERAL
- STR_CONST "
-"
  TYPEID This
  OBJECTID is
  OBJECTID a
  OBJECTID backspace
+ ':' 
  LITERAL
  LITERAL
- LITERAL
- STR_CONST "
-"
+ STR_CONST "\n"
  TYPEID This
  OBJECTID is
  OBJECTID a
  OBJECTID formfeed
+ ':' 
  LITERAL
- LITERAL
- LITERAL
- STR_CONST "
-"
+ STR_CONST "\n"
  TYPEID This
  OBJECTID is
  OBJECTID a
  OBJECTID carriage
  OBJECTID return
- LITERAL
- LITERAL
- STR_CONST "
-"
+ ':' 
+ STR_CONST "\n"
  TYPEID This
  OBJECTID is
  OBJECTID an
  OBJECTID escape
- LITERAL
+ ':' 
  LITERAL
  LITERAL

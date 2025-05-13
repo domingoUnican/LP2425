@@ -1,3 +1,4 @@
 #name "nestedcomment.cool"
- LITERAL
- LITERAL
+ TYPEID XXX
+ '*' 
+ ')'

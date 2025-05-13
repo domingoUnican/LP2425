@@ -307,9 +307,9 @@ class CoolParser(Parser):
 
     @_("BOOL_CONST")
     def Expresion(self, p):
-        if p.BOOL_CONST.upper() == "TRUE":
+        if p.BOOL_CONST:
             return Booleano(valor=True)
-        elif p.BOOL_CONST.upper() == "FALSE":
+        elif p.BOOL_CONST:
             return Booleano(valor=False)
         else:
             return Booleano(valor=p.BOOL_CONST)

@@ -1,6 +1,4 @@
 #name "wq0607-c3.cool"
- LITERAL
- LITERAL
  STR_CONST "\"
  STR_CONST ""
  LITERAL
@@ -16,5 +14,3 @@
  LITERAL
  STR_CONST ""
  STR_CONST ""
- LITERAL
- LITERAL

@@ -1,6 +1,2 @@
 #name "s19.test.cool"
- LITERAL
- STR_CONST "c
-d"
- LITERAL
- LITERAL
+ STR_CONST "c\nd"

@@ -3,8 +3,6 @@
  OBJECTID other
  OBJECTID unescaped
  OBJECTID whitespace
- LITERAL
- LITERAL
- LITERAL
+ ':' 
  LITERAL
  LITERAL

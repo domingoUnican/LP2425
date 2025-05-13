@@ -32,10 +32,10 @@ class CoolLexer(Lexer):
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
               POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
     ignore = '\t '
+    STR_CONST = r'"([\w,\s\\\/\+\-\*\=\(\)\':!@#$%\^&_\t >\?¿\[\]\.]|\\[btrsnf"\\])*"'
     literals = {'+', '-', '*', '/',
                 '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}','='}
     ELSE = r'\b[eE][lL][sS][eE]\b'
-    STR_CONST = r'"[\w,\s\\\/\+\-\*\=\(\)]*"'
     
     @_(r'\(\*')
     def BLOCKCOMMENT(self, t):
@@ -44,6 +44,11 @@ class CoolLexer(Lexer):
     def STR_CONST(self, t):
         t.type = 'STR_CONST'
         t.value = re.sub(r'\\([^btnr])', r'\1', t.value)
+        t.value = t.value.replace('\t', '\\t')
+        t.value = t.value.replace('\n', '\\n')
+        t.value = t.value.replace('\b', '\\b')
+        t.value = t.value.replace('\f', '\\f')
+        t.value = t.value.replace(r'\\', '\\')
         return t
     
     @_(r'--.*')
@@ -58,6 +63,7 @@ class CoolLexer(Lexer):
             t.type = t.value.upper()
         if t.value.upper() in ("TRUE", "FALSE"):
             t.type = "BOOL_CONST"
+            t.value = True if t.value.upper() == "TRUE" else False
         return t
     @_(r'[A-Z][A-Z0-9_a-z]*')
     def TYPEID(self, t):
@@ -69,7 +75,7 @@ class CoolLexer(Lexer):
     
     @_(r'[0-9]+')
     def INT_CONST(self, t):
-        t.value = int(t.value)
+        t.value = t.value
         return t
     @_(r'<=')
     def LE(self, t):

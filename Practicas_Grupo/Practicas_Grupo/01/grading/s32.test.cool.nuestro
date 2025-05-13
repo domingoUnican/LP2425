@@ -1,4 +1,3 @@
 #name "s32.test.cool"
- LITERAL
- LITERAL
- LITERAL
+ '*' 
+ ')'

@@ -1,7 +1,5 @@
 #name "backslash.cool"
  STR_CONST "012\0\1\2\tf\b\n\ra\bcdefg"
- LITERAL
- LITERAL
  STR_CONST ""
  OBJECTID this
  OBJECTID is
@@ -9,9 +7,7 @@
  OBJECTID inside
  OBJECTID the
  OBJECTID string
- STR_CONST "
-
-"
+ STR_CONST "\n\n"
  TYPEID I
  LITERAL
  OBJECTID m
@@ -20,8 +16,5 @@
  OBJECTID excape
  OBJECTID a
  OBJECTID newline
- LITERAL
- LITERAL
- LITERAL
  LITERAL
  LITERAL

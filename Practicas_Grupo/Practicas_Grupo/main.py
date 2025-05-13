@@ -14,12 +14,13 @@ from Lexer import *
 from Parser import *
 from Clases import *
 
-PRACTICA = "02" # Practica que hay que evaluar
+tipo_test = r'grading'
+PRACTICA = r"01" # Practica que hay que evaluar
 DEBUG = True   # Decir si se lanzan mensajes de debug
 NUMLINEAS = 3   # Numero de lineas que se muestran antes y después de la no coincidencia
 sys.path.append(DIRECTORIO)
-DIR = os.path.join(DIRECTORIO, PRACTICA, 'grading')
-FICHEROS = os.listdir(r"./02/grading")
+DIR = os.path.join(DIRECTORIO, PRACTICA, tipo_test)
+FICHEROS = os.listdir(r"./"+PRACTICA+r"/"+tipo_test)
 TESTS = [fich for fich in FICHEROS
          if os.path.isfile(os.path.join(DIR, fich)) and
          re.search(r"^[a-zA-Z].*\.(cool|test|cl)$",fich)]
@@ -41,6 +42,7 @@ if True:
         if PRACTICA == '01':
             texto = '\n'.join(lexer.salida(entrada))
             texto = f'#name "{fich}"\n' + texto
+            #print(texto)
             resultado = g.read()
             g.close()
             a = texto.strip().split()
@@ -52,18 +54,28 @@ if True:
                 if DEBUG:
                     texto = re.sub(r'#\d+\b','',texto)
                     resultado = re.sub(r'#\d+\b','',resultado)
-                    nuestro = [linea for linea in texto.split('\n') if linea]
+                    nuestro = [linea + '\r' for linea in texto.split('\n') if linea]
                     bien = [linea for linea in resultado.split('\n') if linea]
+                    #print(nuestro)
+                    #print(bien)
+                    #for i,j in zip(nuestro, bien):
+                    #    if i.strip() != j.strip():
+                    #        print('fich:', fich)
+                    #        print(f"Nuestro: {i}")
+                    #        print(f"Bien: {j}")
+                    #        break
+                    #print('###############################3')
+                    #print(resultado)
                     linea = 0
                     while nuestro[linea:linea+NUMLINEAS] == bien[linea:linea+NUMLINEAS]:
                         linea += 1
                     #print(colored('\n'.join(nuestro[linea:linea+NUMLINEAS]), 'white', 'on_red'))
                     #print(colored('\n'.join(bien[linea:linea+NUMLINEAS]), 'blue', 'on_green'))
                     f = open(os.path.join(DIR, fich)+'.nuestro', 'w')
-                    g = open(os.path.join(DIR, fich)+'.bien', 'w')
                     f.write(texto.strip())
-                    g.write(resultado.strip())
                     f.close()
+                    g = open(os.path.join(DIR, fich)+'.bien', 'w')
+                    g.write(resultado.strip())
                     g.close()
         elif PRACTICA in ('02', '03'):
             parser = CoolParser()

@@ -1,32 +1,35 @@
-# Exercise 0 - warmup.py
+# AUTOR: GONZALO PEÑA MANTEROLA
+# Ejercicio 0 - warmup.py
 #
-# A warmup exercise to illustrate some of the basic concepts of
-# compilers.  It defines a very minimal virtual machine.  You are
-# to write three programs based on this machine.   Follow instructions
-# near the bottom of this file.
-# ----------------------------------------------------------------------
+# Un ejercicio de calentamiento para ilustrar algunos de los conceptos básicos de
+# compiladores. Define una máquina virtual mínima. Las prácticas son
+# escribir tres programas basados ​​en esta máquina. Seguir instrucciones
+# cerca del final de este archivo.
+# ------------------------------------------------- ---------------------
 
-# TinyVM. 
-# 
-# A tiny virtual machine.  The machine has 8 registers (R0,R1,...,R7)
-# and understands the following 8 instructions--which are encoded as
-# tuples.
+# TinyVM.
 #
-#   ('ADD', 'Ra', 'Rb', 'Rd')     -> Rc = Ra + Rb
-#   ('SUB', 'Ra', 'Rb', 'Rd')     -> Rc = Ra - Rb
-#   ('MOV', value, 'Rd')          -> Rd = value
-#   ('LD', 'Rs', 'Rd', offset)    -> Rd = MEMORY[Rs + offset]
-#   ('ST', 'Rs', 'Rd', offset)    -> MEMORY[Rd + offset] = Rs
-#   ('JMP', 'Rd', offset)         -> PC = Rd + offset
-#   ('BZ', 'Rt', offset)          -> if Rt == 0: PC = PC + offset
-#   ('HALT,)                      -> Halts machine
+# Una pequeña máquina virtual. La máquina tiene 8 registros (R0, R1, ..., R7)
+# y comprende las siguientes 8 instrucciones, que están codificadas como
+# tuplas.
 #
-# In the the above instructions 'Rx' means some register number such 
-# as R0, R1, etc.  Initially the machine initialzes R0,...,R6 to 0.
-# R7 is initialized to last valid memory address.
+# ('ADD', 'Ra', 'Rb', 'Rd') -> Rc = Ra + Rb
+# ('SUB', 'Ra', 'Rb', 'Rd') -> Rc = Ra - Rb
+# ('MOV', valor, 'Rd') -> Rd = valor
+# ('LD', 'Rs', 'Rd', offset) -> Rd = MEMORIA [Rs + desplazamiento]
+# ('ST', 'Rs', 'Rd', offset) -> MEMORIA [Rd + desplazamiento] = Rs
+# ('JMP', 'Rd', offset) -> PC = Rd + desplazamiento
+# ('BRZ', 'Rt', offset) -> si Rt == 0: PC = PC + desplazamiento
+# ('HALT,) -> Detiene la máquina
+#
+# En las instrucciones anteriores, 'Rx' significa algún número de registro como
+# como R0, R1, etc. Inicialmente, la máquina inicializa R0, ..., R6 a 0.
+# R7 se inicializa a la última dirección de memoria válida.
+
 
 class Halt(Exception):
     pass
+
 
 class TinyVM(object):
     def run(self, memory):
@@ -37,16 +40,17 @@ class TinyVM(object):
         memory address.
         '''
         self.pc = 0
-        self.registers = { f'R{d}':0 for d in range(8) }
+        self.registers = {f'R{d}': 0 for d in range(8)}
         self.memory = memory
         self.registers['R7'] = len(memory) - 1
         try:
             while True:
+                #print(self.pc,self.memory[self.pc],self.registers)
                 op, *args = self.memory[self.pc]
                 self.pc += 1
                 getattr(self, op)(*args)
         except Halt:
-            self.registers = { key: 0 for key in self.registers }
+            self.registers = {key: 0 for key in self.registers}
         return
 
     def ADD(self, ra, rb, rd):
@@ -77,64 +81,85 @@ class TinyVM(object):
 
 machine = TinyVM()
 
-# ----------------------------------------------------------------------
-# Problem 1:  Computers
+# ------------------------------------------------- ---------------------
+# Problema 1: Computadoras
 #
-# The CPU of a computer executes low-level instructions.  Using the
-# TinyVM instruction set above, show how you would compute 2 + 3 - 4.
+# La CPU de una computadora ejecuta instrucciones de bajo nivel. Utilizando la
+# La instrucción TinyVM establecida anteriormente, muestra cómo calcularía 2 + 3 - 4. 
 
-prog1 = [ # Instructions here
-          ('MOV', 2, 'R1'),
-          # ...
-          ('ST', 'RESULT', 'R7', 0),    # Save result. Replace 'RESULT' with a register
-          ('HALT',),
-          0            # Store the result here (note: R7 holds this address)
-          ]
+prog1 = [  # Poner aquí las instrucciones
+    ('MOV', 2, 'R1'),
+    ('MOV', 3, 'R2'),
+    ('MOV', 4, 'R3'),
+    ('ADD', 'R1', 'R2', 'R4'),
+    ('SUB', 'R4', 'R3', 'R5'),
+    ('ST', 'R5', 'R7', 0),    # Cambiar el resultado por el registro
+    ('HALT', ),
+    0            # Guardar este valor en R7.
+]
 
 machine.run(prog1)
-print('Program 1 Result:', prog1[-1], '(should be 1)')
+print('Resultado del programa 1:', prog1[-1], '(debería ser  1)')
 
-# ----------------------------------------------------------------------
-# Problem 2: Computation
+# ------------------------------------------------- ---------------------
+# Problema 2: Computación
 #
-# Write a TinyVM program that computes 23 * 37.  Note: The machine
-# doesn't implement multiplication.  So, you need to figure out how
-# to do it.
+# Escribir un programa TinyVM que calcule 23 * 37. Nota: La máquina
+# no implementa la multiplicación, se debe deducir cómo
+# para hacerlo.
 
-prog2 = [ # Instructions here
-          # ...
-          ('HALT',),
-          0           # Store result here
+prog2 = [  # Instrucciones
+           # ...
+           ('MOV', 23, 'R1'),
+           ('MOV', 23, 'R5'),
+           ('MOV', 36, 'R2'),
+           ('MOV', 1, 'R3'),
+           ('ADD', 'R1', 'R5', 'R5'),
+           ('SUB', 'R2', 'R3', 'R2'),
+           ('BRZ', 'R2', 1),
+           ('JMP', 'R7', -6),
+           ('ST', 'R5', 'R7', 0),    # Cambiar el resultado por el registro
+           ('HALT',),
+          0           # Resultado
         ]
 
 machine.run(prog2)
-print('Program 2 Result:', prog2[-1], f'(Should be {23*37})')
+print('Resultado del programa 2:', prog2[-1], f'(El resultado es {23*37})')
 
-# ----------------------------------------------------------------------
-# Problem 3: Abstraction
+# ------------------------------------------------- ---------------------
+# Problema 3: Abstracción
 #
-# Write a Python function mul(x, y) that computes x * y on TinyVM. 
-# This function, should abstract details away--you're not supposed to
-# worry about how it works.  Just call mul(x, y).
+# Escribir una función de Python mul (x, y) que calcule x * y en TinyVM.
+# Esta función debería abstraer los detalles; se supone que no se debe
+# añadir nada sobre la implementacion. 
+
 
 def mul(x, y):
-    prog = [ # Instructions here
+    prog = [  # Instrucciones
              # ...
+             ('MOV', x, 'R1'),
+             ('MOV', x, 'R5'),
+             ('MOV', y-1, 'R2'),
+             ('MOV', 1, 'R3'),
+             ('ADD', 'R1', 'R5', 'R5'),
+             ('SUB', 'R2', 'R3', 'R2'),
+             ('BRZ', 'R2', 1),
+             ('JMP', 'R7', -6),
+             ('ST', 'R5', 'R7', 0),    # Cambiar el resultado por el registro
              ('HALT',),
-             x,      # Input value
-             y,      # Input value
-             0       # Result
+             0                          #Resultado
     ]
     machine.run(prog)
     return prog[-1] 
 
-print(f'Problem 3: 51 * 53 = {mul(51, 53)}. Should be {51*53}')
+print(f'Problema 3: 51 * 53 = {mul(51, 53)}. El resultado es {51*53}.')
 
-# ----------------------------------------------------------------------
-# Problem 4: Challenge
+# ------------------------------------------------- ---------------------
+# Problema 4: Desafío
 #
-# Rewrite this recursive Python function as a single set of TinyVM
-# instructions that recursively calculate the same result.
+# Rescribir esta función de Python recursiva como un solo conjunto de TinyVM
+# instrucciones que calculen recursivamente el mismo resultado.
+
 
 def fib(n):
     if n <= 2:
@@ -143,13 +168,31 @@ def fib(n):
         return fib(n-1) + fib(n-2)
 
 # Your rewritten version should look like this:
-def fib(n):
-    prog = [ # Instructions here
-             # ...
+
+
+def fib_vm(n):
+    prog = [   # Instructions here
+             ('MOV', n, 'R0'),
+             ('BRZ', 'R0', 15),
+             ('MOV', 1, 'R1'),
+             ('MOV', 1, 'R2'),
+             ('MOV', n, 'R3'),
+             ('MOV', 1, 'R4'),
+             ('MOV', 1, 'R5'),
+             ('SUB', 'R3','R4','R3'),
+             ('SUB', 'R3', 'R5', 'R6'),
+             ('BRZ', 'R6', 6),
+             ('ADD', 'R1','R2','R4'),
+             ('MOV', 0, 'R2'),
+             ('ADD', 'R1','R2','R2'),
+             ('MOV', 0, 'R1'),
+             ('ADD', 'R1','R4','R1'),
+             ('JMP', 'R7', -13),
+             ('ST', 'R1', 'R7', 0),
              ('HALT',),
-             n,      # Input value
-             0       # Result
+             0       # Resultado
     ]
     machine.run(prog)
-    return prog[-1] 
-        
+    return prog[-1]
+
+print(f'Problema 4: fib(n) = {fib_vm(6)}. El resultado es {fib(6)}.')

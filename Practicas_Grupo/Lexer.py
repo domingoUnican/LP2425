@@ -5,17 +5,19 @@ import os
 import re
 import sys
 
-
 class Comentario(Lexer):
     tokens = {}
     anidados = 1
+
     @_(r'\(\*')
     def COMMENT(self, t):
         self.anidados += 1
     @_(r'\*\)')
     def VOLVER(self, t):
         self.anidados -= 1
-        if self.anidados == 0:
+        #print("Anidados: ", self.anidados)
+        if self.anidados <= 0:
+            #print("Me largo")
             self.begin(CoolLexer)
     @_(r'\n')
     def LINEA(self, t):
@@ -23,11 +25,6 @@ class Comentario(Lexer):
     @_(r'.')
     def PASAR(self, t):
         pass
-    
-    
-
-
-
 
 class CoolLexer(Lexer):
     tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
@@ -35,10 +32,10 @@ class CoolLexer(Lexer):
               INHERITS, ISVOID, LET, LOOP, NEW, OF,
               POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN}
     ignore = '\t '
-    literals = {'==', '+', '-', '*', '/',
+    STR_CONST = r'"([\w,\s\\\/\+\-\*\=\(\)\':!@#$%\^&_\t >\?¿\[\]\.]|\\[btrsnf"\\])*"'
+    literals = {'+', '-', '*', '/',
                 '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}','='}
     ELSE = r'\b[eE][lL][sS][eE]\b'
-    STR_CONST = r'"[\w,\s\\]*"'
     
     @_(r'\(\*')
     def BLOCKCOMMENT(self, t):
@@ -47,6 +44,11 @@ class CoolLexer(Lexer):
     def STR_CONST(self, t):
         t.type = 'STR_CONST'
         t.value = re.sub(r'\\([^btnr])', r'\1', t.value)
+        t.value = t.value.replace('\t', '\\t')
+        t.value = t.value.replace('\n', '\\n')
+        t.value = t.value.replace('\b', '\\b')
+        t.value = t.value.replace('\f', '\\f')
+        t.value = t.value.replace(r'\\', '\\')
         return t
     
     @_(r'--.*')
@@ -57,20 +59,23 @@ class CoolLexer(Lexer):
     def OBJECTID(self, t):
         if t.value.upper() in ("ELSE", "IF", "FI", "THEN", "NOT", "IN", "CASE", "ESAC", "CLASS",
                                "INHERITS", "ISVOID", "LET", "LOOP", "NEW", "OF",
-                               "POOL", "THEN", "WHILE", "TRUE", "FALSE"):
+                               "POOL", "THEN", "WHILE"):
             t.type = t.value.upper()
+        if t.value.upper() in ("TRUE", "FALSE"):
+            t.type = "BOOL_CONST"
+            t.value = True if t.value.upper() == "TRUE" else False
         return t
     @_(r'[A-Z][A-Z0-9_a-z]*')
     def TYPEID(self, t):
         if t.value.upper() in ("ELSE", "IF", "FI", "THEN", "NOT", "IN", "CASE", "ESAC", "CLASS",
                                "INHERITS", "ISVOID", "LET", "LOOP", "NEW", "OF",
-                               "POOL", "THEN", "WHILE", "TRUE", "FALSE"):
+                               "POOL", "THEN", "WHILE"):
             t.type = t.value.upper()
         return t
     
-    @_(r'-?[0-9]+')
+    @_(r'[0-9]+')
     def INT_CONST(self, t):
-        t.value = int(t.value)
+        t.value = t.value
         return t
     @_(r'<=')
     def LE(self, t):
@@ -83,7 +88,9 @@ class CoolLexer(Lexer):
         return t
     @_(r'\s')
     def SPACE(self, t):
+        self.lineno += t.value.count('\n')
         pass
+
     @_(r'\n')
     def LINEBREAK(self, t):
         self.lineno += 1
@@ -99,9 +106,6 @@ class CoolLexer(Lexer):
         print(t)
         if t.value in self.literals:
             t.type = t.value
-
-    def error(self, t):
-        self.index += 1
     
     
     CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
@@ -137,11 +141,27 @@ class CoolLexer(Lexer):
         
 if __name__ == '__main__':
     
-    directory = './01/grading'
-    for filename in os.listdir(directory):
-        if filename.endswith(".txt"):
-            filepath = os.path.join(directory, filename)
-            with open(filepath, 'r', encoding='utf-8') as file:
-                content = file.read()
-                for token in lexer.tokenize(content):
-                    print(token)
+
+    txt = r'''
+    class Main {
+        main(): Object {
+            out_string("Hello, World\n");
+            out_int(0);
+            out_string("\n");
+            -- Coment
+            return 0
+        };
+    };
+    '''
+
+    for token in CoolLexer().tokenize(txt):
+        print(token)
+
+    # directory = './01/grading'
+    # for filename in os.listdir(directory):
+    #     if filename.endswith(".txt"):
+    #         filepath = os.path.join(directory, filename)
+    #         with open(filepath, 'r', encoding='utf-8') as file:
+    #             content = file.read()
+    #             for token in lexer.tokenize(content):
+    #                 print(token)

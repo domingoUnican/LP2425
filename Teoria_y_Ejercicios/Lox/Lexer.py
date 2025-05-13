@@ -183,11 +183,7 @@ dfa[(TokenType.TComment, TypesLiteral.TyQuote)] = TokenType.TComment
 dfa[(TokenType.TIdentifier, TypesLiteral.TySpace)] = None
 dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
 
-# Rellenar el DFA
-
-# Notacion xarlie: TODO Ejercicio 2: Implementar transiciones para no devolver tokens a ignorar
 tokens_to_ignore = [TokenType.TSpace, TokenType.TComment, TokenType.TCommentLine]
-# Nogtacion xarlie: ODOT oicicrejE 2: Parte 1
 
 
 def is_final_state(state):

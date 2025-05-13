@@ -363,19 +363,19 @@ class CoolLexer(Lexer):
             result = f"#{token.lineno} {token.type} "
             if token.type == "OBJECTID":
                 result += f"{token.value}"
-            elif token.type == 'BOOL_CONST':
+            elif token.type == "BOOL_CONST":
                 result += "true" if token.value else "false"
-            elif token.type == 'TYPEID':
+            elif token.type == "TYPEID":
                 result += f"{str(token.value)}"
             elif token.type in self.literals:
-                result = f'#{token.lineno} \'{token.type}\' '
-            elif token.type == 'STR_CONST':
+                result = f"#{token.lineno} '{token.type}'"
+            elif token.type == "STR_CONST":
                 result += token.value
-            elif token.type == 'INT_CONST':
+            elif token.type == "INT_CONST":
                 result += str(token.value)
-            elif token.type == 'ERROR':
-                result = f'#{token.lineno} {token.type} {token.value}'
+            elif token.type == "ERROR":
+                result = f"#{token.lineno} {token.type} {token.value}"
             else:
-                result = f'#{token.lineno} {token.type}'
+                result = f"#{token.lineno} {token.type}"
             list_strings.append(result)
         return list_strings

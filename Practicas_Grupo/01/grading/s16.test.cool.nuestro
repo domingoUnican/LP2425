@@ -1,0 +1,7 @@
+#name "s16.test.cool"
+ LITERAL
+ INT_CONST 0
+ LITERAL
+ INT_CONST 99
+ LITERAL
+ INT_CONST 777

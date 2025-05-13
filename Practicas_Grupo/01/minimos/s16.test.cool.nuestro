@@ -1,0 +1,7 @@
+#name "s16.test.cool"
+ LITERAL
+ TYPEID 0
+ LITERAL
+ TYPEID 99
+ LITERAL
+ TYPEID 0777

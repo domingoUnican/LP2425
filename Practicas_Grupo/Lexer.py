@@ -5,6 +5,7 @@ import os
 import re
 import sys
 
+from sly import lex
 
 class Comentario(Lexer):
     tokens = {}
@@ -17,7 +18,6 @@ class Comentario(Lexer):
         self.lineno += 1
         if self._numero_anidados == 0:
             self.begin(CoolLexer)
-
 
     @_(r'\*\)')
     def VOLVER(self, t):
@@ -39,6 +39,42 @@ class CadenaTexto(Lexer):
     tokens = {}
     _cadena = ''
 
+    @_(r'\\\x00\"\n')
+    def ERROR_NULL(self, t):
+        t.value = '"String contains escaped null character."'
+        t.type = 'ERROR'
+        self._cadena = ''
+        return t
+
+    @_(r'\\"')
+    def COMILLAS(self, t):
+        if len(self.text) <= t.end and t.value != '"':
+            t.value = '"EOF in string constant"'
+            t.type = 'ERROR'
+            self._cadena = ''
+            return t
+        self._cadena += '\\"'
+
+    @_(r'\\\r\n')
+    def BARRA_RN_BIEN(self, t):
+        self._cadena += '\\n' 
+
+    @_(r'\\\t')
+    def BARRA_T_TRIPLE(self, t):
+        self._cadena += '\\t'
+
+    @_(r'\\\x08')
+    def BARRA_B(self, t):
+        self._cadena += '\\b'
+
+    @_(r'\\\x0c')
+    def BARRA_F(self, t):
+        self._cadena += '\\f'
+
+    @_(r'\\')
+    def BARA_BARA(self, t):
+        self._cadena += t.value
+
     @_(r'\"')
     def VOLVER(self, t):
         self.begin(CoolLexer)
@@ -47,16 +83,44 @@ class CadenaTexto(Lexer):
         self._cadena = ''
         return t
 
-    @_(r'\\[rbf]')
-    def NUEVA_LINEA(self, t):
-        self._cadena += t.value[1]
+    @_(r'\r\n')
+    def BARRA_RN(self, t):
+        self.begin(CoolLexer)
+        t.value = '"Unterminated string constant"'
+        t.type = 'ERROR'
+        self._cadena = ''
+        return t
+
+    @_(r'\n')
+    def BARRA_N(self, t):
+        self._cadena += '\\n'
 
     @_(r'\t')
     def BARRA_T(self, t):
         self._cadena += '\\t'
+    
+    @_(r'\r')
+    def BARRA_R(self, t):
+        self._cadena += '\\015'
+
+    @_(r'\x1b')
+    def BARRA_E(self, t):
+        self._cadena += '\\033'
+
+    @_(r'\\.')
+    def BARRA(self, t):
+        self._cadena += t.value[1]
+
 
     @_(r'.')
     def CUALQUIER_COSA(self, t):
+        if t.index == 95:
+            print(t.value)
+        if len(self.text) <= t.end and t.value != '"':
+            t.value = '"EOF in string constant"'
+            t.type = 'ERROR'
+            self._cadena = ''
+            return t
         self._cadena += t.value
 
 class ASSIGN(Lexer):
@@ -132,8 +196,7 @@ class CoolLexer(Lexer):
               POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN,
               TRUE, FALSE, COMMENT, COMMENT1LINEA, LE}
     ignore = '\t '
-    literals = {'=', '+', '-', '*', '/',
-                '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}'}
+    literals = {'=', '+', '-', '*', '/', '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}'}
     key_words = {'else', 'if', 'fi', 'then', 'not', 'in', 'case', 'esac', 'class', 'inherits', 'isvoid',
                  'let', 'loop', 'new', 'of', 'pool', 'then', 'while'}
 
@@ -186,6 +249,12 @@ class CoolLexer(Lexer):
         t.type = 'BOOL_CONST'
         self.begin(BOOLEANF)
 
+    @_(r'\_')
+    def BARRABAJA(self, t):
+        t.type = 'ERROR'
+        t.value = '"_"'
+        return t
+
     @_(r'[a-z][A-Z0-9_a-z]*')
     def OBJECTID(self, t):
         if t.value.lower() in self.key_words:
@@ -196,7 +265,8 @@ class CoolLexer(Lexer):
         if t.value.lower() in self.key_words:
             t.type = t.value.upper()
         return t
-    @_(r'\n')
+    
+    @_(r'\n|\r')
     def LINEBREAK(self, t):
         self.lineno += 1
 
@@ -220,8 +290,40 @@ class CoolLexer(Lexer):
     def COMMENT1LINEA(self, t):
         pass
 
+    @_(r'[\!\#\$\%\^\&\_\>\?\`\[\]\|]')
+    def CARACTER_INVALIDO(self, t):
+        t.value = '"' + t.value + '"'
+        t.type = 'ERROR'
+        return t
+    
+    @_(r'\\')
+    def BARRA_SOLA(self, t):
+        t.value = '"\\\\"'
+        t.type = 'ERROR'
+        return t
+    
+    @_(r'\x01|\x02|\x03|\x04')
+    def ERRORES_CONTROL(self, t):
+        valor = t.value
+        match valor:
+            case '\x01':
+                t.value = '"\\001"'
+            case '\x02':
+                t.value = '"\\002"'
+            case '\x03':
+                t.value = '"\\003"'
+            case '\x04':   
+                t.value = '"\\004"'
+        t.type = 'ERROR'
+        return t
+
+
     @_(r'.')
-    def ERROR(self, t): 
+    def ERROR(self, t):
+        if t.value is None:
+            t.value = '"EOF in string constant"'
+            t.type = 'ERROR'
+            return t
         if t.value in self.literals:
             t.type = t.value
             return t

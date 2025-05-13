@@ -45,7 +45,7 @@ class CoolParser(Parser):
             return 'Object'
         return p[1]
         
-    @_("", "serie_atr_met atributo ';' ", "serie_atr_met metodo ';' ")
+    @_(" ", "serie_atr_met atributo ';' ", "serie_atr_met metodo ';' ")
     def serie_atr_met(self, p):
         if len(p) == 0:
             return []
@@ -59,17 +59,18 @@ class CoolParser(Parser):
     def metodo(self, p):
         return Metodo(nombre = p[0], tipo = p[4], cuerpo = p[6])
     
-    @_("OBJECTID '(' formales formal ')' ':' TYPEID '{' expresion '}' ")
+    @_("OBJECTID '(' formal formales ')' ':' TYPEID '{' expresion '}' ")
     def metodo(self, p):
-        return Metodo(nombre = p[0], tipo = p[6], cuerpo = p[8], formales = p[2] + [p[3]])
+        return Metodo(nombre = p[0], tipo = p[6], cuerpo = p[8], formales = [p[2]] + p[3])
     
     @_(" '{' expresiones2 '}' ")
     def expresion(self, p):
         return Bloque(expresiones= p[1])
     
-    @_("formal ',' formales")
+    @_("formales ',' formal")
     def formales(self, p):
-        return [p[0]] + p[2]
+        
+        return p[0] + [p[2]]
     
     @_(" ")
     def formales(self, p):
@@ -77,7 +78,7 @@ class CoolParser(Parser):
 
     @_("OBJECTID ':' TYPEID ")
     def formal(self, p):
-        return Formal(nombre_variable= p[0], tipo = p[2])
+        return Formal(nombre_variable = p[0], tipo = p[2])
 
     @_("INT_CONST")
     def expresion(self, p):
@@ -99,6 +100,10 @@ class CoolParser(Parser):
     def expresion(self, p):
         return Booleano(valor = p[0])
 
+    @_("ASSIGN expresion")
+    def expresion(self, p):
+        return Asignacion(nombre=p[0], cuerpo = p[1])
+    
     @_("OBJECTID ASSIGN expresion")
     def expresion(self, p):
         return Asignacion(nombre=p[0], cuerpo = p[2])
@@ -137,30 +142,35 @@ class CoolParser(Parser):
     
     @_("NOT expresion")
     def expresion(self, p):
-        return Not(expresion = p[1])
+        return Not(expr= p[1])
     
     @_("ISVOID expresion")
     def expresion(self, p):
-        return EsNulo(expresion = p[1])
+        return EsNulo(expr = p[1])
     
     @_(" '~' expresion")
     def expresion(self, p):
-        return Neg(expresion = p[1])
-    
-    
+        return Neg(expr= p[1])
     
     @_("expresion '@' TYPEID '.' OBJECTID '(' ')' ")
     def expresion(self, p):
-        return LlamadaMetodoEstatico(cuerpo= p[0], clase = p[2], nombre_metodo= p[5], argumentos=[])
+        return LlamadaMetodoEstatico(cuerpo= p[0], clase = p[2], nombre_metodo= p[4], argumentos=[])
     
     @_("expresion '@' TYPEID '.' OBJECTID '(' expresiones ')' ")
     def expresion(self, p):
-        return LlamadaMetodoEstatico(cuerpo= p[0], clase= p[2], nombre_metodo= p[5], argumentos= p[7])
+        return LlamadaMetodoEstatico(cuerpo= p[0], clase= p[2], nombre_metodo= p[4], argumentos= p[6])
     
+    @_(" OBJECTID '(' expresiones ')' ")
+    def expresion(self, p):
+        return LlamadaMetodo(cuerpo= Objeto(nombre="self"), nombre_metodo= p[0], argumentos= p[2])
+
     @_(" expresion '.' OBJECTID '(' expresiones ')' ")
     def expresion(self, p):
         return LlamadaMetodo(cuerpo= p[0], nombre_metodo= p[2], argumentos= p[4])
 
+    @_(" OBJECTID '(' ')' ")
+    def expresion(self, p):
+        return LlamadaMetodo(cuerpo= Objeto(nombre="self"), nombre_metodo= p[0], argumentos=[])
 
     @_(" expresion '.' OBJECTID '(' ')' ")
     def expresion(self, p):
@@ -168,19 +178,28 @@ class CoolParser(Parser):
     
     @_("IF expresion THEN expresion ELSE expresion FI")
     def expresion(self, p):
-        return Condicional(condicion = p[1], entonces = p[3], sino = p[5])
+        return Condicional(condicion = p[1], verdadero = p[3], falso = p[5])
     
     @_("WHILE expresion LOOP expresion POOL")
     def expresion(self, p):
         return Bucle(condicion = p[1], cuerpo = p[3])
     
-    @_("LET OBJECTID ':' TYPEID expresiones IN expresion ") 
+    @_("LET expresion3 expresiones IN expresion ") 
     def expresion(self, p):
-        return Let(nombre = p[1], tipo = p[3], cuerpo = p[6], inicializacion= NoExpr())
+        if len(p.expresiones) > 0:
+            total = p[4]
+            for nombre, tipo, inicializacion in p[2]:
+                total = Let(nombre = nombre, tipo = tipo, cuerpo = total, inicializacion= inicializacion)
+
+            nombre, tipo, inicializacion = p[1]
+            return Let(nombre = nombre, tipo = tipo, cuerpo = total, inicializacion= inicializacion)
+        else:
+            nombre, tipo, inicializacion = p[1]
+            return Let(nombre = nombre, tipo = tipo, cuerpo = p[4], inicializacion= inicializacion)
     
-    @_("CASE expresion OF '{' serie_when '}' ESAC")
+    @_("CASE expresion OF serie_when ESAC")
     def expresion(self, p):
-        return Swicht(expresion = p[1], serie_when = p[5])
+        return Swicht(expr= p[1], casos= p[3])
 
     @_("serie_when when")
     def serie_when(self, p):
@@ -192,11 +211,23 @@ class CoolParser(Parser):
     
     @_("OBJECTID ':' TYPEID DARROW expresion ';'")
     def when(self, p):
-        return RamaCase(variable = p[0], tipo = p[2], valor = p[4])
+        return RamaCase(nombre_variable= p[0], tipo = p[2], cuerpo = p[4])
     
-    @_(" expresion , expresiones ")
+    @_(" , expresion3 ")
     def expresiones(self, p):
-        return [p[0]] + p[2]
+        return [p[1]]
+
+    @_(" expresiones , expresion3 ")
+    def expresiones(self, p):
+        return [p[2]] + p[0]
+    
+    @_(" expresiones , expresion ")
+    def expresiones(self, p):
+        return p[0] + [p[2]]
+    
+    @_(" expresion ")
+    def expresiones(self, p):
+        return [p[0]]
     
     @_(" expresion ';' expresiones2 ")
     def expresiones2(self, p):
@@ -209,6 +240,14 @@ class CoolParser(Parser):
     @_(" ")
     def expresiones2(self, p):
         return []
+    
+    @_(" OBJECTID ':' TYPEID")
+    def expresion3(self, p):
+        return p[0], p[2] , NoExpr()
+    
+    @_(" OBJECTID ':' TYPEID ASSIGN expresion")
+    def expresion3(self, p):
+        return p[0] , p[2], p[4]
     
 
 # a = CoolLexer()

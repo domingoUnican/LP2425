@@ -7,6 +7,7 @@ init()
 
 
 DIRECTORIO = os.path.expanduser("C:\\Users\\gopem\\OneDrive\\Escritorio\\Estudios\\Uni\\Lenguajes de Programacion\\Practicas\\REPOSITORIO\\LP2425\\Practicas_Grupo")
+
 sys.path.append(DIRECTORIO)
 
 from Lexer import *
@@ -37,6 +38,7 @@ if True:
         entrada = f.read()
         f.close()
         if PRACTICA == '01':
+            print(fich)
             texto = '\n'.join(lexer.salida(entrada))
             texto = f'#name "{fich}"\n' + texto
             resultado = g.read()

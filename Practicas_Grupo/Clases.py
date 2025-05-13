@@ -158,7 +158,6 @@ class RamaCase(Nodo):
         resultado += f'{(n+2)*" "}{self.nombre_variable}\n'
         resultado += f'{(n+2)*" "}{self.tipo}\n'
         resultado += self.cuerpo.str(n+2)
-        resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
 
@@ -172,7 +171,7 @@ class Swicht(Nodo):
         resultado += f'{(n)*" "}_typcase\n'
         resultado += self.expr.str(n+2)
         resultado += ''.join([c.str(n+2) for c in self.casos])
-        resultado += f'{(n)*" "}: {self.cast}\n'
+        resultado += f'{(n)*" "}: _no_type\n'
         return resultado
 
 @dataclass
@@ -182,7 +181,7 @@ class Nueva(Nodo):
         resultado = super().str(n)
         resultado += f'{(n)*" "}_new\n'
         resultado += f'{(n+2)*" "}{self.tipo}\n'
-        resultado += f'{(n)*" "}: {self.cast}\n'
+        resultado += f'{(n)*" "}: _no_type\n'
         return resultado
 
 
@@ -378,7 +377,7 @@ class String(Expresion):
         resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
-    
+
 
 
 @dataclass
@@ -457,6 +456,3 @@ class Atributo(Caracteristica):
         resultado += f'{(n+2)*" "}{self.tipo}\n'
         resultado += self.cuerpo.str(n+2)
         return resultado
-
-
-

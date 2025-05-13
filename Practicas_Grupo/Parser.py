@@ -21,21 +21,12 @@ class CoolParser(Parser):
     ('left', '+', '-'),   
     ('nonassoc', 'LE', '<', '='),      
     ('right', 'NOT'),    
-    ('right', 'ASSIGN')  
-)
-
-    #TODO:ARREGLAR QUE EN CLASE TIENE QUE HABER ATRIBUTOS Y METODOS Y NO EXPRESSIONS
-    #TODO: FIX Infinite recursion detected for symbol 'programa' e Infinite recursion detected for symbol 'clases'
-    #TODO: FIX WARNING: There are 8 unused tokens
-    #TODO: FIX WARNING: There are 2 unused rules
-    #TODO: FIX WARNING: Symbol 'atributo' is unreachable
-    #TODO: FIX WARNING: Symbol 'metodo' is unreachable
-    #TODO: FIX WARNING: Symbol 'formales' is unreachable
-    #TODO: FIX WARNING: Symbol 'formal' is unreachable
+    ('right', 'ASSIGN') 
+    )
 
     @_("clases")
     def programa(self, p):
-        return Programa()
+        return Programa(secuencia=p[0])
     
     @_("clase")
     def clases(self, p):
@@ -48,11 +39,11 @@ class CoolParser(Parser):
     
     @_("CLASS TYPEID '{' caracteristicas '}' ';'")
     def clase(self, p):
-        return Clase(nombre=p[1], caracteristicas=p[3])
+        return Clase(nombre=p[1], caracteristicas=p[3], padre="Object", nombre_fichero=self.nombre_fichero)
     
     @_("CLASS TYPEID INHERITS TYPEID '{' caracteristicas '}' ';'")
     def clase(self, p):
-        return Clase(nombre=p[1], padre=p[3], caracteristicas=p[5])
+        return Clase(nombre=p[1], padre=p[3], caracteristicas=p[5], nombre_fichero=self.nombre_fichero)
     
     @_("OBJECTID ':' TYPEID ASSIGN expression ';'")
     def caracteristica(self, p):
@@ -62,15 +53,15 @@ class CoolParser(Parser):
     def caracteristica(self, p):
         return Atributo(nombre=p[0], tipo=p[2], cuerpo=NoExpr())
 
-    @_("OBJECTID '(' ')' ':' TYPEID '{' expressions '}' ';'")
+    @_("OBJECTID '(' ')' ':' TYPEID '{' expression '}' ';'") 
     def caracteristica(self, p):
         return Metodo(nombre=p[0], tipo=p[4], cuerpo=p[6])
 
-    @_("OBJECTID '(' formal ')' ':' TYPEID '{' expressions '}' ';'")
+    @_("OBJECTID '(' formal ')' ':' TYPEID '{' expression '}' ';'")
     def caracteristica(self, p):
         return Metodo(nombre=p[0], formales=p[2] ,tipo=p[5], cuerpo=p[7])
     
-    @_("OBJECTID '(' formales ')' ':' TYPEID '{' expressions '}' ';'")
+    @_("OBJECTID '(' formales ')' ':' TYPEID '{' expression '}' ';'")
     def caracteristica(self, p):
         return Metodo(nombre=p[0], formales=p[2] ,tipo=p[5], cuerpo=p[7])
 
@@ -86,7 +77,7 @@ class CoolParser(Parser):
     # ⟨Formal⟩ ::= OBJECTID : TYPEID
     @_("OBJECTID ':' TYPEID")
     def formal(self, p):
-        return Formal(nombre=p[0], tipo=p[2])
+        return Formal(nombre_variable=p[0], tipo=p[2])
     
     @_("formal")
     def formales(self, p):
@@ -99,7 +90,7 @@ class CoolParser(Parser):
 
     @_("OBJECTID ASSIGN expression")
     def expression(self, p):
-        return Asignacion(identificador=p[0], expresion=p[2])
+        return Asignacion(nombre=p[0], cuerpo=p[2])
 
     @_("expression '+' expression")
     def expression(self, p):
@@ -145,7 +136,7 @@ class CoolParser(Parser):
     def expression(self, p):
         return  Neg(p[1])
     
-    @_("expression '@' TYPEID '.' OBJECTID '(' ')'")
+    @_("expression '@' TYPEID '.' OBJECTID '(' ')'") # () @ Tipo
     def expression(self, p):
         return LlamadaMetodoEstatico(cuerpo=p[0], clase=p[2], nombre_metodo=p[4], argumentos=[])
 
@@ -194,19 +185,19 @@ class CoolParser(Parser):
     # def expression(self, p):
     #     return Let(nombre=p[1], tipo=p[3], cuerpo=p[5], inicializacion=NoExpr())
 
-    @_("LET OBJECTID ':' TYPEID IN expressions")
+    @_("LET OBJECTID ':' TYPEID IN expression")
     def expression(self, p):
         return Let(nombre=p[1], tipo=p[3], cuerpo=p[5], inicializacion=NoExpr())
     
-    @_("LET OBJECTID ':' TYPEID asignacion IN expressions")
+    @_("LET OBJECTID ':' TYPEID asignacion IN expression")
     def expression(self, p):
         return Let(nombre=p[1], tipo=p[3], cuerpo=p[6], inicializacion=p[4])
 
-    @_("LET OBJECTID ':' TYPEID ',' variables IN expressions")
+    @_("LET OBJECTID ':' TYPEID ',' variables IN expression")
     def expression(self, p):
         return Let(nombre=p[1], tipo=p[3], cuerpo=p[6], inicializacion=NoExpr())
     
-    @_("LET OBJECTID ':' TYPEID asignacion ',' variables IN expressions")
+    @_("LET OBJECTID ':' TYPEID asignacion ',' variables IN expression")
     def expression(self, p):
         return Let(nombre=p[1], tipo=p[3], cuerpo=p[5], inicializacion=p[4])
     
@@ -261,13 +252,16 @@ class CoolParser(Parser):
     
     @_("expressions expression ';'")
     def expressions(self, p): 
-        #se lia porque no sabe el tipo de p y no esta seguro de si es una lista
         p[0].append(p[1])
         return p[0]
 
     @_("'{' expressions '}'")
     def expression(self, p):
-        return Bloque(expressions=p[1])
+        return Bloque(expresiones=p[1])
+    
+    @_("OBJECTID")
+    def expression(self, p):
+        return Objeto(nombre=p[0])
     
     @_("INT_CONST")
     def expression(self, p):

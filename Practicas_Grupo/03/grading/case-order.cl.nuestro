@@ -1,0 +1,99 @@
+_program
+
+  _class
+
+    Main
+
+    IO
+
+    "case-order.cl"
+
+    (
+
+    _method
+
+      main
+
+      Object
+
+      _let
+
+        thing
+
+        Object
+
+        _object
+
+          self
+
+        : _no_type
+
+        _typcase
+
+          _object
+
+            thing
+
+          : _no_type
+
+          _branch
+
+            o
+
+            Object
+
+            _dispatch
+
+              _object
+
+                self
+
+              : _no_type
+
+              out_string
+
+              (
+
+              _string
+
+                "object\n"
+
+              : _no_type
+
+              )
+
+            : _no_type
+
+          _branch
+
+            m
+
+            Main
+
+            _dispatch
+
+              _object
+
+                self
+
+              : _no_type
+
+              out_string
+
+              (
+
+              _string
+
+                "main\n"
+
+              : _no_type
+
+              )
+
+            : _no_type
+
+        : _no_type
+
+      : _no_type
+
+    )

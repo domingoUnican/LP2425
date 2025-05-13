@@ -1,0 +1,177 @@
+_program
+
+  _class
+
+    Main
+
+    IO
+
+    "simple-gc.cl"
+
+    (
+
+    _attr
+
+      y
+
+      Int
+
+      _no_expr
+
+      : _no_type
+
+    _method
+
+      f
+
+      _formal
+
+        x
+
+        Int
+
+      Int
+
+      _assign
+
+        y
+
+        _plus
+
+          _plus
+
+            _plus
+
+              _plus
+
+                _object
+
+                  x
+
+                : _no_type
+
+                _int
+
+                  6
+
+                : _no_type
+
+              : _no_type
+
+              _int
+
+                7
+
+              : _no_type
+
+            : _no_type
+
+            _int
+
+              8
+
+            : _no_type
+
+          : _no_type
+
+          _int
+
+            9
+
+          : _no_type
+
+        : _no_type
+
+      : _no_type
+
+    _method
+
+      main
+
+      Object
+
+      _dispatch
+
+        _object
+
+          self
+
+        : _no_type
+
+        out_int
+
+        (
+
+        _assign
+
+          y
+
+          _plus
+
+            _plus
+
+              _plus
+
+                _plus
+
+                  _int
+
+                    1
+
+                  : _no_type
+
+                  _int
+
+                    2
+
+                  : _no_type
+
+                : _no_type
+
+                _int
+
+                  3
+
+                : _no_type
+
+              : _no_type
+
+              _int
+
+                4
+
+              : _no_type
+
+            : _no_type
+
+            _dispatch
+
+              _object
+
+                self
+
+              : _no_type
+
+              f
+
+              (
+
+              _int
+
+                5
+
+              : _no_type
+
+              )
+
+            : _no_type
+
+          : _no_type
+
+        : _no_type
+
+        )
+
+      : _no_type
+
+    )

@@ -1,0 +1,223 @@
+_program
+
+  _class
+
+    Main
+
+    Object
+
+    "newbasic.cl"
+
+    (
+
+    _attr
+
+      io
+
+      IO
+
+      _new
+
+        IO
+
+      : _no_type
+
+    _method
+
+      main
+
+      Object
+
+      _block
+
+        _dispatch
+
+          _object
+
+            io
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _dispatch
+
+            _comp
+
+              _new
+
+                Bool
+
+              : _no_type
+
+            : _no_type
+
+            type_name
+
+            (
+
+            )
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            io
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            io
+
+          : _no_type
+
+          out_int
+
+          (
+
+          _plus
+
+            _new
+
+              Int
+
+            : _no_type
+
+            _int
+
+              1
+
+            : _no_type
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            io
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            io
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _dispatch
+
+            _dispatch
+
+              _new
+
+                String
+
+              : _no_type
+
+              substr
+
+              (
+
+              _int
+
+                0
+
+              : _no_type
+
+              _int
+
+                0
+
+              : _no_type
+
+              )
+
+            : _no_type
+
+            type_name
+
+            (
+
+            )
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            io
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+      : _no_type
+
+    )

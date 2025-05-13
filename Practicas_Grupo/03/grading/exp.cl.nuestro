@@ -1,0 +1,415 @@
+_program
+
+  _class
+
+    Main
+
+    IO
+
+    "exp.cl"
+
+    (
+
+    _method
+
+      exp
+
+      _formal
+
+        b
+
+        Int
+
+      _formal
+
+        x
+
+        Int
+
+      Int
+
+      _cond
+
+        _eq
+
+          _object
+
+            x
+
+          : _no_type
+
+          _int
+
+            0
+
+          : _no_type
+
+        : _no_type
+
+        _int
+
+          1
+
+        : _no_type
+
+        _cond
+
+          _eq
+
+            _object
+
+              x
+
+            : _no_type
+
+            _mul
+
+              _int
+
+                2
+
+              : _no_type
+
+              _divide
+
+                _object
+
+                  x
+
+                : _no_type
+
+                _int
+
+                  2
+
+                : _no_type
+
+              : _no_type
+
+            : _no_type
+
+          : _no_type
+
+          _let
+
+            y
+
+            Int
+
+            _dispatch
+
+              _object
+
+                self
+
+              : _no_type
+
+              exp
+
+              (
+
+              _object
+
+                b
+
+              : _no_type
+
+              _divide
+
+                _object
+
+                  x
+
+                : _no_type
+
+                _int
+
+                  2
+
+                : _no_type
+
+              : _no_type
+
+              )
+
+            : _no_type
+
+            _mul
+
+              _object
+
+                y
+
+              : _no_type
+
+              _object
+
+                y
+
+              : _no_type
+
+            : _no_type
+
+          : _no_type
+
+          _mul
+
+            _object
+
+              b
+
+            : _no_type
+
+            _dispatch
+
+              _object
+
+                self
+
+              : _no_type
+
+              exp
+
+              (
+
+              _object
+
+                b
+
+              : _no_type
+
+              _sub
+
+                _object
+
+                  x
+
+                : _no_type
+
+                _int
+
+                  1
+
+                : _no_type
+
+              : _no_type
+
+              )
+
+            : _no_type
+
+          : _no_type
+
+        : _no_type
+
+      : _no_type
+
+    _method
+
+      main
+
+      Object
+
+      _block
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_int
+
+          (
+
+          _dispatch
+
+            _object
+
+              self
+
+            : _no_type
+
+            exp
+
+            (
+
+            _int
+
+              2
+
+            : _no_type
+
+            _int
+
+              7
+
+            : _no_type
+
+            )
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_int
+
+          (
+
+          _dispatch
+
+            _object
+
+              self
+
+            : _no_type
+
+            exp
+
+            (
+
+            _int
+
+              3
+
+            : _no_type
+
+            _int
+
+              6
+
+            : _no_type
+
+            )
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_int
+
+          (
+
+          _dispatch
+
+            _object
+
+              self
+
+            : _no_type
+
+            exp
+
+            (
+
+            _int
+
+              8
+
+            : _no_type
+
+            _int
+
+              3
+
+            : _no_type
+
+            )
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+      : _no_type
+
+    )

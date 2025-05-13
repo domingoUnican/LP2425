@@ -1,0 +1,187 @@
+_program
+
+  _class
+
+    Main
+
+    IO
+
+    "let-nested.cl"
+
+    (
+
+    _method
+
+      print
+
+      _formal
+
+        x
+
+        Int
+
+      Object
+
+      _block
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_int
+
+          (
+
+          _object
+
+            x
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+      : _no_type
+
+    _method
+
+      main
+
+      Object
+
+      _let
+
+        foo
+
+        Int
+
+        _int
+
+          5
+
+        : _no_type
+
+        _let
+
+          foo
+
+          Int
+
+          _neg
+
+            _int
+
+              1
+
+            : _no_type
+
+          : _no_type
+
+          _let
+
+            foo
+
+            Bool
+
+            _no_expr
+
+            : _no_type
+
+            _cond
+
+              _comp
+
+                _object
+
+                  foo
+
+                : _no_type
+
+              : _no_type
+
+              _let
+
+                foo
+
+                Int
+
+                _no_expr
+
+                : _no_type
+
+                _dispatch
+
+                  _object
+
+                    self
+
+                  : _no_type
+
+                  print
+
+                  (
+
+                  _plus
+
+                    _object
+
+                      foo
+
+                    : _no_type
+
+                    _int
+
+                      1
+
+                    : _no_type
+
+                  : _no_type
+
+                  )
+
+                : _no_type
+
+              : _no_type
+
+              _int
+
+                5
+
+              : _no_type
+
+            : _no_type
+
+          : _no_type
+
+        : _no_type
+
+      : _no_type
+
+    )

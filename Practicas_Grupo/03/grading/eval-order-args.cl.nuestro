@@ -1,0 +1,191 @@
+_program
+
+  _class
+
+    Main
+
+    IO
+
+    "eval-order-args.cl"
+
+    (
+
+    _method
+
+      recite
+
+      _formal
+
+        value
+
+        Int
+
+      Object
+
+      _block
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_int
+
+          (
+
+          _object
+
+            value
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+      : _no_type
+
+    _method
+
+      disregard
+
+      _formal
+
+        a
+
+        Object
+
+      _formal
+
+        b
+
+        Object
+
+      _formal
+
+        c
+
+        Object
+
+      Object
+
+      _object
+
+        self
+
+      : _no_type
+
+    _method
+
+      main
+
+      Object
+
+      _dispatch
+
+        _object
+
+          self
+
+        : _no_type
+
+        disregard
+
+        (
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          recite
+
+          (
+
+          _int
+
+            1
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          recite
+
+          (
+
+          _int
+
+            2
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          recite
+
+          (
+
+          _int
+
+            3
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+        )
+
+      : _no_type
+
+    )

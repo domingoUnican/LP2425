@@ -1,0 +1,147 @@
+_program
+
+  _class
+
+    Base
+
+    IO
+
+    "copy-self-dispatch.cl"
+
+    (
+
+    _method
+
+      identify
+
+      Object
+
+      _dispatch
+
+        _object
+
+          self
+
+        : _no_type
+
+        out_string
+
+        (
+
+        _string
+
+          "base\n"
+
+        : _no_type
+
+        )
+
+      : _no_type
+
+    _method
+
+      duplicate
+
+      Base
+
+      _dispatch
+
+        _object
+
+          self
+
+        : _no_type
+
+        copy
+
+        (
+
+        )
+
+      : _no_type
+
+    )
+
+  _class
+
+    Derived
+
+    Base
+
+    "copy-self-dispatch.cl"
+
+    (
+
+    _method
+
+      identify
+
+      Object
+
+      _dispatch
+
+        _object
+
+          self
+
+        : _no_type
+
+        out_string
+
+        (
+
+        _string
+
+          "derived\n"
+
+        : _no_type
+
+        )
+
+      : _no_type
+
+    )
+
+  _class
+
+    Main
+
+    Object
+
+    "copy-self-dispatch.cl"
+
+    (
+
+    _method
+
+      main
+
+      Object
+
+      _dispatch
+
+        _dispatch
+
+          _new
+
+            Derived
+
+          : _no_type
+
+          duplicate
+
+          (
+
+          )
+
+        : _no_type
+
+        identify
+
+        (
+
+        )
+
+      : _no_type
+
+    )

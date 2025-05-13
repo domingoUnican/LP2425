@@ -1,0 +1,93 @@
+_program
+
+  _class
+
+    Main
+
+    IO
+
+    "shadow-attr-let.cl"
+
+    (
+
+    _attr
+
+      var
+
+      String
+
+      _string
+
+        "bad"
+
+      : _no_type
+
+    _method
+
+      main
+
+      Object
+
+      _block
+
+        _let
+
+          var
+
+          String
+
+          _string
+
+            "good"
+
+          : _no_type
+
+          _dispatch
+
+            _object
+
+              self
+
+            : _no_type
+
+            out_string
+
+            (
+
+            _object
+
+              var
+
+            : _no_type
+
+            )
+
+          : _no_type
+
+        : _no_type
+
+        _dispatch
+
+          _object
+
+            self
+
+          : _no_type
+
+          out_string
+
+          (
+
+          _string
+
+            "\n"
+
+          : _no_type
+
+          )
+
+        : _no_type
+
+      : _no_type
+
+    )

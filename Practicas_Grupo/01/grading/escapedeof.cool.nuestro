@@ -1,8 +1,3 @@
 #name "escapedeof.cool"
- TYPEID What
- HAPPENS
- IF
- TYPEID I
- ESCAPE
- AN
- TYPEID EOF
+
+ ERROR "EOF in string constant"

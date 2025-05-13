@@ -1,9 +1,17 @@
 #name "null_in_code.cl.cool"
- NULL
- CHARACTER
- IN
- CODE
- NULL
- CHARACTER
- IS
- HERE
+
+ OBJECTID null
+
+ OBJECTID character
+
+ OBJECTID is
+
+ OBJECTID here
+
+ DARROW
+
+ ERROR "\x00"
+
+ ASSIGN
+
+ ')'

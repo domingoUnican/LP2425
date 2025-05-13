@@ -1,3 +1,13 @@
 #name "invalidinvisible.cool"
- G
- H
+
+ OBJECTID g
+
+ ERROR "\x01"
+
+ ERROR "\x02"
+
+ ERROR "\x03"
+
+ ERROR "\x04"
+
+ OBJECTID h

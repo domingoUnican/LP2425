@@ -1,15 +1,29 @@
 #name "wq0607-c3.cool"
- TYPEID Complicated
- SEQUENCE
- OF
- STRINGS
- AND
- ESCAPED
- QUOTES
- AND
- ERRORS
+
+ STR_CONST "\\"
+
+ STR_CONST "\"\""
+
+ ERROR "\\"
+
+ ERROR "\\"
+
  STR_CONST ""
+
+ ERROR "\\"
+
+ STR_CONST "\\"
+
+ ERROR "\\"
+
+ STR_CONST "\\"
+
  STR_CONST ""
- STR_CONST ""
- STR_CONST ""
- STR_CONST ""
+
+ ERROR "\\"
+
+ STR_CONST "\""
+
+ ERROR "\\"
+
+ ERROR "EOF in string constant"

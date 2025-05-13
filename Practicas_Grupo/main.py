@@ -13,10 +13,10 @@ from Lexer import *
 from Parser import *
 from Clases import *
 
-PRACTICA = "02"  # Practica que hay que evaluar
+PRACTICA = "03"  # Practica que hay que evaluar
 DEBUG = True  # Decir si se lanzan mensajes de debug
 NUMLINEAS = 10  # Numero de lineas que se muestran antes y después de la no coincidencia
-DIR = os.path.join(DIRECTORIO, PRACTICA, "grading")
+DIR = os.path.join(DIRECTORIO, PRACTICA, "minimos")
 FICHEROS = os.listdir(DIR)
 TESTS = [
     fich
@@ -84,7 +84,7 @@ for fich in TESTS:
         g.close()
         j = parser.parse(lexer.tokenize(entrada))
         try:
-            #j.Tipo() # TODO
+            j.Tipo()  # TODO
             if j and not parser.errores:
                 resultado = "\n".join(
                     [c for c in j.str(0).split("\n") if c and "#" not in c]
@@ -102,8 +102,13 @@ for fich in TESTS:
                     f_bien.write(bien.strip())
                 contexto_antes = 1  # Una línea antes del error
                 contexto_despues = 10  # Diez líneas después del error
-                for i, (line_res, line_bien) in enumerate(zip(resultado.splitlines(), bien.splitlines()), start=1):
-                    if line_res.strip().lower().split() != line_bien.strip().lower().split():
+                for i, (line_res, line_bien) in enumerate(
+                    zip(resultado.splitlines(), bien.splitlines()), start=1
+                ):
+                    if (
+                        line_res.strip().lower().split()
+                        != line_bien.strip().lower().split()
+                    ):
                         print(f"Diferencia en la línea {i}:")
                         inicio = max(0, i - 1 - contexto_antes)
                         fin = i + contexto_despues
@@ -124,7 +129,9 @@ for fich in TESTS:
                             print(f"  bien     : {col_bien}")
                         break
         except Exception as e:
-            print(f"Lanza excepción en {fich} con el texto {e}")
+            # print(f"{fich}:{e}")
+            with open(os.path.join(DIR, fich) + ".nuestro", "w") as f_nuestro:
+                f_nuestro.write(f"Lanza excepción en {fich} con el texto {e}")
 if ficheros_fallidos:
     print("\nFicheros fallidos:")
     for f in ficheros_fallidos:

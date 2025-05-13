@@ -3,34 +3,6 @@ from typing import List
 from enum import Enum
 from collections import defaultdict
 
-### Ejercicio 4 ###
-
-# La clase Token tiene tres atributos principales:
-
-#  - lineno: Almacena el número de línea donde se encuentra el token, útil para reportar errores.
-#  - value: Contiene el texto literal del token (por ejemplo, un identificador, número o palabra clave).
-#  - tipo: Indica el tipo de token según la enumeración TokenType.
-
-# En caso de no completarlos, todos los atributos tienen valores por defecto, permitiendo 
-# crear tokens vacíos.
-
-# En cuanto al método 'post_init()', se ejecuta automáticamente tras el constructor general 
-# y tiene dos funciones principales:
-    
-#  - Detección automática de palabras clave, lo que permite que tokens con valores como 
-#     "and", "or", "if", etc., sean automáticamente asignados al tipo correspondiente de
-#     la enumeración (TAnd, TOr, TIf).
-    
-#  - Convierte los tokens de tipo TDecimal a tipo TNumber.
-
-# Si el valor no corresponde a ningún miembro de la enumeración TokenType (como ocurre con
-# identificadores o números), simplemente mantiene el tipo original que fue asignado durante
-# la tokenización.
-
-# Este diseño facilita la identificación automática de palabras clave, ya que no es necesario 
-# tener lógica adicional para detectarlas - basta con crear un token con el valor adecuado y
-# el método post_init() se encarga de asignar el tipo correcto automáticamente.
-
 
 class TokenType(Enum):
     # One character literals
@@ -62,7 +34,7 @@ class TokenType(Enum):
     THalfString = "_Unfinised String"
     TString = '"text"'
     TNumber = "_Number"  # or '123.45'
-    TDecimal = "_Decimal"
+    TSemiNumber = "_Number_dot"
     TIdentifier = "_Identificador"
     # Keywords
     TAnd = "and"
@@ -123,17 +95,46 @@ class Token:
 
     def __post_init__(self):
         try:
-            if self.tipo == TokenType.TDecimal:
+            if self.tipo == TokenType.TSemiNumber:
                 self.tipo = TokenType.TNumber
             self.tipo = TokenType(self.value)
         except:
             pass
        
+# Descripción de la estructura:
+# Uso de @dataclass: Esta funcionalidad de Python genera automáticamente 
+# métodos como __init__, __repr__ y __eq__ basándose en los atributos definidos, reduciendo así el código repetitivo.
+
+# Atributos:
+# lineno: Guarda el número de línea en el que aparece el token, lo que resulta útil para la detección y reporte de errores.
+# value: Almacena el contenido literal del token, que puede ser un identificador, un número o una palabra clave.
+# tipo: Define la categoría del token según la enumeración TokenType.
+# Valores por defecto: Se asignan valores predeterminados a todos los atributos, permitiendo 
+# la creación de tokens sin necesidad de inicializarlos con datos específicos.
+
+# Función del método __post_init__:
+# Este método se ejecuta automáticamente después del constructor generado por @dataclass y cumple con dos propósitos fundamentales:
+# Ajuste de tipos numéricos: Si el token tiene el tipo TSemiNumber, se convierte en TNumber para estandarizar la clasificación de números.
+# Identificación automática de palabras clave: La línea self.tipo = TokenType(self.value) intenta 
+# reasignar el tipo del token basándose en su valor textual. De este modo, términos como "and", "or", "if", etc.,
+# se convierten automáticamente en su correspondiente tipo dentro de la enumeración (TAnd, TOr, TIf).
+
+# Manejo de errores:
+# Si el valor del token no coincide con ninguna categoría en TokenType (como sucede con identificadores o números), 
+# se conserva el tipo original definido durante la tokenización.
+
+# Este enfoque permite reconocer palabras clave de forma automática, eliminando la necesidad de lógica adicional 
+# para diferenciarlas. Basta con asignar el valor correcto al token y __post_init__ se encargará de establecer su tipo adecuado.
 
 
 
 dfa = defaultdict(lambda:None)
+
+# dfa[(estado_actual, tipo_literal)] = estado_siguiente
+
 # Rellenar el DFA
+
+#Estado TNothing
 dfa[(TokenType.TNothing, TypesLiteral.TyNumber)] = TokenType.TNumber
 dfa[(TokenType.TNothing, TypesLiteral.TyChar)] = TokenType.TIdentifier
 dfa[(TokenType.TNothing, TypesLiteral.TyLeftParen)] = TokenType.TLeftParen
@@ -152,16 +153,41 @@ dfa[(TokenType.TNothing, TypesLiteral.TyEqual)] = TokenType.TEqual
 dfa[(TokenType.TNothing, TypesLiteral.TyLess)] = TokenType.TLess
 dfa[(TokenType.TNothing, TypesLiteral.TyGreater)] = TokenType.TGreater
 dfa[(TokenType.TNothing, TypesLiteral.TyQuote)] = TokenType.THalfString
-dfa[(TokenType.TNothing, TypesLiteral.TyLine)] = TokenType.TLine
 dfa[(TokenType.TNothing, TypesLiteral.TySpace)] = TokenType.TSpace
+dfa[(TokenType.TNothing, TypesLiteral.TyLine)] = TokenType.TLine
+
+
+#Estado TNumber
 dfa[(TokenType.TNumber, TypesLiteral.TyNumber)] = TokenType.TNumber
+dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TSemiNumber
+
+#Estado TSemiNumber
+dfa[(TokenType.TSemiNumber, TypesLiteral.TyNumber)] = TokenType.TSemiNumber
+dfa[(TokenType.TSemiNumber, TypesLiteral.TyDot)] = None
+
+#Estado TBang
 dfa[(TokenType.TBang, TypesLiteral.TyEqual)] = TokenType.TBangEqual
+
+#Estado TEqual
 dfa[(TokenType.TEqual, TypesLiteral.TyEqual)] = TokenType.TEqualEqual
+
+#Estado TLess
 dfa[(TokenType.TLess, TypesLiteral.TyEqual)] = TokenType.TLessEqual
+
+#Estado TGreater
 dfa[(TokenType.TGreater, TypesLiteral.TyEqual)] = TokenType.TGreaterEqual
+
+#Estado TSpace
 dfa[(TokenType.TSpace, TypesLiteral.TySpace)] = TokenType.TSpace
+dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
+
+#Estado TIdentifier
 dfa[(TokenType.TIdentifier, TypesLiteral.TyChar)] = TokenType.TIdentifier
 dfa[(TokenType.TIdentifier, TypesLiteral.TyNumber)] = TokenType.TIdentifier
+dfa[(TokenType.TIdentifier, TypesLiteral.TySpace)] = None
+
+
+#Estado THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyNumber)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyChar)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TySpace)] = TokenType.THalfString
@@ -182,10 +208,11 @@ dfa[(TokenType.THalfString, TypesLiteral.TyLess)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyGreater)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TyQuote)] = TokenType.TString
 dfa[(TokenType.THalfString, TypesLiteral.TyLine)] = TokenType.THalfString
-dfa[(TokenType.TNumber, TypesLiteral.TyDot)] = TokenType.TDecimal
-dfa[(TokenType.TDecimal, TypesLiteral.TyNumber)] = TokenType.TDecimal
-dfa[(TokenType.TDecimal, TypesLiteral.TyDot)] = None
+
+#Estado TSlash
 dfa[(TokenType.TSlash, TypesLiteral.TySlash)] = TokenType.TComment
+
+#Estado TComment
 dfa[(TokenType.TComment, TypesLiteral.TyLine)] = TokenType.TCommentLine
 dfa[(TokenType.TComment, TypesLiteral.TyChar)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TySpace)] = TokenType.TComment
@@ -205,15 +232,15 @@ dfa[(TokenType.TComment, TypesLiteral.TyEqual)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TyLess)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TyGreater)] = TokenType.TComment
 dfa[(TokenType.TComment, TypesLiteral.TyQuote)] = TokenType.TComment
-dfa[(TokenType.TIdentifier, TypesLiteral.TySpace)] = None
-dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
+
+
 
 def is_final_state(state):
     return (state not in [TokenType.THalfString, TokenType.TNothing])
         
 
 def tokenize(entrada):
-    tokens_ignorados = [TokenType.TComment, TokenType.TCommentLine]
+    tokens_a_ignorar = [TokenType.TComment, TokenType.TCommentLine]
     line = 1
     pos = 0
     pos_final = 0
@@ -268,49 +295,59 @@ def tokenize(entrada):
             pos_final = pos + 1 if is_final_state(state) else pos_final
             pos = pos + 1
         else:
-            if state not in tokens_ignorados:
-                yield Token(line, entrada[:pos_final], state)
+            if state not in tokens_a_ignorar:
+                yield Token(line, entrada[:pos_final],
+                            state)
             pos = 0
             entrada = entrada[pos_final:]
             if type_literal == TypesLiteral.TyLine:
                 line += 1
                 pos += 1
             state = TokenType.TNothing
-    if state != TokenType.TNothing and state not in tokens_ignorados:
+    if state != TokenType.TNothing and state not in tokens_a_ignorar:
         yield Token(line, entrada, state)
 
 prueba1 = "a = 1\n a"
 prueba2 = "a"
 prueba3 = '"esto es un string" b'
 prueba4 = "or and "
-prueba5 = "antes //dentro\ndespues"
-prueba6 = "1 2.3 45.67 8.9.10.123"
+prueba5 = "alcachofa // esto es un comentario\n esto no lo es"
+prueba6 = "esto es un numero 43.5.5.5 y 9.a"
 
-for i in tokenize(prueba6):
-    print("El token es ", i)
+# d = [Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
+# print(d)
 
+# pruebas = [prueba1, prueba2, prueba3, prueba4, prueba5, prueba6]
+# c = 1
+# for prueba in pruebas:
+#     print("Prueba: ", c)
+#     c += 1
+#     for i in tokenize(prueba):
+#         print("El token es ", i)
 
+# for i in tokenize(prueba6):
+#     print("El token es ", i)
 # salida de prueba 1
 
-"""
-[Token(lineno=1, value='a', tipo=TokenType.TIdentifier),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='=', tipo=TokenType.TEqual),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='1', tipo=TokenType.TNumber),Token(lineno=2, value='\n ', tipo=TokenType.TSpace),Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]
-"""
+# """
+# [Token(lineno=1, value='a', tipo=TokenType.TIdentifier),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='=', tipo=TokenType.TEqual),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='1', tipo=TokenType.TNumber),Token(lineno=2, value='\n ', tipo=TokenType.TSpace),Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]
+# """
 
-# salida de prueba 2
+# # salida de prueba 2
 
-"""
-[Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
-"""
+# """
+# [Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
+# """
 
 
-# salida de prueba 3
+# # salida de prueba 3
 
-"""
-[Token(lineno=1, value='"esto es un string"', tipo=TokenType.TString),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='b', tipo=TokenType.TIdentifier)]
-"""
+# """
+# [Token(lineno=1, value='"esto es un string"', tipo=TokenType.TString),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='b', tipo=TokenType.TIdentifier)]
+# """
 
-# salida de prueba 4
+# # salida de prueba 4
 
-"""
-[Token(lineno=1, value='or', tipo=TokenType.TOr),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='and', tipo=TokenType.TAnd),Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
-"""
+# """
+# [Token(lineno=1, value='or', tipo=TokenType.TOr),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='and', tipo=TokenType.TAnd),Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
+# """

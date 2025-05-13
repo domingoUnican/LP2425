@@ -94,6 +94,10 @@ class CoolParser(Parser):
         p[0].append(p[1])
         return p[0]
 
+    @_("error ';'")
+    def componentes(self, p):
+        return []
+
     @_("OBJECTID '(' ')' ':' TYPEID '{' expresion '}'")
     def componente(self, p):
         return Metodo(linea=p.lineno, nombre=p[0], tipo=p[4], cuerpo=p[6], formales=[])
@@ -123,6 +127,10 @@ class CoolParser(Parser):
         )
 
     @_("OBJECTID ':' TYPEID")
+    def componente(self, p):
+        return Atributo(linea=p.lineno, nombre=p[0], tipo=p[2], cuerpo=NoExpr())
+
+    @_("OBJECTID ':' error")
     def componente(self, p):
         return Atributo(linea=p.lineno, nombre=p[0], tipo=p[2], cuerpo=NoExpr())
 

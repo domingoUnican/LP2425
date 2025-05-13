@@ -1,0 +1,9 @@
+#name "sort_list.cl.cool"
+ LITERAL
+ LITERAL
+ TYPEID Class
+ TYPEID List
+ INHERITS
+ TYPEID IO
+ LITERAL
+ LITERAL

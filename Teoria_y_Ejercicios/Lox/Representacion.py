@@ -3,6 +3,7 @@ from Lexer import Token
 from typing import List, Optional
 
 @dataclass
+<<<<<<< HEAD
 class Expression:
     def tostring(self, n=0):
         return " " * n + "Expression" 
@@ -35,12 +36,22 @@ class Assignment(Expression):
         output = " " * n + f"Assign to {self.name.value}\n"
         output += self.value.tostring(n+2)
         return output
+=======
+class Declaration:
+    pass
+
+@dataclass
+class Primary:
+    pass
+
+>>>>>>> ac704d2b4d73596ecbbaf2a1cc3dfe1217ce59f1
 
 
 
 @dataclass
 class Unary:
     op: str
+<<<<<<< HEAD
     atr: Optional["Unary"]=None 
     def tostring(self, n=0):
         return " " * n + f"Unary op={self.op}"
@@ -136,6 +147,23 @@ class Term(Expression):
         return output
     
 @dataclass
+=======
+    atr: Optional["Unary"]=None  # Esto es para representar call o otro Unary
+
+@dataclass
+class Call:
+    base: Primary
+
+@dataclass
+class Number(Primary):
+    tok: Token
+    def tostring(self, n):
+        output = " " * n + self.tok.tipo + "\n"
+        output += " " * (n + 2) + self.tok.value  # Aquí ponemos el valor un poco más indentado
+        return output
+
+@dataclass
+>>>>>>> ac704d2b4d73596ecbbaf2a1cc3dfe1217ce59f1
 class Factor:
     op: str
     first_un: Unary
@@ -148,6 +176,7 @@ class Factor:
         output += self.second_un.tostring(n+2) + "\n"
         return output
             
+<<<<<<< HEAD
 @dataclass
 class Literal(Expression):
     value: object
@@ -170,11 +199,15 @@ class Parameter:
     name: str
     def tostring(self, n=0):
         return " " * n + f"Parameter: {self.name} "+ "\n"   
+=======
+
+>>>>>>> ac704d2b4d73596ecbbaf2a1cc3dfe1217ce59f1
 @dataclass
 class Function:
     name: str
     params: List['Parameter']
     body: 'Block'
+<<<<<<< HEAD
     def tostring(self, n):
         output = " " * n + self.name + "\n"
         output += " " * (n + 2) + "Params:\n"
@@ -235,10 +268,32 @@ class Arguments:
         for arg in self.arguments:
             output += arg.tostring(n+2) + "\n"
         return output
+=======
+
+@dataclass
+class ClassDeclaration(Declaration):
+    name: str
+    father: str
+    methods: List[Function]
+
+@dataclass
+class FunctionDeclaration(Declaration):
+    fun: Function
+
+@dataclass
+class VarDeclaration(Declaration):
+    name: str
+    expr: 'Expression'
+
+@dataclass
+class Statement(Declaration):
+    pass
+>>>>>>> ac704d2b4d73596ecbbaf2a1cc3dfe1217ce59f1
 
 @dataclass
 class Program:
     declarations: List[Declaration]
+<<<<<<< HEAD
 
     def tostring(self, n=0):
         output = " " * n + "Program:\n"
@@ -354,3 +409,5 @@ if __name__ == "__main__":
     test_all()
 
 
+=======
+>>>>>>> ac704d2b4d73596ecbbaf2a1cc3dfe1217ce59f1

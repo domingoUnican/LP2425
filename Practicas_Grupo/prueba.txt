@@ -1,8 +1,0 @@
-class Main {
-        main(): Object {
-            out_string("Hello, World Nicolas");
-            out_int(0);
-            out_string("\n");
-            return 0;
-        };
-    };

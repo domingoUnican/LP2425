@@ -1,0 +1,10 @@
+#name "s05.test.cool"
+ LITERAL
+ OBJECTID other
+ OBJECTID unescaped
+ OBJECTID whitespace
+ LITERAL
+ LITERAL
+ LITERAL
+ LITERAL
+ LITERAL

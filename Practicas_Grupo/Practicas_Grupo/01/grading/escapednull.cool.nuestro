@@ -1,0 +1,11 @@
+#name "escapednull.cool"
+ LITERAL
+ TYPEID This
+ OBJECTID contains
+ OBJECTID an
+ OBJECTID escaped
+ OBJECTID null
+ OBJECTID character
+ LITERAL
+ LITERAL
+ LITERAL

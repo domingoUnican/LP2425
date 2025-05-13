@@ -1,0 +1,14 @@
+#name "s34.test.cool"
+ OBJECTID before_it
+ LITERAL
+ LITERAL
+ LITERAL
+ OBJECTID this
+ OBJECTID string
+ LITERAL
+ LITERAL
+ OBJECTID doens
+ LITERAL
+ OBJECTID t
+ OBJECTID end
+ LITERAL

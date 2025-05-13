@@ -1,0 +1,12 @@
+#name "escapedeof.cool"
+ LITERAL
+ TYPEID What
+ OBJECTID happens
+ IF
+ TYPEID I
+ OBJECTID escape
+ OBJECTID an
+ TYPEID EOF
+ LITERAL
+ LITERAL
+ LITERAL

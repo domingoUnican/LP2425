@@ -1,0 +1,16 @@
+#name "bothcomments.cool"
+ OBJECTID what
+ OBJECTID the
+ OBJECTID programmer
+ OBJECTID thought
+ OBJECTID it
+ OBJECTID was
+ LITERAL
+ LITERAL
+ LITERAL
+ LITERAL
+ LITERAL
+ IF
+ INT_CONST 5
+ THEN
+ LITERAL

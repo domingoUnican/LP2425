@@ -125,7 +125,6 @@ class StringLexer(Lexer):
         """Si encontramos el caracter de fin de fichero `$`, indicamos el error."""
         t.type = "ERROR"
         t.value = '"EOF in string constant"'
-        self.lineno += 1
         self._num_caracteres = 0
         self._string = '"'
         self.begin(CoolLexer)

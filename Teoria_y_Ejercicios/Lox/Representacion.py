@@ -299,15 +299,16 @@ class AssignmentWithAssignment:
 
     def tostring(self, n):
         output = ""
+        output += " " * n + "=\n"
 
         if self.call is not None:
-            output += self.call.tostring(n) + "\n"
-            output += " " * (n + 2) + ".\n"
-            output += " " * (n + 4) + f"{self.identificator}\n"
+            output += self.call.tostring(n+2) + "\n"
+            output += " " * (n + 4) + ".\n"
+            output += " " * (n + 6) + f"{self.identificator}\n"
         else:
             output += " " * n + f"{self.identificator}\n"
 
-        output += " " * n + "=\n"
+        output += " " * n + "\n"
         output += self.assignment.tostring(n + 2)
         return output
 
@@ -518,40 +519,37 @@ class ExprStmt(Statement):
 
     def toString(self, n=0):
         indent = " " * n
-        return f"{indent}{self.expression.toString(n)} ;"
+        return f"{indent}{self.expression.toString(n)};"
     
 @dataclass
 class ForStmt(Statement):
-    body: Statement  # Argumento obligatorio (sin valor predeterminado)
-    initializer: Optional[Union["VarDecl", "ExprStmt"]] = None  # Opcional
-    expr1: Optional[Expression] = None  # Opcional
-    expr2: Optional[Expression] = None  # Opcional
-    
+    body: Statement  # Cuerpo del bucle
+    initializer: Optional[Union["VarDecl", "ExprStmt"]] = None  # Inicializador opcional
+    expr1: Optional[Expression] = None  # Condición opcional
+    expr2: Optional[Expression] = None  # Incremento opcional
 
     def toString(self, n=0):
         indent = " " * n
-        output = f"{indent}for (\n"
+        output = f"{indent}for\n"  # Imprimir "for" en una nueva línea
+        output += f"{' ' * (n + 2)}(\n"  # Abrir paréntesis con más indentación
 
         # Inicializador
         if self.initializer:
-            output += self.initializer.toString(n + 2)  # Imprimir el inicializador sin punto y coma adicional
+            output += self.initializer.toString(n + 4) + "\n"
         else:
-            output += f"{' ' * (n + 2)};"  # Imprimir un punto y coma si no hay inicializador
-        output += "\n"
+            output += f"{' ' * (n + 4)};\n"  # Imprimir un punto y coma si no hay inicializador
 
         # Condición
         if self.expr1:
-            output += self.expr1.toString(n + 2)  # Imprimir la condición
-        else:
-            output += f"{' ' * (n + 2)};"  # Imprimir un punto y coma si no hay condición
-        output += "\n"
+            output += self.expr1.toString(n + 4) + "\n"
+        
+        output += f"{' ' * (n + 4)};\n"  # Imprimir un punto y coma si no hay condición
 
         # Incremento
         if self.expr2:
-            output += self.expr2.toString(n + 2)  # Imprimir el incremento
-        else:
-            output += f"{' ' * (n + 2)};"  # Imprimir un punto y coma si no hay incremento
-        output += f"\n{indent})\n"
+            output += self.expr2.toString(n + 4) + "\n"
+
+        output += f"{' ' * (n + 2)})\n"  # Cerrar paréntesis con más indentación
 
         # Cuerpo del bucle
         output += self.body.toString(n + 2)
@@ -569,10 +567,17 @@ class IfStmt(Statement):
         output += f"{indent}(\n"  # Abrir paréntesis en una nueva línea
         output += self.condition.toString(n + 2) + "\n"  # Imprimir la condición con más indentación
         output += f"{indent})\n"  # Cerrar paréntesis en una nueva línea
-        output += self.then_branch.toString(n + 2)  # Imprimir el bloque `then` con más indentación
+
+        # Ajustar la indentación del bloque `then_branch`
+        then_output = self.then_branch.toString(n + 2).strip()
+        output += f"{' ' * (n + 2)}{then_output}\n"
+
+        # Ajustar la indentación del bloque `else_branch` si existe
         if self.else_branch:
-            output += f"\n{indent}else\n"
-            output += self.else_branch.toString(n + 2)  # Imprimir el bloque `else` con más indentación
+            output += f"{indent}else\n"
+            else_output = self.else_branch.toString(n + 2).strip()
+            output += f"{' ' * (n + 2)}{else_output}\n"
+
         return output
     
 @dataclass
@@ -581,7 +586,10 @@ class PrintStmt(Statement):
 
     def toString(self, n=0):
         indent = " " * n
-        return f"{indent}print {self.expression.toString(n)} ;"
+        output = f"{indent}print\n"  # Imprimir "print" primero
+        output += self.expression.toString(n + 2) + "\n"  # Imprimir la expresión con más indentación
+        output += f"{indent};"  # Imprimir el punto y coma al final
+        return output
     
 @dataclass
 class ReturnStmt(Statement):
@@ -589,10 +597,15 @@ class ReturnStmt(Statement):
 
     def toString(self, n=0):
         indent = " " * n
+        output = f"{indent}return\n"  # Imprimir "return" primero
+
+        # Si hay un valor, imprimirlo con la jerarquía adecuada
         if self.value:
-            return f"{indent}return {self.value.toString(n)} ;"
-        else:
-            return f"{indent}return ;"
+            output += self.value.toString(n + 2) + "\n"
+
+        # Imprimir el punto y coma al final
+        output += f"{indent};"
+        return output
         
 @dataclass
 class WhileStmt(Statement):
@@ -601,20 +614,31 @@ class WhileStmt(Statement):
 
     def toString(self, n=0):
         indent = " " * n
-        return f"{indent}while ({self.condition.toString(n)}) {self.body.toString(n)}"
+        output = f"{indent}while\n"  # Imprimir "while" primero
+        output += f"{' ' * (n + 2)}(\n"  # Abrir paréntesis con dos niveles más de indentación
+        output += self.condition.toString(n + 4) + "\n"  # Imprimir la condición con más indentación
+        output += f"{' ' * (n + 2)})\n"  # Cerrar paréntesis con dos niveles más de indentación
+        output += self.body.toString(n + 4)  # Imprimir el cuerpo con más indentación
+        return output
     
 @dataclass
 class Block(Statement):
-    declarations: List["Declaration"] = None  # Lista de declaraciones (puede estar vacía)
+    declarations: Optional[List["Declaration"]] = None  # Lista de declaraciones (puede estar vacía)
 
     def toString(self, n=0):
         indent = " " * n
         output = f"{indent}{{\n"
+
+        # Asegurarse de que `self.declarations` sea una lista
         if self.declarations is None:
             self.declarations = []
-        else:
-            for declaration in self.declarations:
-                output += declaration.toString(n + 2) + "\n"
+        elif not isinstance(self.declarations, list):
+            self.declarations = [self.declarations]
+
+        # Iterar sobre las declaraciones y generar su representación
+        for declaration in self.declarations:
+            output += declaration.toString(n + 2) + "\n"
+
         output += f"{indent}}}"
         return output
 #####################################################################################
@@ -625,35 +649,58 @@ class Block(Statement):
 class Function:
     name: str
     body: "Block"
-    params: Optional["Parameters"] = None  # Cambiar esto
-    
+    params: Optional["Parameters"] = None
 
     def tostring(self, n=0):
         indent = " " * n
         output = f"{indent}{self.name}\n"  # Imprimir el nombre de la función en una línea
-        output += f"{indent}(\n"  # Abrir paréntesis en una nueva línea
+        output += f"{' ' * (n + 2)}(\n"  # Abrir paréntesis con una tabulación más
+
+        # Imprimir los parámetros con la indentación adecuada
         if self.params:
-            output += self.params.tostring(n + 2) + "\n"  # Imprimir los parámetros con más indentación
-        output += f"{indent})\n"  # Cerrar paréntesis en una nueva línea
-        output += self.body.toString(n)  # Imprimir el cuerpo de la función
+            for param in self.params.identifiers:
+                output += f"{' ' * (n + 4)}{param},\n"
+            output = output.rstrip(",\n") + "\n"  # Eliminar la última coma y salto de línea
+
+        output += f"{' ' * (n + 2)})\n"  # Cerrar paréntesis con una tabulación más
+
+        # Imprimir el cuerpo de la función con la indentación adecuada
+        output += self.body.toString(n + 2)
         return output
     
 @dataclass
 class Parameters:
-    identifiers: List[str]  # Lista de identificadores
+    id1: str  # El primer identificador es obligatorio
+    identifiers: Optional[List[str]] = None  # Lista opcional de identificadores adicionales
 
     def tostring(self, n=0):
         indent = " " * n
-        # Convertir la lista de identificadores en una cadena separada por comas
-        return indent + ", ".join(self.identifiers)
+        output = f"{indent}{self.id1}"  # Imprimir el primer identificador
+
+        # Si hay identificadores adicionales, imprimirlos con comas y en líneas separadas
+        if self.identifiers:
+            for i, identifier in enumerate(self.identifiers):
+                output += f",\n{indent}{identifier}"
+
+        output += "\n"  # Agregar un salto de línea al final
+        return output
 
 @dataclass
 class Arguments:
-    args: List[Expression]
+    arg1: Expression  # El primer argumento es obligatorio
+    args: Optional[List[Expression]] = None  # Lista de argumentos adicionales
+
     def tostring(self, n=0):
         indent = " " * n
-        # Convertir la lista de argumentos en una cadena separada por comas
-        return indent + ", ".join(arg.toString(n) for arg in self.args)
+        output = f"{indent}{self.arg1.toString(n)}"  # Imprimir el primer argumento
+
+        # Si hay argumentos adicionales, imprimirlos con comas y en líneas separadas
+        if self.args:
+            for arg in self.args:
+                output += f",\n{arg.toString(n)}"
+
+        output += "\n"  # Agregar un salto de línea al final
+        return output
     
 #####################################################################################
                                     # Declarations
@@ -671,16 +718,21 @@ class ClassDecl(Declaration):
 
     def toString(self, n=0):
         indent = " " * n
-        output = indent + f"class {self.identificador1}"
-        if self.identificador2:  # Solo imprimir si identificador2 no es None
-            output += f" < {self.identificador2}"
-        output += " {\n"
+        output = f"{indent}class\n"  # Imprimir "class" en una nueva línea
+        output += f"{' ' * (n + 2)}{self.identificador1}\n"  # Imprimir el nombre de la clase con más indentación
+
+        # Si hay un identificador2 (herencia), imprimirlo en una nueva línea
+        if self.identificador2:
+            output += f"{' ' * (n + 2)}<\n"
+            output += f"{' ' * (n + 4)}{self.identificador2}\n"
+
+        output += f"{' ' * (n + 2)}{{\n"  # Abrir el bloque con más indentación
 
         # Imprimir los métodos con la indentación adecuada
         for method in self.methods or []:
-            output += method.tostring(n + 2) + "\n"
+            output += method.tostring(n + 4) + "\n"
 
-        output += indent + "}"
+        output += f"{' ' * (n + 2)}}}"  # Cerrar el bloque con más indentación
         return output
     
 @dataclass
@@ -689,19 +741,8 @@ class FunDecl(Declaration):
 
     def toString(self, n=0):
         indent = " " * n
-        output = f"{indent}fun {self.fun.name}\n"  # Imprimir el nombre de la función en una línea
-        output += f"{indent}(\n"  # Abrir paréntesis en una nueva línea
-
-        # Imprimir los parámetros con la indentación adecuada
-        if self.fun.params:
-            for param in self.fun.params.identifiers:
-                output += f"{' ' * (n + 2)}{param},\n"
-            output = output.rstrip(",\n") + "\n"  # Eliminar la última coma y salto de línea
-
-        output += f"{indent})\n"  # Cerrar paréntesis en una nueva línea
-
-        # Imprimir el cuerpo de la función con la indentación adecuada
-        output += self.fun.body.toString(n + 2)
+        output = f"{indent}fun\n"  # Imprimir "fun" en una nueva línea
+        output += self.fun.tostring(n + 2)  # Delegar la impresión completa de la función al método `tostring` de `Function`
         return output
     
 @dataclass
@@ -711,74 +752,25 @@ class VarDecl(Declaration):
 
     def toString(self, n=0):
         indent = " " * n
-        output = f"{indent}var {self.identificador}"
-        if self.expresion:
-            output += f" =\n{self.expresion.toString(n + 2)}"  # Imprimir la expresión con más indentación
-        output += f"\n{indent};"
-        return output
-
-""" 
-@dataclass
-class ClassDeclaration(Declaration):
-    name: str
-    father: str
-    methods: List["Function"]
-
-@dataclass
-class ClassDeclaration(Declaration):
-    name: Token 
-    father: Optional[Token] = None
-    methods: List["Function"] = None
-
-    def toString(self, n=0):
-        indent = " " * n
-        output = indent + "class " + self.name.value
-
-        if self.father:
-            output += " < " + self.father.value
-        output += " {\n"
-
-        for method in self.methods or []:
-            output += method.toString(n + 2) + "\n"
-
-        output += indent + "}"
-        return output
-
-@dataclass
-class FunctionDeclaration(Declaration):
-    fun: Function
-
-@dataclass
-class VarDeclaration(Declaration):
-    name: str
-    expr: 'Expression'
-
-@dataclass
-class Statement(Declaration):
-    exprStmt: Optional['ExpressionStatement']=None
-    blockStmt: Optional['Block']=None
-    ifStmt: Optional['IfStatement']=None
-    whileStmt: Optional['WhileStatement']=None
-    returnStmt: Optional['ReturnStatement']=None 
-    
-    
-@dataclass
-class Function:
-    name: str
-    params: List['str']
-    body: 'Block'    
-
-    @dataclass
-class Program:
-    declarations: List[Declaration]  # Lista de declaraciones (puede estar vacía)
-
-    def toString(self, n=0):
-        indent = " " * n
         output = ""
-        for declaration in self.declarations:
-            output += declaration.toString(n) + "\n"
+
+        # Si hay una expresión, imprimir el operador `=` primero
+        if self.expresion:
+            output += f"{indent}=\n"
+
+        # Imprimir `var` y el identificador con la jerarquía adecuada
+        output += f"{indent}var\n"
+        output += f"{' ' * (n + 4)}{self.identificador}\n"
+
+        # Si hay una expresión, imprimirla con la jerarquía adecuada
+        if self.expresion:
+            output += self.expresion.toString(n + 2) + "\n"
+
+        # Imprimir el punto y coma al final
+        output += f"{indent};"
         return output
-    """
+
+
 
 #####################################################################################
                                     # PROGRAM

@@ -296,8 +296,9 @@ prueba2 = "// esto es comentario"
 prueba3 = '"esto es un string" b'
 prueba4 = "or and "
 
-for i in tokenize(prueba1):
-    print("El token es ", i)
+# Probar las distintas pruebas para comprobar que funciona
+""" for i in tokenize(prueba1):
+    print("El token es ", i) """
 
 
 

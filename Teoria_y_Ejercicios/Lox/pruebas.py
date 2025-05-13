@@ -135,24 +135,25 @@ print("")
 
 #######################STATEMENTS########################
 var_declaration = VarDecl("variable", expression)
-
+var_declaration1 = VarDecl("vtt")
 # Tipo Statement
 print("Pruebas Tipo ExprStmt")
 print("----------------------")
 expr_statement = ExprStmt(expression) # expression
-#print(statement.toString(0)) # expression
+#print(expr_statement.toString(0)) # expression
 print("")
 
 # Tipo ForStmt
 print("Pruebas Tipo ForStmt")
 print("----------------------")
-for_stmt = ForStmt(expr_statement, var_declaration) # var_declaration; statement; expression
+for_stmt = ForStmt(var_declaration1, None, expression, expression) # var_declaration; statement; expression
 #print(for_stmt.toString(0)) # statement; statement; expression
 print("")
 
 # Tipo IfStmt
 print("Pruebas Tipo IfStmt")
 print("----------------------")
+# Con bloque else
 if_stmt = IfStmt(expression, expr_statement, expr_statement) # expression; statement; statement
 #print(if_stmt.toString(0)) # expression; statement; statement
 print("")
@@ -167,8 +168,13 @@ print("")
 # Tipo ReturnStmt
 print("Pruebas Tipo ReturnStmt")
 print("----------------------")
+# Con expression
 return_stmt = ReturnStmt(expression) # expression
 #print(return_stmt.toString(0))
+
+# Sin expression
+return_stmt1 = ReturnStmt()
+#print(return_stmt1.toString(0))
 print("")
 
 # Tipo WhileStmt
@@ -181,29 +187,35 @@ print("")
 # Tipo Block
 print("Pruebas Tipo Block")
 print("----------------------")
-bloque = Block() # {}
-#print(bloque.toString(0)) # {}
+
+# Con declaration
+bloque = Block([var_declaration])
+#print(bloque.toString(0))
+
+# Sin declaration
+bloque1 = Block() # {}
+#print(bloque1.toString(0)) # {}
 print("")
 
 ########################UNITY RULES########################
 # Tipo Parameters
 print("Pruebas Tipo Parameters")
 print("----------------------")
-parameters = Parameters(["param1", "param2"]) # variable, 1
-#print(parameters.tostring(0)) # variable, 1
+parameters = Parameters("param1", ["param2", "param3"])
+#print(parameters.tostring(0)) 
 print("")
 
 # Tipo Arguments
 print("Pruebas Tipo Arguments")
 print("----------------------")
-arguments = Arguments([expression, expression]) # variable, 1
+arguments = Arguments(expression, [expression]) # variable, 1
 #print(arguments.tostring(0)) # variable, 1
 print("")
 
 # Tipo Function
 print("Pruebas Tipo Function")
 print("----------------------")
-function = Function("funcion", bloque, parameters)
+function = Function("funcion", bloque1, parameters)
 #print(function.tostring(0)) # funcion {}
 print("")
 
@@ -211,7 +223,11 @@ print("")
 # Tipo VarDeclaration
 print("Pruebas Tipo VarDecl")
 print("----------------------")
+# Con expresion
 #print(var_declaration.toString(0))
+
+# Sin expresion
+#print(var_declaration1.toString(0))
 print("")
 
 # Tipo ClassDeclaration
@@ -225,39 +241,12 @@ print("")
 print("Pruebas Tipo FunDecl")
 print("----------------------")
 fun_declaration = FunDecl(function)
-#print(fun_declaration.toString(0)) # funcion {}
+#print(fun_declaration.toString(0)) # fun funcion {}
 print("")
 
 # Tipo Program
 print("Pruebas Tipo Program")
 print("----------------------")
-program = Program([class_declaration, fun_declaration]) # funcion {}
+program = Program([class_declaration, fun_declaration]) # class {} funcion {}
 #print(program.toString(0)) # funcion {}
 print("")
-
-""" 
-# Probar Block 
-print("Pruebas Tipo Block")
-print("----------------------")
-bloque = Block([declaration])
-print(bloque.toString(0)) # { var variable = expression; }
-print("")
-
-# Probar Function
-function = Function("function", bloque) # function { var variable = expression; }
-print(function.tostring(0))
-print("")
-
-declaration1 = FunctionDeclaration(function) # fun function { var variable = expression; }
-print(declaration1.toString(0))
-print("")
-
-declaration2 = ClassDeclaration("Clase1", "Clase2", [function]) # class Clase1 < Clase2 { fun function { var variable = expression; } }
-print(declaration2.toString(0))
-print("")
-
-
-
-
-
- """

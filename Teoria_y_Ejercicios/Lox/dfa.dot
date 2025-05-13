@@ -1,4 +1,5 @@
-digraph {TNothing-> TNumber [label="TyNumber"];
+digraph {
+TNothing-> TNumber [label="TyNumber"];
 TNothing-> TIdentifier [label="TyChar"];
 TNothing-> TLeftParen [label="TyLeftParen"];
 TNothing-> TRightParen [label="TyRightParen"];

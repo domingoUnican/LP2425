@@ -14,6 +14,7 @@ from Lexer import *
 from Parser import *
 from Clases import *
 
+# Ultima version
 tipo_test = r'grading'
 PRACTICA = r"01" # Practica que hay que evaluar
 DEBUG = True   # Decir si se lanzan mensajes de debug

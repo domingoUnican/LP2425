@@ -6,8 +6,8 @@ from termcolor import colored
 init()
 
 
-DIRECTORIO = os.path.expanduser("C:\\Users\\Sergio\\Desktop\\LenguajesDeProgramacion\\LP2425\\Practicas_Grupo")
-# DIRECTORIO = os.path.expanduser("C:\\Users\\gopem\\OneDrive\\Escritorio\\Estudios\\Uni\\Lenguajes de Programacion\\Practicas\\REPOSITORIO\\LP2425\\Practicas_Grupo")
+DIRECTORIO = os.path.expanduser("C:\\Users\\jesme\\Desktop\\CUARTO\\SEGUNDO CUATRIMESTRE\\G1662-LenguajesDeProgramacion\\Nueva carpeta\\LP2425\\Practicas_Grupo")
+
 
 sys.path.append(DIRECTORIO)
 

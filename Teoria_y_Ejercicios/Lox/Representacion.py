@@ -22,7 +22,7 @@ class ExprStmt(Statement):
         return output
 
 @dataclass
-class Primary:
+class Primary(Expression):
     value: Token
 
     def tostring(self, n):
@@ -65,7 +65,7 @@ class Logic_and(Expression):
 class Term(Expression):
     left: "Factor"
     operator: Optional[Token]
-    right: Optional[Expression]
+    right: Optional["Factor"]
 
     def tostring(self, n):
         if self.operator:
@@ -144,7 +144,7 @@ class CallAtribute(Call):
 @dataclass
 class Unary(Expression):
     op: Token
-    right: Union[Call, "Unary"]
+    right: Union[Token, "Unary"]
 
     def tostring(self, n):
         output = " " * n + f"Unary: {self.op.value}\n"
@@ -158,8 +158,10 @@ class Factor(Expression):
     right: Optional[Unary]
 
     def tostring(self, n):
-        output = " " * n + f"Factor: {self.operator.value}\n"
-        output += self.left.tostring(n + 2) + "\n"
+        output = " " * n
+        if self.operator:
+            output += f"Factor: {self.operator.value}\n"
+            output += self.left.tostring(n + 2) + "\n"
         if self.right:
             output += self.right.tostring(n + 2)
         return output
@@ -171,15 +173,16 @@ class Comparison(Expression):
     right: Optional[Term]
 
     def tostring(self, n):
-        indent = " " * n
-        if self.operator:
-            output = indent + f"Comparison: {self.operator.value}\n"
-        else:
-            output = indent + "Comparison:\n"
+        output = ""  # Inicializamos la variable 'output'
 
-        output += self.left.tostring(n + 2) + "\n"
+        if self.operator:
+            output = " " * (n + 2) + f"Operator: {self.operator.value}\n"
+
+        if self.left:
+            output += self.left.tostring(n + 3) + "\n"
+
         if self.right:
-            output += self.right.tostring(n + 2) + "\n"
+            output += self.right.tostring(n + 3) + "\n"
 
         return output.rstrip()
 

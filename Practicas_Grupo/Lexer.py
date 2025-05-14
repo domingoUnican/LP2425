@@ -5,29 +5,159 @@ import os
 import re
 import sys
 
-# ---------------------------------- Para los comentarios ------------------------------------
+# EL ORDEN EN EL QUE SE PONEN LAS FUNCIONES IMPORTA!!
+# VA MIRANDO TAL CUAL EL ORDEN QUE SE PONE
 
+# LOS ERRORES TIENE  QUE TENER EL NOMBRE Y TEXTO TAL CUAL
+
+# COMO NO COINCIDA EL NUMERO DE LINEAS, DA ERROR
+
+
+# ---------------------------------
+#           Comentarios
+# ---------------------------------
 class Comentario(Lexer):
-    tokens = {}
+    tokens = {}  # no devuelve tokens porque queremos ignorar comentarios
+    profundidad = 1
 
-    @_(r"\n")
-    def LINEA(self, t):
-        self.lineno += 1
+    # ERRORES QUE DICE EL PDF
+    @_(r"[^\\]\*\)$")
+    def ERROR_COMENTARIO_NO_CERRADO(self, t):
+        """
+        Maneja el cierre de comentarios anidados. Si se encuentra un comentario no cerrado,
+        marca un error de "EOF en comentario" y vuelve al lexer.
+        """
+        self.profundidad -= 1
 
-    @_(r"\*\)")
-    def VOLVER(self, t):
+        # si estamos en profundidad 0 cuando llegamos al fin, se ha cerrado bien
+        if not self.profundidad:
+            self.profundidad = 1
+            self.begin(CoolLexer)
+
+        # si no estamos en el final ahi si que es error
+        else:
+            t.type = "ERROR"
+            t.value = '"EOF in comment"'
+            self.begin(CoolLexer)
+            return t
+
+    @_(r"(.|\n)$")
+    def ERROR_FIN_ARCHIVO(self, t):
+        """
+        Maneja comentarios no cerrados al final del archivo y marca un error
+        de "EOF en comentario".
+        Cuenta todos los \n que haya de por medio y pone como linea del error
+        la ultima linea de todas donde esta el error (si no se queda en la primera)
+        """
+        self.lineno += t.value.count("\n")
+        t.lineno = self.lineno
+        t.type = "ERROR"
+        t.value = '"EOF in comment"'
         self.begin(CoolLexer)
+        return t
+
+    # GESTION COMENTARIOS
+    @_(r"([^\\]\*\))")
+    def CERRAR_COMENTARIO(self, t):
+        """Detecta el cierre de un comentario *), evitando escapados
+        Cuenta todos los \n porque puede haber varios entre medias del comentario
+        """
+        self.profundidad -= 1  # Reduce la profundidad de anidamiento
+        self.lineno += t.value.count("\n")
+
+        # Si ya no hay comentarios anidados, vuelve al lexer principal
+        if not self.profundidad:
+            self.profundidad = 1
+            self.begin(CoolLexer)
+
+    @_(r"[^\\]\(\*")
+    def ENTRAR_COMENTARIO(self, t):
+        """Detecta la apertura de un comentario (*, evitando escapados
+        Cuenta todos los \n porque puede haber varios entre medias del comentario
+        """
+        self.profundidad += 1  # Aumenta la profundidad de anidamiento
+        self.lineno += t.value.count("\n")
+
+    # COSAS QUE IGNORAR
+    @_(r"\n")
+    def NUEVA_LINEA(self, t):
+        """Maneja nuevas líneas dentro de comentarios."""
+        self.lineno += 1
 
     @_(r".")
     def PASAR(self, t):
+        """Ignora cualquier otro carácter dentro del comentario."""
         pass
 
 
-# --------------------------------------------------------------------------------------------
+# ---------------------------------
+#            Strings
+# ---------------------------------
+class Strings(Lexer):
+    tokens = {STR_CONST}  # tokens que puede devolver
+    contador = 0
 
-# ---------------------------------- Para el lexer de Cool ------------------------------------
+    # tiene que ser privada porque si no da error el lexer
+    # dice que no pertenecen a ningun token y se raya por ser un string
+    _caracteres = '"'
+
+    # GESTION CARACTERES ESPECIALES
+    @_(r"\t")
+    def TABULACIONES(self, t):
+        """
+        Maneja tabulaciones dentro de una cadena.
+        Almacena el carácter de tabulación como '\t' en la cadena.
+        """
+        self.contador += 1
+        self._caracteres += r"\t"
+
+    @_(r"\n")
+    def SALTO_LINEA(self, t):
+        """
+        Maneja el caso en que una cadena de texto no se cierra antes de un salto de línea.
+        Se genera un error de "Unterminated string constant".
+        """
+        self._caracteres = '"'  # Resetea la cadena parcial detectada.
+        self.lineno += (
+            1  # Incrementa el número de línea, ya que se encontró un salto de línea.
+        )
+        t.type = "ERROR"  # Marca el token como un error.
+        t.value = '"Unterminated string constant"'  # Mensaje de error.
+        t.lineno = self.lineno
+        self.contador = 0  # Resetea el contador de caracteres procesados.
+        self.begin(CoolLexer)  # Reinicia el lexer en su estado principal.
+        return t
+
+    # VAMOS LEYENDO EL STRING Y ACABAMOS
+    @_(r'(\\\\)*"')
+    def STR_CONST(self, t):
+        """
+        Maneja el cierre de una cadena de texto.
+        - Si la cadena es menor a 1024 caracteres, la almacena normalmente.
+        - Si supera los 1024 caracteres, genera un error "String constant too long".
+        """
+        if self.contador < 1024:
+            self._caracteres += t.value  # Añade la cadena cerrada.
+            t.value = self._caracteres  # Asigna el valor final de la cadena.
+        else:
+            t.value = '"String constant too long"'  # Mensaje de error.
+            t.type = "ERROR"  # Define el token como error.
+
+        self._caracteres = '"'  # Resetea la construcción de la cadena.
+        self.contador = 0  # Reinicia el contador de caracteres.
+        self.begin(CoolLexer)  # Reinicia el lexer en su estado principal.
+        return t
+
+    @_(r".")
+    def CONSTRUIR_STRING(self, t):
+        """Maneja la construcción de una cadena de caracteres."""
+        self.contador += 1  # Incrementa el contador de caracteres procesados.
+        self._caracteres += t.value
 
 
+# ---------------------------------
+#           Lexer de Cool
+# ---------------------------------
 class CoolLexer(Lexer):
     # Definición de los tokens para Cool. (aqui da igual el orden)
     tokens = {
@@ -62,7 +192,8 @@ class CoolLexer(Lexer):
         TYPEID,  # Identificadores de tipos (nombres de clases, comienzan con mayúscula)
     }
 
-    # Lista de caracteres literales que el lexer reconoce directamente sin asociarlos a un token específico.
+    # Lista de caracteres literales que el lexer reconoce directamente sin
+    # asociarlos a un token específico.
     literals = {
         "=",
         "+",
@@ -84,9 +215,12 @@ class CoolLexer(Lexer):
     }
 
     # tiene que haber un ignore y luego ya los demas les pones el nombre con _
+    # ignoramos todos los saltos especiales que existen
     ignore = " "
     ignore_tab = "\t"
     ignore_carriage = "\r"
+    ignore_salto_pagina = "\f"
+    ignore_salto_vertical = "\v"
 
     # ahora las definiciones de los tokens. EL ORDEN IMPORTA!!
 
@@ -100,40 +234,13 @@ class CoolLexer(Lexer):
     BOOL_CONST = (
         r"\bt[rR][uU][eE]\b|\bf[aA][lL][sS][eE]\b"  # Constantes booleanas (true, false)
     )
-    STR_CONST = r'"[a-zA-Z0-9_/]*"'  # Constantes de tipo string (entre comillas dobles)
+    STR_CONST = r'"'  # Constantes de tipo string (entre comillas dobles)
 
     # Identificadores (lo ultimo porque es muy general)
-    OBJECTID = r"\b[a-z][A-Z0-9_a-z]*\b"  # Identificadores de variables o métodos en minúsculas
+    OBJECTID = (
+        r"[a-z][A-Z0-9_a-z]*"  # Identificadores de variables o métodos en minúsculas
+    )
     TYPEID = r"[A-Z][a-zA-Z0-9_]*"  # Identificadores de tipos (nombres de clases, comienzan con mayúscula)
-
-    # una vez definidos los tokens, se pueden definir las funciones que se encargan de manejar los tokens
-    # para que hagan cosas especiales
-
-    def OBJECTID(self, t):
-        if t.value.upper() in self.tokens:
-            t.type = t.value.upper()
-        return t
-
-    def TYPEID(self, t):
-        if t.value.upper() in self.tokens:
-            t.type = t.value.upper()
-        return t
-
-    @_(r"--.*")
-    def COMMENT1LINE(self, t):
-        pass
-
-    @_(r"\*\)")
-    def COMMENTEND(self, t):
-        t.value = '"Unmatched *)"'
-        t.type = "ERROR"
-        return t
-    # Para ir a los comentarios de linea 
-    
-    # ------------------------------Cosas que no entiendo ---------------------------------------------
-    @_(r"\n")
-    def LINEBREAK(self, t):
-        self.lineno += 1
 
     CARACTERES_CONTROL = [
         bytes.fromhex(i + hex(j)[-1]).decode("ascii")
@@ -141,12 +248,77 @@ class CoolLexer(Lexer):
         for j in range(16)
     ] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
 
+    # una vez definidos los tokens, se pueden definir las funciones que se encargan de manejar los tokens
+    # para que hagan cosas especiales
+
+    # ---------------------------------
+    #        Manejo de Strings
+    # ---------------------------------
+    def STR_CONST(self, t):
+        """Empieza un string"""
+        self.begin(Strings)
+
+    # ---------------------------------
+    #     Manejo de tipos de datos en tokens
+    # ---------------------------------
+    def BOOL_CONST(self, t):
+        """Convierte booleanos para que tengan la sintaxis correcta. (empezar en mayuscula)"""
+        lower_val = t.value.lower()
+        if lower_val == "true":
+            t.value = True
+        elif lower_val == "false":
+            t.value = False
+        return t
+
+    def OBJECTID(self, t):
+        """Convierte identificadores en palabras clave si corresponden."""
+        if t.value.upper() in self.tokens:
+            t.value = t.value.upper()
+            t.type = t.value
+        return t
+
+    def TYPEID(self, t):
+        """Convierte identificadores de tipo en palabras clave si corresponden."""
+        if t.value.upper() in self.tokens:
+            t.value = t.value.upper()
+            t.type = t.value
+        return t
+
+    # ---------------------------------
+    #      Manejo de Comentarios
+    # ---------------------------------
+    @_(r"\*\)")
+    def ERROR_CIERRE_COMENTARIO(self, t):
+        """Maneja errores de comentarios sin abrir."""
+        t.value = '"Unmatched *)"'
+        t.type = "ERROR"
+        return t
+
     @_(r"\(\*")
-    def IR(self, t):
+    def EMPEZAR_COMENTARIO(self, t):
+        """Cambia al modo de comentarios."""
+        Comentario.profundidad = 1
         self.begin(Comentario)
 
-    # --------------------------------------------------------------------------------------------
+    @_(r"--.*(\n|\Z)")
+    def COMENTARIO_LINEA(self, t):
+        """
+        Ignora comentarios de una sola línea.
+        Tiene en cuenta que acabe en final de linea o de fichero
+        Se suman todos los \n que haya siempre entre medias (si no cuenta solo 1).
+        """
+        self.lineno += t.value.count("\n")
 
+    # ---------------------------------
+    #             Extras
+    # ---------------------------------
+
+    @_(r"\n")
+    def NUEVA_LINEA(self, t):
+        """para los saltos de linea (de uno en uno)"""
+        self.lineno += 1
+
+    # --------------------------------------------------------------------------------------------
     def error(self, t):
         """
         Maneja errores léxicos cuando se encuentra un carácter no reconocido.
@@ -160,7 +332,8 @@ class CoolLexer(Lexer):
         """
 
         # Se imprime un mensaje indicando el carácter ilegal encontrado
-        print(f"Error encontrado: '{t.value[0]}'")
+        # tiene que tener este formato justo para que lo detecten los tests
+        print("Illegal character '%s'" % t.value[0])
 
         # Se avanza el índice del lexer para seguir analizando el texto
         self.index += 1
@@ -186,9 +359,7 @@ class CoolLexer(Lexer):
         - Maneja errores detectados durante el análisis léxico.
         """
 
-        list_strings = (
-            []
-        )  # Lista donde se almacenarán los tokens procesados como strings
+        list_strings = []
 
         lexer = CoolLexer()  # Se crea una nueva instancia del analizador léxico
 

@@ -311,11 +311,22 @@ prueba1 = "a = 1\n a"
 prueba2 = "a"
 prueba3 = '"esto es un string" b'
 prueba4 = "or and "
+prueba5 = "alcachofa // esto es un comentario\n esto no lo es"
+prueba6 = "esto es un numero 43.5.5.5 y 9.a"
 
-for i in tokenize(prueba3):
-    print("El token es ", i)
+# d = [Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
+# print(d)
 
+# pruebas = [prueba1, prueba2, prueba3, prueba4, prueba5, prueba6]
+# c = 1
+# for prueba in pruebas:
+#     print("Prueba: ", c)
+#     c += 1
+#     for i in tokenize(prueba):
+#         print("El token es ", i)
 
+# for i in tokenize(prueba6):
+#     print("El token es ", i)
 # salida de prueba 1
 
 # """

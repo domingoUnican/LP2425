@@ -1,4 +1,4 @@
-% Created 2025-03-04 mar 10:02
+% Created 2025-03-04 mar 15:53
 % Intended LaTeX compiler: pdflatex
 \input{$HOME/Git_Repositories/encargos/ALGT/hojas/source/cabeza}
 \author{Helmut Krauser}
@@ -7,7 +7,7 @@
 \begin{document}
 
 \vspace{5mm}\centerline{\large\bf Representación de Código}\vspace{5mm}
-\label{sec:orgc66f9a9}
+\label{sec:orga46933b}
 
 Para poder trabajar con código Lox de una manera eficiente, es necesario poder 
 tener una representación de este código dentro del lenguaje donde escribamos un compilador.
@@ -19,15 +19,46 @@ Como Python permite la programación orientada a objetos, vamos a utilizar clase
 Demos un extracto del código que debemos generar:
 \begin{minted}[frame=lines,fontsize=\scriptsize,linenos=]{python}
 from dataclasses import dataclass
-from typing import List 
-
-@dataclass
-class Program:
-    declarations: List[Declaration]
+from Lexer import Token
+from typing import List, Optional
 
 @dataclass
 class Declaration:
     pass
+
+@dataclass
+class Primary:
+    pass
+
+
+
+
+@dataclass
+class Unary:
+    op: str
+    atr: Optional["Unary"]=None  # Esto es para representar call o otro Unary
+
+@dataclass
+class Call:
+    base: Primary
+
+@dataclass
+class Number(Primary):
+    tok: Token
+
+@dataclass
+class Factor:
+    op: str
+    first_un: Unary
+    second_un: Unary
+
+            
+
+@dataclass
+class Function:
+    name: str
+    params: List['Parameter']
+    body: 'Block'
 
 @dataclass
 class ClassDeclaration(Declaration):
@@ -42,17 +73,66 @@ class FunctionDeclaration(Declaration):
 @dataclass
 class VarDeclaration(Declaration):
     name: str
-    expr: Expression
+    expr: 'Expression'
 
 @dataclass
-class statement(Declaration):
+class Statement(Declaration):
     pass
 
 @dataclass
-class Function:
-    name: str
-    params: List[Parameter]
-    body: Block
+class Program:
+    declarations: List[Declaration]
+
 
 \end{minted}
+
+Notesé que las clases coinciden con el nombre de las distintas variables y, por convención, el nombre de las clases empieza \href{https://peps.python.org/pep-0008/}{siempre por mayúscula}.
+\prop{Se pide completar las clases, según la gramática de Lox.}
+\label{sec:orga5152bc}
+
+Es conveniente añadir un método a las clases, de forma que se imprima la representación del objeto. Por ser esta representación un árbol, es conveniente que la salida este correctamente indentada y por ello el método tiene que tomar un argumento con el número de espacios de indentación.
+
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos=]{python}
+@dataclass
+class Number(Primary):
+    tok: Token
+    def tostring(self, n):
+        output = " " * n + self.tok.tipo + "\n"
+        output += " " * (n + 2) + self.tok.value  # Aquí ponemos el valor un poco más indentado
+        return output
+
+@dataclass
+class Factor:
+    op: str
+    first_un: Unary
+    second_un: Unary
+
+    def tostring(self, n):
+        output =""
+        output += " "*n + self.op + "\n"
+        output += self.first_un.tostring(n+2) + "\n"
+        output += self.second_un.tostring(n+2) + "\n"
+        return output
+
+\end{minted}
+
+Con este código se puede realizar la siguiente llamada:
+\begin{minted}[frame=lines,fontsize=\scriptsize,linenos=]{python}
+Factor(op="/", first_un=Number(tok=Token(lineno=0, value="10", tipo="Int"))
+       ,
+       second_un=Number(tok=Token(lineno=0, value="10",tipo="Int")))
+.tostring(2)
+\end{minted}
+
+y obtener la siguiente salida
+
+\begin{verbatim}
+/
+  Int
+    10
+  Int
+    10
+\end{verbatim}
+\prop{Corríjase la clase Factor, de forma que siga la gramática y añádase el método tostring(self, n) a todas las clases realizadas en el apartado anterior.}
+\label{sec:orgb53d60c}
 \end{document}

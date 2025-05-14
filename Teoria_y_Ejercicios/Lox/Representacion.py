@@ -3,7 +3,6 @@ from Lexer import Token
 from typing import List, Optional
 
 @dataclass
-<<<<<<< HEAD
 class Expression:
     pass
 
@@ -27,31 +26,10 @@ class Unary(Expression):
         for element in self.atr:
             output += element.tostring(n + 2) + "\n"
         return output
-=======
-class Declaration:
-    pass
-
-@dataclass
-class Primary:
-    pass
-
-
-
-
-@dataclass
-class Unary:
-    op: str
-    atr: Optional["Unary"]=None  # Esto es para representar call o otro Unary
-
-@dataclass
-class Call:
-    base: Primary
->>>>>>> 4a3593908ba31089da9436bfc305b91f4786bc70
 
 @dataclass
 class Number(Primary):
     tok: Token
-<<<<<<< HEAD
     
     def tostring(self, n):
         output = " " * n + str(self.tok.tipo) + "\n"
@@ -295,37 +273,10 @@ class FunctionDeclaration(Declaration):
     
     def tostring(self, n):
         return self.fun.tostring(n)
-=======
-    def tostring(self, n):
-        output = " " * n + self.tok.tipo + "\n"
-        output += " " * (n + 2) + self.tok.value  # Aquí ponemos el valor un poco más indentado
-        return output
-
-@dataclass
-class Factor:
-    op: str
-    first_un: Unary
-    second_un: Unary
-
-    def tostring(self, n):
-        output =""
-        output += " "*n + self.op + "\n"
-        output += self.first_un.tostring(n+2) + "\n"
-        output += self.second_un.tostring(n+2) + "\n"
-        return output
-            
-
-@dataclass
-class Function:
-    name: str
-    params: List['Parameter']
-    body: 'Block'
->>>>>>> 4a3593908ba31089da9436bfc305b91f4786bc70
 
 @dataclass
 class ClassDeclaration(Declaration):
     name: str
-<<<<<<< HEAD
     father: any
     methods: List[Function]
 
@@ -340,28 +291,10 @@ class ClassDeclaration(Declaration):
         for method in self.methods:
             output += method.tostring(n + 2)
         return output
-=======
-    father: str
-    methods: List[Function]
-
-@dataclass
-class FunctionDeclaration(Declaration):
-    fun: Function
-
-@dataclass
-class VarDeclaration(Declaration):
-    name: str
-    expr: 'Expression'
-
-@dataclass
-class Statement(Declaration):
-    pass
->>>>>>> 4a3593908ba31089da9436bfc305b91f4786bc70
 
 @dataclass
 class Program:
     declarations: List[Declaration]
-<<<<<<< HEAD
     
     def tostring(self, n):
         output = "Program\n"
@@ -700,5 +633,3 @@ funcion = Function("drink", [], Block([funcionPrint]))
 clase = ClassDeclaration("Brunch", claseBF, [funcion])
 print(clase.tostring(0))
 print("------------------------------------------------")
-=======
->>>>>>> 4a3593908ba31089da9436bfc305b91f4786bc70

@@ -1,2 +1,7 @@
 #name "invalidcharacters.cool"
-#1 '>'
+ '!'
+ '>'
+ '?'
+ '['
+ ']'
+ '|'

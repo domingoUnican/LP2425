@@ -1,0 +1,20 @@
+#name "stringcomment.cool"
+ TYPEID This
+ OBJECTID is
+ OBJECTID a
+ OBJECTID string
+ OBJECTID and
+ OBJECTID it
+ OBJECTID s
+ OBJECTID still
+ OBJECTID a
+ OBJECTID string
+ TYPEID This
+ OBJECTID is
+ OBJECTID a
+ OBJECTID comment
+ STR_CONST ""not a string""
+ STR_CONST ""not a string""
+ NOT
+ OBJECTID a
+ OBJECTID comment

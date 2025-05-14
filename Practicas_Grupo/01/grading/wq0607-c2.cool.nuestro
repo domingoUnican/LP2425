@@ -1,3 +1,23 @@
 #name "wq0607-c2.cool"
-#3 STR_CONST "*)"
-#3 STR_CONST "*)(*"
+ TYPEID COMMENT
+ TYPEID STRING
+ TYPEID ERROR
+ OBJECTID unmatched
+ OBJECTID close
+ OBJECTID comment
+ TYPEID STRING
+ TYPEID Estos
+ OBJECTID son
+ OBJECTID comentarios
+ OBJECTID anidados
+ TYPEID String
+ TYPEID Esto
+ OBJECTID es
+ OBJECTID el
+ OBJECTID error
+ OBJECTID de
+ OBJECTID cerrar
+ OBJECTID comentario
+ OBJECTID sin
+ OBJECTID abrirlo
+ TYPEID String

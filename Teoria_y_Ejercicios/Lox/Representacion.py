@@ -465,6 +465,7 @@ if __name__ == "__main__":
     # Crear algunos tokens de ejemplo
     token_42         = Token(lineno=1, value="42", tipo="Int")
     token_1          = Token(lineno=1, value="1", tipo="Int")
+    token_1          = Token(lineno=1, value="1", tipo="Int")
     token_x          = Token(lineno=1, value="x", tipo="TIdentifier")
     token_plus       = Token(lineno=1, value="+", tipo="TPlus")
     token_minus      = Token(lineno=1, value="-", tipo="TMinus")
@@ -527,7 +528,7 @@ if __name__ == "__main__":
     print("\nWhile Statement:")
     print(while_stmt.tostring(2))
     
-    var_decl = VarDeclaration(name="x", expr=literal_42)
+    var_decl = VarDeclaration(name="x", expr=Binary(left=literal_42, operator=token_plus, right=literal_1))
     for_stmt = ForStatement(
         initializer=var_decl,
         condition=condition_expr,
@@ -550,3 +551,4 @@ if __name__ == "__main__":
     program = Program(declarations=[var_decl, func_decl, class_decl])
     print("\nProgram:")
     print(program.tostring(0))
+

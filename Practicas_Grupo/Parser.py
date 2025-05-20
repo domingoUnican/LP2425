@@ -6,18 +6,17 @@ import sys
 import os
 from Clases import *
 
+
 class CoolParser(Parser):
     nombre_fichero = ''
-    tokens = CoolLexer.tokens
-    literals = CoolLexer.literals
-    reservados = CoolLexer._key_words
+    tokens = CoolLexer.tokens.union(CoolLexer.literals).union(CoolLexer.key_words).union(CoolLexer.ignore)
     debugfile = "salida.out"
     errores = []
-    
+
     precedence = (
-        ('right', 'DARROW'),
+        ('right', 'ASSIGN'),
         ('left', 'NOT'),
-        ('nonassoc', 'LE', '<', '='),
+        ('nonassoc', 'DARROW', '<', '='),
         ('left', '+', '-'),
         ('left', '*', '/'),
         ('left', 'ISVOID'),
@@ -25,357 +24,239 @@ class CoolParser(Parser):
         ('left', '@'),
         ('left', '.'),
     )
-    
-    @_('clases')
-    def program(self, p):
-        return Programa(linea = 0, secuencia = p.clases)
-    
-    @_("clase ';'")
-    def clases(self, p):
-        return [p.clase]
-        
-    @_("clases clase ';'")
-    def clases(self, p):
-        lista_clases = p.clases
-        lista_clases.append(p.clase)
-        return lista_clases
-    
-    @_("CLASS TYPEID '{'  '}'")
-    def clase(self, p):
-        return Clase(linea = p.lineno, nombre = p.TYPEID, padre = 'OBJECT', nombre_fichero = self.nombre_fichero, caracteristicas = [])
 
-    @_("CLASS TYPEID INHERITS TYPEID '{' '}'")
-    def clase(self, p):
-        return Clase(linea = p.lineno, nombre = p.TYPEID0, padre = p.TYPEID1, nombre_fichero = self.nombre_fichero, caracteristicas = [])
+    start = 'Programa'
+
+    @_("Clase ';'")
+    def Programa(self, p):
+        return Programa(secuencia=[p[0]])
+
+    @_("Programa Clase ';'")
+    def Programa(self, p):
+        return Programa(secuencia=p[0].secuencia + [p[1]])
     
-    @_("CLASS TYPEID '{' caracteristicas '}'")
-    def clase(self, p):
-        return Clase(linea = p.lineno, nombre = p.TYPEID, padre = 'OBJECT', nombre_fichero = self.nombre_fichero, caracteristicas = p.caracteristicas)
+    @_("CLASS TYPEID hereda '{' serie_atr_met '}' ") 
+    def Clase(self, p):
+        return Clase(nombre = p[1], nombre_fichero=self.nombre_fichero, padre = p[2], caracteristicas = p[4])
+
+    @_("", "INHERITS TYPEID")
+    def hereda(self, p):
+        if len(p) == 0:
+            return 'Object'
+        return p[1]
+        
+    @_(" ", "serie_atr_met atributo ';' ", "serie_atr_met metodo ';' ")
+    def serie_atr_met(self, p):
+        if len(p) == 0:
+            return []
+        return p[0] + [p[1]]
     
-    @_("CLASS TYPEID '{' error '}'")
-    def clase(self, p):
-        return Clase(linea = p.lineno, nombre = p.TYPEID, padre = 'OBJECT', nombre_fichero = self.nombre_fichero, caracteristicas = NoExpr())
+    @_("OBJECTID ':' TYPEID ")
+    def atributo(self, p):
+        return Atributo(nombre = p[0], tipo = p[2], cuerpo= NoExpr())
     
-    @_("CLASS TYPEID INHERITS TYPEID '{' caracteristicas '}'")
-    def clase(self, p):
-        return Clase(linea = p.lineno, nombre = p.TYPEID0, padre = p.TYPEID1, nombre_fichero = self.nombre_fichero, caracteristicas = p.caracteristicas)
+    @_("OBJECTID '(' ')' ':' TYPEID '{' expresion '}' ")
+    def metodo(self, p):
+        return Metodo(nombre = p[0], tipo = p[4], cuerpo = p[6])
     
-    @_("CLASS TYPEID INHERITS TYPEID '{' error '}'")
-    def clase(self, p):
-        return Clase(linea = p.lineno, nombre = p.TYPEID0, padre = p.TYPEID1, nombre_fichero = self.nombre_fichero, caracteristicas = NoExpr())
+    @_("OBJECTID '(' formal formales ')' ':' TYPEID '{' expresion '}' ")
+    def metodo(self, p):
+        return Metodo(nombre = p[0], tipo = p[6], cuerpo = p[8], formales = [p[2]] + p[3])
     
-    @_("caracteristica ';'")
-    def caracteristicas(self, p):
-        return [p.caracteristica]
-    
-    @_("caracteristicas caracteristica ';'")
-    def caracteristicas(self, p):
-        lista_caracteristicas = p.caracteristicas
-        lista_caracteristicas.append(p.caracteristica)
-        return lista_caracteristicas
-    
-    @_("OBJECTID '(' ')' ':' TYPEID '{' expr '}'")
-    def caracteristica(self, p):
-        return Metodo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = p.expr, formales = [])
-    
-    @_("OBJECTID '(' ')' ':' TYPEID '{' error '}'")
-    def caracteristica(self, p):
-        return Metodo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = NoExpr(), formales = [])
-    
-    @_("OBJECTID '(' formales ')' ':' TYPEID '{' expr '}'")
-    def caracteristica(self, p):
-        return Metodo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = p.expr, formales = p.formales)
-    
-    @_("OBJECTID '(' formales ')' ':' TYPEID '{' error '}'")
-    def caracteristica(self, p):
-        return Metodo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = NoExpr(), formales = p.formales)
-    
-    @_("OBJECTID '(' error ')' ':' TYPEID '{' expr '}'")
-    def caracteristica(self, p):
-        return Metodo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = p.expr, formales = NoExpr())
-    
-    @_("OBJECTID ':' TYPEID")
-    def caracteristica(self, p):
-        return Atributo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = NoExpr())
-    
-    @_("OBJECTID ':' TYPEID ASSIGN expr")
-    def caracteristica(self, p):
-        return Atributo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = p.expr)
-    
-    @_("OBJECTID ':' TYPEID ASSIGN error")
-    def caracteristica(self, p):
-        return Atributo(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, cuerpo = NoExpr())
-    
-    @_("formal ")
-    def formales(self, p):
-        return [p.formal]
+    @_(" '{' expresiones2 '}' ")
+    def expresion(self, p):
+        return Bloque(expresiones= p[1])
     
     @_("formales ',' formal")
     def formales(self, p):
-        lista_formales = p.formales
-        lista_formales.append(p.formal)
-        return lista_formales
+        
+        return p[0] + [p[2]]
     
-    @_('OBJECTID ":" TYPEID')
+    @_(" ")
+    def formales(self, p):
+        return []
+
+    @_("OBJECTID ':' TYPEID ")
     def formal(self, p):
-        return Formal(linea = p.lineno, nombre_variable = p.OBJECTID, tipo = p.TYPEID)
+        return Formal(nombre_variable = p[0], tipo = p[2])
+
+    @_("INT_CONST")
+    def expresion(self, p):
+        return Entero(valor = p[0])
     
-    @_('OBJECTID ASSIGN expr')
-    def expr(self, p):
-        return Asignacion(linea = p.lineno, nombre = p.OBJECTID, cuerpo = p.expr)
+    @_("NEW TYPEID")
+    def expresion(self, p):
+        return Nueva(tipo = p[1])
+        
+    @_("OBJECTID")
+    def expresion(self, p):
+        return Objeto(nombre = p[0])
     
-    @_('OBJECTID ASSIGN error')
-    def expr(self, p):
-        return Asignacion(linea = p.lineno, nombre = p.OBJECTID, cuerpo = NoExpr())
+    @_("STR_CONST")
+    def expresion(self, p):
+        return String(valor = p[0])
     
-    @_("expr '.' OBJECTID '(' ')'") 
-    def expr(self, p):
-        return LlamadaMetodo(linea = p.lineno, cuerpo = p.expr, nombre_metodo = p.OBJECTID, argumentos = [])
+    @_("BOOL_CONST")
+    def expresion(self, p):
+        return Booleano(valor = p[0])
+
+    @_("ASSIGN expresion")
+    def expresion(self, p):
+        return Asignacion(nombre=p[0], cuerpo = p[1])
     
-    @_("expr '@' TYPEID '.' OBJECTID '(' ')'") 
-    def expr(self, p):
-        return LlamadaMetodoEstatico(linea = p.lineno, cuerpo = p.expr, clase = p.TYPEID, nombre_metodo = p.OBJECTID, argumentos = [])
+    @_("OBJECTID ASSIGN expresion")
+    def expresion(self, p):
+        return Asignacion(nombre=p[0], cuerpo = p[2])
+
+    @_("expresion + expresion")
+    def expresion(self, p):
+        return Suma(izquierda = p[0], derecha = p[2])
     
-    @_("expr '.' OBJECTID '(' parametros ')'") 
-    def expr(self, p):
-        return LlamadaMetodo(linea = p.lineno, cuerpo = p.expr, nombre_metodo = p.OBJECTID, argumentos = p.parametros)
+    @_("expresion - expresion")
+    def expresion(self, p):
+        return Resta(izquierda = p[0], derecha = p[2])
     
-    @_("expr '@' TYPEID '.' OBJECTID '(' parametros ')'") 
-    def expr(self, p):
-        return LlamadaMetodoEstatico(linea = p.lineno, cuerpo = p.expr, clase = p.TYPEID, nombre_metodo = p.OBJECTID, argumentos = p.parametros)
+    @_("expresion '*' expresion")
+    def expresion(self, p):
+        return Multiplicacion(izquierda = p[0], derecha = p[2])
+
+    @_("expresion '/' expresion")
+    def expresion(self, p):
+        return Division(izquierda = p[0], derecha = p[2])
     
-    @_("OBJECTID '(' ')'")
-    def expr(self, p):
-        return LlamadaMetodo(linea = p.lineno, cuerpo = Objeto(linea = p.lineno, nombre = 'self'), nombre_metodo = p.OBJECTID, argumentos = [])
+    @_("expresion '<' expresion")
+    def expresion(self, p):
+        return Menor(izquierda = p[0], derecha = p[2])
     
-    @_("OBJECTID '(' parametros ')'")
-    def expr(self, p):
-        return LlamadaMetodo(linea = p.lineno, cuerpo = Objeto(linea = p.lineno, nombre = 'self'), nombre_metodo = p.OBJECTID, argumentos = p.parametros)
+    @_("expresion DARROW expresion")
+    def expresion(self, p):
+        return LeIgual(izquierda = p[0], derecha = p[2])
     
-    @_('expr')
-    def parametros(self, p):
-        return [p.expr]
+    @_("expresion '=' expresion")
+    def expresion(self, p):
+        return Igual(izquierda = p[0], derecha = p[2])
     
-    @_("parametros ',' expr")
-    def parametros(self, p):
-        lista_param = p.parametros
-        lista_param.append(p.expr)
-        return lista_param
+    @_(" '(' expresion ')' ")
+    def expresion(self, p):
+        return p[1]
     
-    @_('IF expr THEN error FI')
-    def expr(self, p):
-        return Condicional(linea = p.lineno, condicion = p.expr, verdadero = NoExpr(), falso = NoExpr())
+    @_("NOT expresion")
+    def expresion(self, p):
+        return Not(expr= p[1])
     
-    @_('IF error THEN expr ELSE expr FI')
-    def expr(self, p):
-        return Condicional(linea = p.lineno, condicion = NoExpr(), verdadero = p.expr1, falso = p.expr2)
+    @_("ISVOID expresion")
+    def expresion(self, p):
+        return EsNulo(expr = p[1])
     
-    @_('IF expr THEN expr ELSE expr FI')
-    def expr(self, p):
-        return Condicional(linea = p.lineno, condicion = p.expr0, verdadero = p.expr1, falso = p.expr2)
+    @_(" '~' expresion")
+    def expresion(self, p):
+        return Neg(expr= p[1])
     
-    @_('WHILE expr LOOP expr POOL')
-    def expr(self, p):
-        return Bucle(linea = p.lineno, condicion = p.expr0, cuerpo = p.expr1)
+    @_("expresion '@' TYPEID '.' OBJECTID '(' ')' ")
+    def expresion(self, p):
+        return LlamadaMetodoEstatico(cuerpo= p[0], clase = p[2], nombre_metodo= p[4], argumentos=[])
     
-    @_('WHILE error LOOP error POOL')
-    def expr(self, p):
-        return Bucle(linea = p.lineno, condicion = NoExpr(), cuerpo = NoExpr())
+    @_("expresion '@' TYPEID '.' OBJECTID '(' expresiones ')' ")
+    def expresion(self, p):
+        return LlamadaMetodoEstatico(cuerpo= p[0], clase= p[2], nombre_metodo= p[4], argumentos= p[6])
     
-    @_('WHILE error LOOP expr POOL')
-    def expr(self, p):
-        return Bucle(linea = p.lineno, condicion = NoExpr(), cuerpo = p.expr)
+    @_(" OBJECTID '(' expresiones ')' ")
+    def expresion(self, p):
+        return LlamadaMetodo(cuerpo= Objeto(nombre="self"), nombre_metodo= p[0], argumentos= p[2])
+
+    @_(" expresion '.' OBJECTID '(' expresiones ')' ")
+    def expresion(self, p):
+        return LlamadaMetodo(cuerpo= p[0], nombre_metodo= p[2], argumentos= p[4])
+
+    @_(" OBJECTID '(' ')' ")
+    def expresion(self, p):
+        return LlamadaMetodo(cuerpo= Objeto(nombre="self"), nombre_metodo= p[0], argumentos=[])
+
+    @_(" expresion '.' OBJECTID '(' ')' ")
+    def expresion(self, p):
+        return LlamadaMetodo(cuerpo= p[0], nombre_metodo= p[2], argumentos=[])
     
-    @_('WHILE expr LOOP error POOL')
-    def expr(self, p):
-        return Bucle(linea = p.lineno, condicion = p.expr, cuerpo = NoExpr())
+    @_("IF expresion THEN expresion ELSE expresion FI")
+    def expresion(self, p):
+        return Condicional(condicion = p[1], verdadero = p[3], falso = p[5])
     
-    @_("expr ';'")
-    def exprs(self, p):
-        return [p.expr]
+    @_("WHILE expresion LOOP expresion POOL")
+    def expresion(self, p):
+        return Bucle(condicion = p[1], cuerpo = p[3])
     
-    @_("exprs expr ';'")
-    def exprs(self, p):
-        lista_expresiones = p.exprs
-        lista_expresiones.append(p.expr)
-        return lista_expresiones
+    @_("LET expresion3 expresiones IN expresion ") 
+    def expresion(self, p):
+        if len(p.expresiones) > 0:
+            total = p[4]
+            for nombre, tipo, inicializacion in p[2]:
+                total = Let(nombre = nombre, tipo = tipo, cuerpo = total, inicializacion= inicializacion)
+
+            nombre, tipo, inicializacion = p[1]
+            return Let(nombre = nombre, tipo = tipo, cuerpo = total, inicializacion= inicializacion)
+        else:
+            nombre, tipo, inicializacion = p[1]
+            return Let(nombre = nombre, tipo = tipo, cuerpo = p[4], inicializacion= inicializacion)
     
-    @_("'{' exprs '}'")
-    def expr(self, p):
-        return Bloque(linea = p.lineno, expresiones = p.exprs)
+    @_("CASE expresion OF serie_when ESAC")
+    def expresion(self, p):
+        return Swicht(expr= p[1], casos= p[3])
+
+    @_("serie_when when")
+    def serie_when(self, p):
+        return p[0] + [p[1]]
     
-    @_("error ';'")
-    def exprs(self, p):
+    @_(" ")
+    def serie_when(self, p):
         return []
     
-    @_("LET OBJECTID ':' TYPEID IN expr")
-    def expr(self, p):
-        return Let(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, inicializacion = NoExpr(), cuerpo = p.expr)
+    @_("OBJECTID ':' TYPEID DARROW expresion ';'")
+    def when(self, p):
+        return RamaCase(nombre_variable= p[0], tipo = p[2], cuerpo = p[4])
     
-    @_("LET OBJECTID ':' TYPEID ASSIGN expr IN expr")
-    def expr(self, p):
-        return Let(linea = p.lineno, nombre = p.OBJECTID, tipo = p.TYPEID, inicializacion = p.expr0, cuerpo = p.expr1)
+    @_(" , expresion3 ")
+    def expresiones(self, p):
+        return [p[1]]
+
+    @_(" expresiones , expresion3 ")
+    def expresiones(self, p):
+        return [p[2]] + p[0]
     
-    @_("LET OBJECTID ':' TYPEID tiposlet IN expr")
-    def expr(self, p):
-        Cuerpo = Let(nombre = tiposlet[-1][0],
-            tipo = tiposlet[-1][1],
-            inicializacion= tiposlet[-1][2],
-            cuerpo = p.expr)
-        tiposlet.pop()
-        while tiposlet:
-            Cuerpo = Let(nombre = tiposlet[-1][0],
-            tipo = tiposlet[-1][1],
-            inicializacion= tiposlet[-1][2],
-            cuerpo = Cuerpo)
-        cuerpo = ....__annotations__
-        return Cuerpo
+    @_(" expresiones , expresion ")
+    def expresiones(self, p):
+        return p[0] + [p[2]]
     
-    @_("LET OBJECTID ':' TYPEID error IN expr")
-    def expr(self, p):
-        return NoExpr()
+    @_(" expresion ")
+    def expresiones(self, p):
+        return [p[0]]
     
-    @_("LET OBJECTID ':' TYPEID expr IN error")
-    def expr(self, p):
-        return NoExpr()
+    @_(" expresion ';' expresiones2 ")
+    def expresiones2(self, p):
+        return [p[0]] + p[2]
     
-    @_("',' tipolet ")
-    def tiposlet(self, p):
-        return [p.inicializacion]
+    @_(" ")
+    def expresiones(self, p):
+        return []
     
-    @_("tiposlet ',' tipolet")
-    def inicializaciones(self, p):
-        lista_ini = p.inicializaciones
-        lista_ini.append(p.inicializacion)
-        return lista
+    @_(" ")
+    def expresiones2(self, p):
+        return []
     
-    @_("OBJECTID ':' TYPEID ASSIGN expr")
-    def tipolet(self, p):
-        return [p.OBJECTID, p.TYPEID, p.expr]
+    @_(" OBJECTID ':' TYPEID")
+    def expresion3(self, p):
+        return p[0], p[2] , NoExpr()
     
-    @_('OBJECTID ":" TYPEID ASSIGN error')
-    def tipolet(self, p):
-        return [p.OBJECTID, P.TYPEID, NoExpr()]
+    @_(" OBJECTID ':' TYPEID ASSIGN expresion")
+    def expresion3(self, p):
+        return p[0] , p[2], p[4]
     
-    @_("OBJECTID ':' TYPEID")
-    def inicializacion(self, p):
-        return [p.OBJECTID, p.TYPEID, NoExpr(nombre = '')]
+
+# a = CoolLexer()
+# b = CoolParser()
+
+# f = open(r'C:\Users\gopem\OneDrive\Escritorio\Estudios\Uni\Lenguajes de Programacion\Practicas\REPOSITORIO\LP2425\Practicas_Grupo\02\minimos\classonefield.test', 'r')
+# objecto = b.parse(a.tokenize(f.read()))
+# print(objecto.str(0))
+# # for tok in a.tokenize(f.read()):
+# #     print(tok)
 
     
-    @_('CASE error OF darrowlist ESAC')
-    def expr(self, p):
-        return Swicht(linea = p.lineno, expr = NoExpr() , casos = p.darrowlist)
-    
-    @_('CASE expr OF error ESAC')
-    def expr(self, p):
-        return Swicht(linea = p.lineno, expr = p.expr , casos = NoExpr())
-    
-    @_('CASE expr OF darrowlist ESAC')
-    def expr(self, p):
-        return Swicht(linea = p.lineno, expr = p.expr , casos = p.darrowlist)
-    
-    @_("OBJECTID ':' TYPEID DARROW expr ';'")
-    def darrowlist(self, p):
-        return [RamaCase(linea = p.lineno, nombre_variable = p.OBJECTID, tipo = p.TYPEID, cuerpo = p.expr)]
-    
-    @_("OBJECTID ':' TYPEID DARROW error ';'")
-    def darrowlist(self, p):
-        return [RamaCase(linea = p.lineno, nombre_variable = p.OBJECTID, tipo = p.TYPEID, cuerpo = NoExpr())]
-    
-    @_("darrowlist OBJECTID ':' TYPEID DARROW expr ';'")
-    def darrowlist(self, p):
-        lista = p.darrowlist
-        lista.append(RamaCase(linea = p.lineno, nombre_variable = p.OBJECTID, tipo = p.TYPEID, cuerpo = p.expr))
-        return lista
-    
-    @_('NEW TYPEID')
-    def expr(self, p):
-        return Nueva(linea = p.lineno, tipo = p.TYPEID)
-    
-    @_('error TYPEID')
-    def expr(self, p):
-        return Nueva(linea = p.lineno, tipo = p.TYPEID)
-    
-    @_('ISVOID expr')
-    def expr(self, p):
-        return EsNulo(linea = p.lineno, expr = p.expr)
-    
-    @_('ISVOID error')
-    def expr(self, p):
-        return EsNulo(linea = p.lineno, expr = NoExpr())
-    
-    @_("expr '+' expr")
-    def expr(self, p):
-        return Suma(linea = p.lineno, izquierda = p.expr0, derecha = p.expr1)
-    
-    @_("expr '-' expr")
-    def expr(self, p):
-        return Resta(linea = p.lineno, izquierda = p.expr0, derecha = p.expr1)
-    
-    @_("expr '*' expr")
-    def expr(self, p):
-        return Multiplicacion(linea = p.lineno, izquierda = p.expr0, derecha = p.expr1)
-    
-    @_("expr '/' expr")
-    def expr(self, p):
-        return Division(linea = p.lineno, izquierda = p.expr0, derecha = p.expr1)
-    
-    @_("'~' expr")
-    def expr(self, p):
-        return Neg(linea = p.lineno, expr = p.expr)
-    
-    @_("expr '<' expr")
-    def expr(self, p):
-        return Menor(linea = p.lineno, izquierda = p.expr0, derecha = p.expr1)
-    
-    @_('expr LE expr')
-    def expr(self, p):
-        return LeIgual(linea = p.lineno, izquierda = p.expr0, derecha = p.expr1)
-    
-    @_("expr '=' expr")
-    def expr(self, p):
-        return Igual(linea = p.lineno, izquierda = p.expr0, derecha = p.expr1)
-    
-    @_('NOT expr')
-    def expr(self, p):
-        return Not(linea = p.lineno, expr = p.expr)
-    
-    @_('NOT error')
-    def expr(self, p):
-        return Not(linea = p.lineno, expr = NoExpr())
-    
-    @_('"(" expr ")"')
-    def expr(self, p):
-        return p.expr
-    
-    @_('OBJECTID')
-    def expr(self, p):
-        return Objeto(linea = p.lineno, nombre = p.OBJECTID)
-
-    @_('INT_CONST')
-    def expr(self, p):
-        return Entero(linea = p.lineno, valor = p.INT_CONST)
-
-    @_('STR_CONST')
-    def expr(self, p):
-        return String(linea = p.lineno, valor = p.STR_CONST)
-    
-    @_("error INT_CONST")
-    def expr(self, p):
-        return Objeto(linea = p.lineno, nombre = 'basura')
-    
-    @_('BOOL_CONST')
-    def expr(self, p):
-        return Booleano(linea = p.lineno, valor = p.BOOL_CONST)
-    
-    def error(self, p):
-        if p is None:
-            resultado = f'"{self.nombre_fichero}", line 0: syntax error at or near EOF'
-        elif p.value in self.reservados:
-            resultado = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type}'
-        elif p.value in self.literals:
-            resultado = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near \'{p.type}\''
-        else:
-            resultado = f'"{self.nombre_fichero}", line {p.lineno}: syntax error at or near {p.type} = {p.value}'
-        
-        self.errores.append(resultado)

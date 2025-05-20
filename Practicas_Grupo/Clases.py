@@ -160,20 +160,23 @@ class RamaCase(Nodo):
     tipo: str = "_no_set"
     cuerpo: Expresion = None
 
+    cast: str = "_no_type"
+
     def str(self, n):
         resultado = super().str(n)
         resultado += f'{(n)*" "}_branch\n'
         resultado += f'{(n+2)*" "}{self.nombre_variable}\n'
         resultado += f'{(n+2)*" "}{self.tipo}\n'
         resultado += self.cuerpo.str(n + 2)
-        resultado += f'{(n)*" "}: {self.cast}\n'
+        # resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
 
 @dataclass
-class Swicht(Nodo):
+class Switch(Nodo):
     expr: Expresion = None
     casos: List[RamaCase] = field(default_factory=list)
+    cast: str = "_no_type"
 
     def str(self, n):
         resultado = super().str(n)
@@ -187,6 +190,7 @@ class Swicht(Nodo):
 @dataclass
 class Nueva(Nodo):
     tipo: str = "_no_set"
+    cast: str = "_no_type"
 
     def str(self, n):
         resultado = super().str(n)
@@ -482,3 +486,6 @@ class Atributo(Caracteristica):
         resultado += f'{(n+2)*" "}{self.tipo}\n'
         resultado += self.cuerpo.str(n + 2)
         return resultado
+
+# class Ambito:
+#     pass

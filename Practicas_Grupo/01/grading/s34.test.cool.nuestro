@@ -1,7 +1,5 @@
 #name "s34.test.cool"
- BEFORE_IT
- THIS
- STRING
- DOENS
- T
- END
+
+ OBJECTID before_it
+
+ ERROR "EOF in string constant"

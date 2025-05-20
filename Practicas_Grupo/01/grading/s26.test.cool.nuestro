@@ -1,0 +1,6 @@
+#name "s26.test.cool"
+ LITERAL
+ INT_CONST 3
+ OBJECTID a
+ LITERAL
+ LITERAL

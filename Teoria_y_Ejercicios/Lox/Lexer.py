@@ -113,27 +113,78 @@ class Token:
 
 
 dfa = defaultdict(lambda:None)
-dfa[(TokenType.TNothing, TypesLiteral.TyNumber)] = TokenType.TNumber
+
 # Rellenar el DFA
 dfa[(TokenType.TNothing, TypesLiteral.TyNumber)] = TokenType.TNumber
 dfa[(TokenType.TNothing, TypesLiteral.TyChar)] = TokenType.TIdentifier
+dfa[(TokenType.TNothing, TypesLiteral.TyLeftParen)] = TokenType.TLeftParen
+dfa[(TokenType.TNothing, TypesLiteral.TyRightParen)] = TokenType.TRightParen
+dfa[(TokenType.TNothing, TypesLiteral.TyLeftBrace)] = TokenType.TLeftBrace
+dfa[(TokenType.TNothing, TypesLiteral.TyRightBrace)] = TokenType.TRightBrace
+dfa[(TokenType.TNothing, TypesLiteral.TyComma)] = TokenType.TComma
+dfa[(TokenType.TNothing, TypesLiteral.TyDot)] = TokenType.TDot
+dfa[(TokenType.TNothing, TypesLiteral.TyMinus)] = TokenType.TMinus
+dfa[(TokenType.TNothing, TypesLiteral.TyPlus)] = TokenType.TPlus
+dfa[(TokenType.TNothing, TypesLiteral.TySemiColon)] = TokenType.TSemiColon
+dfa[(TokenType.TNothing, TypesLiteral.TyStar)] = TokenType.TStar
+dfa[(TokenType.TNothing, TypesLiteral.TySlash)] = TokenType.TSlash
+dfa[(TokenType.TNothing, TypesLiteral.TyBang)] = TokenType.TBang
+dfa[(TokenType.TNothing, TypesLiteral.TyEqual)] = TokenType.TEqual
+dfa[(TokenType.TNothing, TypesLiteral.TyLess)] = TokenType.TLess
+dfa[(TokenType.TNothing, TypesLiteral.TyGreater)] = TokenType.TGreater
 dfa[(TokenType.TNothing, TypesLiteral.TyQuote)] = TokenType.THalfString
 dfa[(TokenType.TNothing, TypesLiteral.TySpace)] = TokenType.TSpace
 dfa[(TokenType.TNothing, TypesLiteral.TyLine)] = TokenType.TLine
-dfa[TokenType.TSlash,TypesLiteral.TySlash] = TokenType.TComment
-dfa[TokenType.TComment,TypesLiteral.TyLine] = TokenType.TCommentLine
-dfa[TokenType.THalfString,TypesLiteral.TyChar] = TokenType.THalfString
-dfa[TokenType.THalfString,TypesLiteral.TySpace] = TokenType.THalfString
-dfa[TokenType.THalfString,TypesLiteral.TyQuote] = TokenType.TString
-dfa[TokenType.THalfString,TypesLiteral.TyEqual] = TokenType.TEqual
+dfa[(TokenType.TNumber, TypesLiteral.TyNumber)] = TokenType.TNumber
+dfa[(TokenType.TBang, TypesLiteral.TyEqual)] = TokenType.TBangEqual
+dfa[(TokenType.TEqual, TypesLiteral.TyEqual)] = TokenType.TEqualEqual
+dfa[(TokenType.TLess, TypesLiteral.TyEqual)] = TokenType.TLessEqual
+dfa[(TokenType.TGreater, TypesLiteral.TyEqual)] = TokenType.TGreaterEqual
+dfa[(TokenType.TSpace, TypesLiteral.TySpace)] = TokenType.TSpace
+dfa[(TokenType.TSpace, TypesLiteral.TyChar)] = None
+dfa[(TokenType.TIdentifier, TypesLiteral.TyChar)] = TokenType.TIdentifier
+dfa[(TokenType.TIdentifier, TypesLiteral.TyNumber)] = TokenType.TIdentifier
+dfa[(TokenType.TIdentifier, TypesLiteral.TySpace)] = None
+dfa[(TokenType.THalfString, TypesLiteral.TyNumber)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyChar)] = TokenType.THalfString
 dfa[(TokenType.THalfString, TypesLiteral.TySpace)] = TokenType.THalfString
-dfa[TokenType.THalfString,TypesLiteral.TyLine] = TokenType.THalfString
-dfa[TokenType.TNumber,TypesLiteral.TyNumber] = TokenType.TNumber
-dfa[TokenType.TString,TypesLiteral.TyLine] = TokenType.TString
-dfa[TokenType.TNumber,TypesLiteral.TyDot] = TokenType.TNumber
-dfa[TokenType.TIdentifier,TypesLiteral.TyChar] = TokenType.TIdentifier
-dfa[TokenType.TIdentifier,TypesLiteral.TyNumber] = TokenType.TIdentifier
-
+dfa[(TokenType.THalfString, TypesLiteral.TyLeftParen)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyRightParen)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyLeftBrace)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyRightBrace)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyComma)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyDot)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyMinus)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyPlus)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TySemiColon)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyStar)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TySlash)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyBang)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyEqual)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyLess)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyGreater)] = TokenType.THalfString
+dfa[(TokenType.THalfString, TypesLiteral.TyQuote)] = TokenType.TString
+dfa[(TokenType.THalfString, TypesLiteral.TyLine)] = TokenType.THalfString
+dfa[(TokenType.TSlash, TypesLiteral.TySlash)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyLine)] = TokenType.TCommentLine
+dfa[(TokenType.TComment, TypesLiteral.TyChar)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TySpace)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyLeftParen)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyRightParen)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyLeftBrace)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyRightBrace)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyComma)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyDot)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyMinus)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyPlus)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TySemiColon)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyStar)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TySlash)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyBang)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyEqual)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyLess)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyGreater)] = TokenType.TComment
+dfa[(TokenType.TComment, TypesLiteral.TyQuote)] = TokenType.TComment
 def is_final_state(state):
     return (state not in [TokenType.THalfString, TokenType.TNothing])
         
@@ -213,6 +264,7 @@ def tokenize(entrada):
         if token.tipo not in ignore_tokens:
             yield token
 
+<<<<<<< HEAD
 # Test cases
 prueba1 = "a = 1\n a"
 prueba2 = "a"
@@ -221,9 +273,44 @@ prueba4 = "or and "
 prueba5 = '"prueba numero decimal "1.2'
 
 
-for i in tokenize(prueba4):
+for i in tokenize(prueba5):
     print("El token es ", i)
 
 
 
 
+=======
+# prueba1 = "a = 1\n a"
+# prueba2 = "a"
+# prueba3 = '"esto es un string" b'
+# prueba4 = "or and "
+
+# for i in tokenize(prueba3):
+#     print("El token es ", i)
+
+
+# # salida de prueba 1
+
+# """
+# [Token(lineno=1, value='a', tipo=TokenType.TIdentifier),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='=', tipo=TokenType.TEqual),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='1', tipo=TokenType.TNumber),Token(lineno=2, value='\n ', tipo=TokenType.TSpace),Token(lineno=2, value='a', tipo=TokenType.TIdentifier)]
+# """
+
+# # salida de prueba 2
+
+# """
+# [Token(lineno=1, value='a', tipo=TokenType.TIdentifier)]
+# """
+
+
+# # salida de prueba 3
+
+# """
+# [Token(lineno=1, value='"esto es un string"', tipo=TokenType.TString),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='b', tipo=TokenType.TIdentifier)]
+# """
+
+# # salida de prueba 4
+
+# """
+# [Token(lineno=1, value='or', tipo=TokenType.TOr),Token(lineno=1, value=' ', tipo=TokenType.TSpace),Token(lineno=1, value='and', tipo=TokenType.TAnd),Token(lineno=1, value=' ', tipo=TokenType.TSpace)]
+# """
+>>>>>>> ac704d2b4d73596ecbbaf2a1cc3dfe1217ce59f1

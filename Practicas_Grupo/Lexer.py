@@ -1,306 +1,375 @@
 # coding: utf-8
 
 from sly import Lexer
+import os
+import re
+import sys
+
+from sly import lex
+
+class Comentario(Lexer):
+    tokens = {}
+
+    _numero_anidados = 1
 
 
-class Strings(Lexer):
-    tokens = {ERROR, STR_CONST}
-    _caracteres = '"'
-    _contador = 0
-
-    @_(r'\\"$')
-    def ERROR_ESCAPED_QUOTE(self, t):
+    @_(r'\n')
+    def LINEA(self, t):
         self.lineno += 1
-        self._caracteres = '"'
-        t.type = "ERROR"
-        t.value = '"EOF in string constant"'
-        self._caracteres = '"'
-        self._contador = 0
-        self.begin(CoolLexer)
-        return t
-    
-    @_(r'(\\\\)*"')
-    def STR_CONST(self, t):
-        self._contador *= (len(t.value)-1)//2
-        if self._contador < 1024:
-            self._caracteres += t.value
-            t.value = self._caracteres
-        else:
-            t.value = '"String constant too long"'
-            t.type = "ERROR"
-        self._caracteres = '"'
-        self._contador = 0
-        self.begin(CoolLexer)
+        if self._numero_anidados == 0:
+            self.begin(CoolLexer)
+
+    @_(r'\*\)')
+    def VOLVER(self, t):
+        self._numero_anidados -= 1
+        if self._numero_anidados == 0:
+            self.begin(CoolLexer)
+        pass
+
+    @_(r'\(\*')
+    def ANIDAR(self, t):
+        if self._numero_anidados != 0:
+            self._numero_anidados += 1
+
+    @_(r'.')
+    def PASAR(self, t):
+        pass
+
+class CadenaTexto(Lexer):
+    tokens = {}
+    _cadena = ''
+
+    @_(r'\\\x00\"\n')
+    def ERROR_NULL(self, t):
+        t.value = '"String contains escaped null character."'
+        t.type = 'ERROR'
+        self._cadena = ''
         return t
 
-    @_(r'\\[\\"ntbf]')
-    def ADD_SPECIAL(self, t):
-        self._contador += 1
-        self._caracteres += t.value
+    @_(r'\\"')
+    def COMILLAS(self, t):
+        if len(self.text) <= t.end and t.value != '"':
+            t.value = '"EOF in string constant"'
+            t.type = 'ERROR'
+            self._cadena = ''
+            return t
+        self._cadena += '\\"'
 
-    @_(r'\\\w')
-    def ADD_SCAPED(self, t):
-        self._contador += 1        
-        self._caracteres += t.value[-1]
+    @_(r'\\\r\n')
+    def BARRA_RN_BIEN(self, t):
+        self._cadena += '\\n' 
+
+    @_(r'\\\t')
+    def BARRA_T_TRIPLE(self, t):
+        self._cadena += '\\t'
+
+    @_(r'\\\x08')
+    def BARRA_B(self, t):
+        self._cadena += '\\b'
+
+    @_(r'\\\x0c')
+    def BARRA_F(self, t):
+        self._cadena += '\\f'
+
+    @_(r'\\')
+    def BARA_BARA(self, t):
+        self._cadena += t.value
+
+    @_(r'\"')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.value = '"' + self._cadena +'"'
+        t.type = 'STR_CONST'
+        self._cadena = ''
+        return t
+
+    @_(r'\r\n')
+    def BARRA_RN(self, t):
+        self.begin(CoolLexer)
+        t.value = '"Unterminated string constant"'
+        t.type = 'ERROR'
+        self._cadena = ''
+        return t
+
+    @_(r'\n')
+    def BARRA_N(self, t):
+        self._cadena += '\\n'
 
     @_(r'\t')
-    def TAB(self, t):
-        self._contador += 1        
-        self._caracteres += r"\t"
-
-
-    @_(r'\\\n$')
-    def ERROR_ADD_LINE(self, t):
-        self.lineno += 1
-        self._caracteres = '"'
-        t.type = "ERROR"
-        t.value = '"EOF in string constant"'
-        self._caracteres = '"'
-        self._contador = 0
-        self.begin(CoolLexer)
-        return t
+    def BARRA_T(self, t):
+        self._cadena += '\\t'
     
+    @_(r'\r')
+    def BARRA_R(self, t):
+        self._cadena += '\\015'
 
-        
+    @_(r'\x1b')
+    def BARRA_E(self, t):
+        self._cadena += '\\033'
+
+    @_(r'\\.')
+    def BARRA(self, t):
+        self._cadena += t.value[1]
 
 
-    @_(r'\\\n')
-    def ADD_LINE(self, t):
-        self._contador += 1
-        self.lineno += 1
-        self._caracteres += r'\n'
-
-    
-    
-    @_(r'([^"]|(\\\n))$')
-    def FIN_FICHERO(self, t):
-        t.type = "ERROR"
-        t.value = '"EOF in string constant"'
-        self._caracteres = '"'
-        self.begin(CoolLexer)
-        return t
-
-    @_(r'.*\x00[^"]*"?')
-    def CARACTER_FIN(self, t):
-        self._caracteres = '"'
-        t.type = "ERROR"
-        if '\\\x00' in t.value: 
-            t.value = '"String contains escaped null character."'
-        else:
-            t.value = '"String contains null character."'
-        self.begin(CoolLexer)
-        return t
-
-    @_(r'\n')
-    def SALTO_LINEA(self, t):
-        self._caracteres = '"'
-        self.lineno += 1
-        t.type = "ERROR"
-        t.value = '"Unterminated string constant"'
-        self._contador = 0
-        self.begin(CoolLexer)
-        return t
     @_(r'.')
-    def CAR(self, t):
-        self._contador += 1
-        if t.value in CoolLexer.CARACTERES_CONTROL:
-                self._caracteres += (
-                    '\\'+str(oct(int(t.value.encode("ascii").hex(), 16)).replace('o', '0'))[-3:])
-        else:
-            self._caracteres += t.value
-
-    def error(self, t):
-        print(f'ERROR en linea {t.lineno} por {t.value}\n')
-
-class Comments(Lexer):
-    tokens = {}
-    profundidad = 1
-
-
-    @_(r'\n?\(\*\*\)')
-    def COMMENTOPEN(self, t):
-        pass
-        
-    @_(r'[^\\]\*\)$')
-    def ERROR(self, t):
-        self.profundidad -= 1
-        if not self.profundidad:
-            self.profundidad = 1
-            self.begin(CoolLexer)
-        else:
-            t.type = "ERROR"
-            t.value = '"EOF in comment"'
-            self.begin(CoolLexer)
+    def CUALQUIER_COSA(self, t):
+        if t.index == 95:
+            print(t.value)
+        if len(self.text) <= t.end and t.value != '"':
+            t.value = '"EOF in string constant"'
+            t.type = 'ERROR'
+            self._cadena = ''
             return t
+        self._cadena += t.value
 
-    @_(r'(.|\n)$')
-    def ERROR2(self, t):
-        self.lineno += t.value.count('\n')
-        t.lineno = self.lineno
-        t.type = "ERROR"
-        t.value = '"EOF in comment"'
+class ASSIGN(Lexer):
+    tokens = {}
+
+
+    @_(r'\-')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.type = 'ASSIGN'
+        t.value = ''
+        return t
+
+    @_(r'.')
+    def CUALQUIER_COSA(self, t):
         self.begin(CoolLexer)
         return t
     
-    @_(r'([^\\]\*\))')
-    def INSIDE(self, t):
-        self.lineno += t.value.count("\n")
-        self.profundidad -= 1
-        if not self.profundidad:
-            self.profundidad = 1
-            self.begin(CoolLexer)
+class BOOLEANT(Lexer):
+    tokens = {}
+    _cadena = 'tru'
 
-    @_(r'[^\\]\(\*')
-    def OUTSIDE(self, t):
-        self.lineno += t.value.count("\n")
-        self.profundidad += 1
-    @_(r'\n')
-    def newline(self, t):
-        self.lineno += t.value.count('\n')
+    @_(r'[^eE][a-zA-Z0-9]*')
+    def VOLVERNOBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
 
-    @_(r'.')
-    def EAT(self, t):
-        pass
-
-    def salida(self, texto):
-        return ['#1 ERROR "EOF in string constant"']
+    @_(r'[eE][a-zA-Z0-9]+')
+    def VOLVERCASIBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
     
+    @_(r'[eE]')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.type = 'BOOL_CONST'
+        t.value = True
+        return t
+
+class BOOLEANF(Lexer):
+    tokens = {}
+    _cadena = 'fals'
+
+    @_(r'[^eE][a-zA-Z0-9]*')
+    def VOLVERNOBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
+
+    @_(r'[eE][a-zA-Z0-9]+')
+    def VOLVERCASIBOOL(self, t):
+        t.value = self._cadena + t.value
+        self.begin(CoolLexer)
+        t.type = 'OBJECTID'
+        return t
+    
+    @_(r'[eE]')
+    def VOLVER(self, t):
+        self.begin(CoolLexer)
+        t.type = 'BOOL_CONST'
+        t.value = False
+        return t
 
 class CoolLexer(Lexer):
-    tokens = {OBJECTID, INT_CONST, BOOL_CONST, TYPEID,
-              ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC,
-              CLASS, INHERITS, ISVOID, LET, LOOP,
-              NEW, OF, POOL, THEN, WHILE, STR_CONST,
-              LE, DARROW, ASSIGN}
-    _key_words = {'else', 'if', 'fi', 'then', 'not',
-                  'in', 'case', 'esac', 'class', 'inherits',
-                  'isvoid', 'let', 'loop', 'new', 'of', 'pool',
-                  'then', 'while'}
-    #ignore = '\t '
-    literals = {'=', '+', '-', '*', '/',
-                '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}'}
+    tokens = {BOOL_CONST, OBJECTID, INT_CONST, TYPEID,
+              ELSE, IF, FI, THEN, NOT, IN, CASE, ESAC, CLASS,
+              INHERITS, ISVOID, LET, LOOP, NEW, OF,
+              POOL, THEN, WHILE, STR_CONST, LE, DARROW, ASSIGN,
+              TRUE, FALSE, COMMENT, COMMENT1LINEA, LE}
+    ignore = '\t '
+    literals = {'=', '+', '-', '*', '/', '(', ')', '<', '>', '.', '~', ',', ';', ':', '@', '{', '}'}
+    key_words = {'else', 'if', 'fi', 'then', 'not', 'in', 'case', 'esac', 'class', 'inherits', 'isvoid',
+                 'let', 'loop', 'new', 'of', 'pool', 'then', 'while'}
 
-    LE = r'<='
-    DARROW = r'=>'
-    ASSIGN = r'<-'
+    #LE = r'\b[lL][eE]\b'
+    #DARROW = r'\b[\=][\>]\b'
+   # ASSIGN = r'\b[\<][\-]\b'
+    #STR_CONST = r'"[a-zA-Z0-9_\:\\\s\b\r\n]*"'
 
-    CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
-                          for i in ['0', '1']
-                          for j in range(16)] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
 
-    @_(r'"')
-    def STR_CONST(self, t):
-        self.begin(Strings)
-        
+    _numero_anidados = 0
 
-    @_(r'[!#$%^&_>\?`\[\]\\\|\x00]')
-    def ERROR2(self, t):
-        t.type = "ERROR"
-        if t.value == '\\':
-            t.value = '\\\\'
-        if t.value in self.CARACTERES_CONTROL:
-            t.value = '\\' + \
-                str(oct(int(t.value.encode("ascii").hex(), 16)
-                        ).replace('o', '0')[-3:])
-        t.value = '"'+t.value+'"'
+
+    # @_(r'\"[a-zA-Z0-9_\-\:\\\s\t\b\f\015\033]*\"')
+    # def STR_CONST(self, t):
+    #     t.value = t.value.replace('\t', r't').replace('\b', r'b').replace('\f', r'f').replace('\015', '\\015').replace('\033', '\\033')
+    #     return t
+
+    @_(r'\=\>')
+    def DARROW(self, t):
+        t.type = 'DARROW'
         return t
-
-    @_(r'\(\*\*\)')
-    def COMMENT0(self, t):
-        pass
-    @_(r'\(\*$')
-    def ERROR7(self, t):
-        t.type = "ERROR"
-        t.value = '"EOF in comment"'
-        return t
-
     
+    @_(r'\<\=')
+    def LE(self, t):
+        t.type = 'LE'
+        return t
+
+    @_(r'\<\-')
+    def ASSIGN(self, t):
+        t.type = 'ASSIGN'
+        return t
+
+    @_(r'\"')
+    def STRING(self, t):
+        self.begin(CadenaTexto)
+
+    #aqui antes iba '-?\d+'
+    @_(r'\d+')
+    def INT_CONST(self, t):
+        #t.value = int(t.value)
+        return t
+
+    @_(r't[rR][uU]')
+    def BOOL_CONSTT(self, t):
+        t.type = 'BOOL_CONST'
+        self.begin(BOOLEANT)
+
+    @_(r'f[aA][lL][sS]')
+    def BOOL_CONSTF(self, t):
+        t.type = 'BOOL_CONST'
+        self.begin(BOOLEANF)
+
+    @_(r'\_')
+    def BARRABAJA(self, t):
+        t.type = 'ERROR'
+        t.value = '"_"'
+        return t
+
+    @_(r'[a-z][A-Z0-9_a-z]*')
+    def OBJECTID(self, t):
+        if t.value.lower() in self.key_words:
+            t.type = t.value.upper()
+        return t
+    @_(r'[A-Z][A-Z0-9_a-z]*')
+    def TYPEID(self, t):
+        if t.value.lower() in self.key_words:
+            t.type = t.value.upper()
+        return t
+    
+    @_(r'\n|\r')
+    def LINEBREAK(self, t):
+        self.lineno += 1
+
+    @_(r'\b[wW][hH][iI][lL][eE]\b')
+    def WHILE(self, t):
+        t.value = (t.value) + 'dddd'
+        return t
+
     @_(r'\(\*')
     def COMMENT(self, t):
-        Comments.profundidad = 1
-        self.begin(Comments)
+        self._numero_anidados += 1
+        self.begin(Comentario)
 
-    
     @_(r'\*\)')
     def ERRORCIERRE(self, t):
         t.value = '"Unmatched *)"'
         t.type = 'ERROR'
         return t
-        
-    @_(r'--.*(\n|$)')
-    def LINECOMMENT(self, t):
-        self.lineno += t.value.count("\n")
 
-    @_(r'\d+')
-    def INT_CONST(self, t):
-        t.value = t.value
-        return t
-
-    @_(r'\bt[rR][uU][eE]\b|\bf[aA][lL][sS][eE]\b')
-    def BOOL_CONST(self, t):
-        t.value = t.value[0] =='t'
-        return t
-
-    @_(r'[A-Z][a-zA-Z0-9_]*')
-    def TYPEID(self, t):
-        if t.value.lower() in self._key_words:
-            t.value = t.value.upper()
-            t.type = t.value
-        return t
-
-    @_(r'[a-z_][a-zA-Z0-9_]*')
-    def OBJECTID(self, t):
-        if t.value.lower() in self._key_words:
-            t.value = t.value.upper()
-            t.type = t.value
-        return t
-
-    @_(r'\t| |\v|\r|\f')
-    def spaces(self, t):
+    @_(r'--.*')
+    def COMMENT1LINEA(self, t):
         pass
 
-    @_(r'\n+')
-    def newline(self, t):
-        self.lineno += t.value.count('\n')
+    @_(r'[\!\#\$\%\^\&\_\>\?\`\[\]\|]')
+    def CARACTER_INVALIDO(self, t):
+        t.value = '"' + t.value + '"'
+        t.type = 'ERROR'
+        return t
+    
+    @_(r'\\')
+    def BARRA_SOLA(self, t):
+        t.value = '"\\\\"'
+        t.type = 'ERROR'
+        return t
+    
+    @_(r'\x01|\x02|\x03|\x04')
+    def ERRORES_CONTROL(self, t):
+        valor = t.value
+        match valor:
+            case '\x01':
+                t.value = '"\\001"'
+            case '\x02':
+                t.value = '"\\002"'
+            case '\x03':
+                t.value = '"\\003"'
+            case '\x04':   
+                t.value = '"\\004"'
+        t.type = 'ERROR'
+        return t
+
+
+    @_(r'.')
+    def ERROR(self, t):
+        if t.value is None:
+            t.value = '"EOF in string constant"'
+            t.type = 'ERROR'
+            return t
+        if t.value in self.literals:
+            t.type = t.value
+            return t
+        print(t)
 
     def error(self, t):
-        print("Illegal character '%s'" % t.value[0])
+        self.index += 1
+
+
+
+    CARACTERES_CONTROL = [bytes.fromhex(i+hex(j)[-1]).decode('ascii')
+                          for i in ['0', '1']
+                          for j in range(16)] + [bytes.fromhex(hex(127)[-2:]).decode("ascii")]
+    @_(r'\(\*')
+    def IR(self, t):
+        self.begin(Comentario)
+
+    def error(self, t):
         self.index += 1
 
     def salida(self, texto):
-        list_strings = []
         lexer = CoolLexer()
+        list_strings = []
         for token in lexer.tokenize(texto):
             result = f'#{token.lineno} {token.type} '
-            if token.type == 'OBJECTID':
+            if token.type == 'COMMENT':
+                result += f'(* {token.value} *)'
+            elif token.type == 'COMMENT1LINEA':
+                result += f'-- {token.value}'
+            elif token.type == 'STR_CONST':
+                result += token.value
+            elif token.type == 'OBJECTID':
                 result += f"{token.value}"
             elif token.type == 'BOOL_CONST':
                 result += "true" if token.value else "false"
             elif token.type == 'TYPEID':
                 result += f"{str(token.value)}"
+            elif token.type == 'ASSIGN':
+                result = f" {token.type}"
             elif token.type in self.literals:
                 result = f'#{token.lineno} \'{token.type}\''
-            elif token.type == 'STR_CONST':
-                result += token.value
             elif token.type == 'INT_CONST':
                 result += str(token.value)
             elif token.type == 'ERROR':
                 result = f'#{token.lineno} {token.type} {token.value}'
             else:
                 result = f'#{token.lineno} {token.type}'
-
-            list_strings.append(result)
+            list_strings.append('\n'+result)
         return list_strings
-
-    def tests(self):
-        for fich in TESTS:
-            f = open(os.path.join(DIR, fich), 'r')
-            g = open(os.path.join(DIR, fich + '.out'), 'r')
-            resultado = g.read()
-            entrada = f.read()
-            texto = '\n'.join(self.salida(entrada))
-            texto = f'#name "{fich}"\n' + texto
-            f.close(), g.close()
-            if texto.strip().split() != resultado.strip().split():
-                print(f"Revisa el fichero {fich}")
-

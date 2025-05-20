@@ -8,11 +8,13 @@ __version__ = "2025"
 import sys
 
 from AstPrinter import AstPrinter
+from Interpreter import Interpreter
 from Parser import Parser
 from Scanner import Scanner, TokenType
 
 
 class Lox:
+    interpreter = Interpreter()
     had_error = False
     had_runtime_error = False
 
@@ -68,6 +70,9 @@ class Lox:
         print("____AST_TREE____")
         for stmt in statements:
             print(AstPrinter().print(stmt))
+
+        print("____PROGRAM_OUTPUT____")
+        Lox.interpreter.interpret(statements)
 
     @staticmethod
     def error(line, message):

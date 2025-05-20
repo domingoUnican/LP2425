@@ -9,7 +9,9 @@ class Nodo:
 
     def str(self, n):
         return f'{n*" "}#{self.linea}\n'
-
+    
+    def Tipo(self):
+        pass
 
 @dataclass
 class Formal(Nodo):
@@ -169,7 +171,7 @@ class RamaCase(Nodo):
 
 
 @dataclass
-class Swicht(Nodo):
+class Switch(Nodo):
     expr: Expresion = None
     casos: List[RamaCase] = field(default_factory=list)
 
@@ -188,7 +190,8 @@ class Nueva(Nodo):
         resultado = super().str(n)
         resultado += f'{(n)*" "}_new\n'
         resultado += f'{(n+2)*" "}{self.tipo}\n'
-        resultado += f'{(n)*" "}: {self.cast}\n'
+        # # FIXME: NO FUNCIONA EL CAST
+        # resultado += f'{(n)*" "}: {self.tipo}\n'
         return resultado
 
 

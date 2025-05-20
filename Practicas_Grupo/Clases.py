@@ -46,7 +46,6 @@ class Asignacion(Expresion):
         else:
             self.cast = 'Object'
 
-
 @dataclass
 class LlamadaMetodoEstatico(Expresion):
     cuerpo: Expresion = None
@@ -157,6 +156,7 @@ class RamaCase(Nodo):
     nombre_variable: str = '_no_set'
     tipo: str = '_no_set'
     cuerpo: Expresion = None
+    cast: str = '_no_type'
 
     def str(self, n):
         resultado = super().str(n)
@@ -164,14 +164,15 @@ class RamaCase(Nodo):
         resultado += f'{(n+2)*" "}{self.nombre_variable}\n'
         resultado += f'{(n+2)*" "}{self.tipo}\n'
         resultado += self.cuerpo.str(n+2)
-        resultado += f'{(n)*" "}: {self.cast}\n'
+        #resultado += f'{(n)*" "}: {self.cast}\n'
         return resultado
 
 
 @dataclass
-class Swicht(Nodo):
+class Swich(Nodo):
     expr: Expresion = None
     casos: List[RamaCase] = field(default_factory=list)
+    cast: str = '_no_type'
 
     def str(self, n):
         resultado = super().str(n)
@@ -184,6 +185,7 @@ class Swicht(Nodo):
 @dataclass
 class Nueva(Nodo):
     tipo: str = '_no_set'
+    cast: str = '_no_type'
     def str(self, n):
         resultado = super().str(n)
         resultado += f'{(n)*" "}_new\n'
@@ -419,8 +421,7 @@ class Programa(IterableNodo):
         resultado += ''.join([c.str(n+2) for c in self.secuencia])
         return resultado
 
-    def Tipo(self):
-        ambito = Ambito()
+    
 
 @dataclass
 class Caracteristica(Nodo):

@@ -1,2 +1,8 @@
 #name "s05.test.cool"
-#1 STR_CONST "other unescaped whitespace: \t"
+ LITERAL
+ OBJECTID other
+ OBJECTID unescaped
+ OBJECTID whitespace
+ ':' 
+ LITERAL
+ LITERAL

@@ -4,7 +4,6 @@ import matplotlib.pyplot as plt
 
 import os
 
-
 class Parser:
     def __init__(self, tokens):
         self.tokens = list(tokens)

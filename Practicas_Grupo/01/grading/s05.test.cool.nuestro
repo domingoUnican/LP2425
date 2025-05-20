@@ -1,4 +1,3 @@
 #name "s05.test.cool"
- OTHER
- UNESCAPED
- WHITESPACE
+
+ STR_CONST "other unescaped whitespace: \t000"

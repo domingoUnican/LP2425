@@ -1,22 +1,11 @@
 #name "escapedunprintables.cool"
- TYPEID This
- IS
- A
- TAB
- TYPEID This
- IS
- A
- BACKSPACE
- TYPEID This
- IS
- A
- FORMFEED
- TYPEID This
- IS
- A
- CARRIAGE
- RETURN
- TYPEID This
- IS
- AN
- ESCAPE
+
+ STR_CONST "This is a tab:\\t"
+
+ STR_CONST "This is a backspace:\0"
+
+ STR_CONST "This is a formfeed:\0"
+
+ STR_CONST "This is a carriage return:0"
+
+ STR_CONST "This is an escape:0"

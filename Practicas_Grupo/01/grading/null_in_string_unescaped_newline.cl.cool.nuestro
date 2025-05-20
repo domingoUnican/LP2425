@@ -1,10 +1,3 @@
 #name "null_in_string_unescaped_newline.cl.cool"
- NULL
- CHARACTER
- IN
- STRING
- NULL
- CHARACTER
- IS
- HERE
- A
+
+ ERROR "String contains null character."

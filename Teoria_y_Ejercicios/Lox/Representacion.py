@@ -2,6 +2,8 @@ from dataclasses import dataclass
 from Lexer import Token
 from typing import List, Optional, Union
 
+#Autores: Hugo Martinez, Jorge Garcia
+
 # --- PRINCIPALES ---
 @dataclass
 class Declaration:
